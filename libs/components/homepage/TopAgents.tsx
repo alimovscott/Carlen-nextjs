@@ -11,6 +11,7 @@ import { AgentsInquiry } from '../../types/member/member.input';
 import { GET_AGENTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { T } from '../../types/common';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 interface TopAgentsProps {
 	initialInput: AgentsInquiry;
@@ -38,7 +39,13 @@ const TopAgents = (props: TopAgentsProps) => {
    setTopAgents(data?.getAgents?.list); // Extracts the list and stores it in local React state
   },
  });
+
+ 
 	/** HANDLERS **/
+ if (topAgents) console.log('topAgents:', topAgents);
+	if (!topAgents) return null;
+
+
 
 
 	if (device === 'mobile') {
