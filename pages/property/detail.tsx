@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, use, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
@@ -31,9 +31,10 @@ import { GET_COMMENTS, GET_PROPERTIES, GET_PROPERTY } from '../../apollo/user/qu
 import { T } from '../../libs/types/common';
 import { dir } from 'console';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { PropertyLocation } from '../../libs/enums/property.enum';
+import { get } from 'http';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -64,7 +65,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
-
+	const [createComment] = useMutation(CREATE_COMMENT);
 	const {
 			loading: getPropertyLoading,
 			data: getPropertyData,
@@ -193,6 +194,20 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 		commentInquiry.page = value;
 		setCommentInquiry({ ...commentInquiry });
 	};
+
+
+	const createCommentHandler = async () => {
+		try{
+			if(!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await createComment({variables: {input: insertCommentData}});
+
+			setInsertCommentData({...insertCommentData, commentContent: ''});
+			await getCommentsRefetch({ input: { ...commentInquiry } });
+
+		} catch(err: any){
+			await sweetErrorHandling(err);
+		}
+	}
 
 	if (device === 'mobile') {
 		return <div>PROPERTY DETAIL PAGE</div>;
@@ -506,6 +521,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										<Button
 											className={'submit-review'}
 											disabled={insertCommentData.commentContent === '' || user?._id === ''}
+											onClick={createCommentHandler}
 										>
 											<Typography className={'title'}>Submit Review</Typography>
 											<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
