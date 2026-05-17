@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Stack, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Alert, Box, CircularProgress, Stack } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,7 +10,6 @@ import { AgentsInquiry } from '../../types/member/member.input';
 import { GET_AGENTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { T } from '../../types/common';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 interface TopAgentsProps {
 	initialInput: AgentsInquiry;
@@ -20,30 +18,38 @@ interface TopAgentsProps {
 const TopAgents = (props: TopAgentsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
-	const router = useRouter();
 	const [topAgents, setTopAgents] = useState<Member[]>([]);
 
 	/** APOLLO REQUESTS **/
-	const {
-  loading: getAgentsLoading, // Shows spinner
-  data: getAgentsData, // The actual data
-  error: getAgentsError, // Shows error messages
-  refetch: getAgentsRefetch,
- } = useQuery(GET_AGENTS, { // Predefined GraphQL query document
-  // 1st returns data from Apollo cache (if available)
-  // 2nd then always fetches from the network and updates the cache
-  fetchPolicy: "cache-and-network",
-  variables: { input: initialInput }, // Initial state
-  notifyOnNetworkStatusChange: true,
-  onCompleted: (data: T) => {
-   setTopAgents(data?.getAgents?.list); // Extracts the list and stores it in local React state
-  },
- });
+	const { loading: getAgentsLoading, data: getAgentsData, error: getAgentsError } = useQuery(GET_AGENTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setTopAgents(data?.getAgents?.list ?? []);
+		},
+	});
 
- 
+	useEffect(() => {
+		if (getAgentsData?.getAgents?.list) {
+			setTopAgents(getAgentsData.getAgents.list);
+		}
+	}, [getAgentsData]);
+
 	/** HANDLERS **/
- if (topAgents) console.log('topAgents:', topAgents);
-	if (!topAgents) return null;
+	if (getAgentsLoading && topAgents.length === 0) {
+		return (
+			<Stack alignItems="center" py={4}>
+				<CircularProgress />
+			</Stack>
+		);
+	}
+
+	if (getAgentsError) {
+		return <Alert severity="error">{getAgentsError.message}</Alert>;
+	}
+
+	if (topAgents.length === 0) return null;
 
 
 
