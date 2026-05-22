@@ -8,11 +8,14 @@ import MemberProperties from '../../libs/components/member/MemberProperties';
 import { useRouter } from 'next/router';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
 import MemberArticles from '../../libs/components/member/MemberArticles';
-import { useReactiveVar } from '@apollo/client';
-import { sweetErrorHandling } from '../../libs/sweetAlert';
+import { useMutation, useReactiveVar } from '@apollo/client';
+import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
 import { userVar } from '../../apollo/store';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
+import { Message } from '../../libs/enums/common.enum';
+import { Messages } from '../../libs/config';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -27,6 +30,10 @@ const MemberPage: NextPage = () => {
 	const user = useReactiveVar(userVar);
 
 	/** APOLLO REQUESTS **/
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
+	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -44,9 +51,54 @@ const MemberPage: NextPage = () => {
 	}, [category, router]);
 
 	/** HANDLERS **/
-	const subscribeHandler = async (id: string, refetch: any, query: any) => {};
+	const subscribeHandler = async (id: string, refetch: any, query: any) => {
+			try {
+				console.log('subscribeHandler, id:', id);
+				if (!id) throw new Error(Message.error1);
+				if (!user._id) throw new Error(Message.error2);
+	
+				await subscribe({ variables: { input: id } });
+				await sweetTopSmallSuccessAlert('Subscribed', 800);
+				await refetch({ input: query });
+	
+			} catch (err: any) {
+				sweetErrorHandling(err).then();
+			}
+		};
+	
+		const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
+			try {
+				console.log('subscribeHandler, id:', id);
+				if (!id) throw new Error(Message.error1);
+				if (!user._id) throw new Error(Message.error2);
+	
+				await unsubscribe({ variables: { input: id } });
+				await sweetTopSmallSuccessAlert('unSubscribed', 800);
+				await refetch({ input: query });
+				
+			} catch (err: any) {
+				sweetErrorHandling(err).then();
+			}
+		};
 
-	const unsubscribeHandler = async (id: string, refetch: any, query: any) => {};
+		const likeMemberHandler = async (id: string, refetch: any, query: any) => {
+				try {
+					if (!id) return;
+					if (!user._id) throw new Error(Messages.error2);
+		
+					await likeTargetMember({
+						variables: {
+							input: id,
+						},
+					});
+		
+					await sweetTopSmallSuccessAlert('Success!', 800);
+					await refetch({ input: query });
+				} catch (err: any) {
+					console.log('ERROR, likeMemberHandler:', err.message);
+					sweetMixinErrorAlert(err.message).then();
+				}
+			};
 
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
@@ -76,6 +128,7 @@ const MemberPage: NextPage = () => {
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											likeMemberHandler={likeMemberHandler}
 										/>
 									)}
 									{category === 'followings' && (
@@ -83,6 +136,7 @@ const MemberPage: NextPage = () => {
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											likeMemberHandler={likeMemberHandler}
 										/>
 									)}
 									{category === 'articles' && <MemberArticles />}
