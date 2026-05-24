@@ -26,7 +26,6 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 	} catch (err) {
 		console.warn('login err', err);
 		logOut();
-		throw new Error('Login Err');
 	}
 };
 
@@ -75,7 +74,6 @@ export const signUp = async (nick: string, password: string, phone: string, type
 	} catch (err) {
 		console.warn('login err', err);
 		logOut();
-		throw new Error('Login Err');
 	}
 };
 
