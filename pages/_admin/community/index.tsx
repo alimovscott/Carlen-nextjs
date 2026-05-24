@@ -14,6 +14,10 @@ import { BoardArticle } from '../../../libs/types/board-article/board-article';
 import { BoardArticleCategory, BoardArticleStatus } from '../../../libs/enums/board-article.enum';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
 import { BoardArticleUpdate } from '../../../libs/types/board-article/board-article.update';
+import { GET_ALL_BOARD_ARTICLES_BY_ADMIN } from '../../../apollo/admin/query';
+import { useMutation, useQuery } from '@apollo/client';
+import { T } from '../../../libs/types/common';
+import { REMOVE_BOARD_ARTICLE_BY_ADMIN, UPDATE_BOARD_ARTICLE_BY_ADMIN } from '../../../apollo/admin/mutation';
 
 const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<any>([]);
@@ -26,6 +30,23 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [searchType, setSearchType] = useState('ALL');
 
 	/** APOLLO REQUESTS **/
+	const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
+	const [removeBoardArticleByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
+
+	const {
+			loading: getAllBoardArticlesByAdminLoading,
+			error: getAllBoardArticlesByAdminError,
+			data: getAllBoardArticlesByAdminData,
+			refetch: getAllBoardArticlesByAdminRefetch,
+		} = useQuery(GET_ALL_BOARD_ARTICLES_BY_ADMIN, {
+			fetchPolicy: 'network-only',
+			variables: { input: communityInquiry },
+			notifyOnNetworkStatusChange: true,
+			onCompleted: (data: T) => {
+				setArticles(data?.getAllBoardArticlesByAdmin?.list);
+				setArticleTotal(data?.getAllBoardArticlesByAdmin?.metaCounter[0]?.total ?? 0);
+			}
+		});
 
 	/** LIFECYCLES **/
 	useEffect(() => {}, [communityInquiry]);
@@ -33,12 +54,14 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {
 		communityInquiry.page = newPage + 1;
+		await getAllBoardArticlesByAdminRefetch({ inquiry: communityInquiry });
 		setCommunityInquiry({ ...communityInquiry });
 	};
 
 	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		communityInquiry.limit = parseInt(event.target.value, 10);
 		communityInquiry.page = 1;
+		await getAllBoardArticlesByAdminRefetch({ inquiry: communityInquiry });
 		setCommunityInquiry({ ...communityInquiry });
 	};
 
@@ -96,22 +119,35 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	const updateArticleHandler = async (updateData: BoardArticleUpdate) => {
 		try {
-			console.log('+updateData: ', updateData);
-
-			menuIconCloseHandler();
-		} catch (err: any) {
-			menuIconCloseHandler();
-			sweetErrorHandling(err).then();
-		}
+					console.log('+updateData: ', updateData);
+					await updateBoardArticleByAdmin({
+						variables: {
+							input: updateData,
+						},
+					});
+					
+					menuIconCloseHandler();
+					await getAllBoardArticlesByAdminRefetch({ inquiry: communityInquiry });
+				} catch (err: any) {
+					menuIconCloseHandler();
+					sweetErrorHandling(err).then();
+				}
 	};
 
 	const removeArticleHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('are you sure to remove?')) {
-			}
-		} catch (err: any) {
-			sweetErrorHandling(err).then();
-		}
+					if (await sweetConfirmAlert('Are you sure to remove?')) {
+						await removeBoardArticleByAdmin({
+							variables: {
+								input: id,
+							},
+						});
+						await getAllBoardArticlesByAdminRefetch({ inquiry: communityInquiry });
+					}
+					menuIconCloseHandler();
+				} catch (err: any) {
+					sweetErrorHandling(err).then();
+				}
 	};
 
 	console.log('+communityInquiry', communityInquiry);
@@ -128,21 +164,21 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 						<Box component={'div'}>
 							<List className={'tab-menu'}>
 								<ListItem
-									onClick={(e) => tabChangeHandler(e, 'ALL')}
+									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ALL')}
 									value="ALL"
 									className={value === 'ALL' ? 'li on' : 'li'}
 								>
 									All
 								</ListItem>
 								<ListItem
-									onClick={(e) => tabChangeHandler(e, 'ACTIVE')}
+									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ACTIVE')}
 									value="ACTIVE"
 									className={value === 'ACTIVE' ? 'li on' : 'li'}
 								>
 									Active
 								</ListItem>
 								<ListItem
-									onClick={(e) => tabChangeHandler(e, 'DELETE')}
+									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'DELETE')}
 									value="DELETE"
 									className={value === 'DELETE' ? 'li on' : 'li'}
 								>
