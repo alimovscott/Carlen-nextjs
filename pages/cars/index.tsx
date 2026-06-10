@@ -17,6 +17,7 @@ import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import ProductCard from '../../libs/components/product/PropductCard';
+import { sanitizeProductsInquiry } from '../../libs/utils';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -27,9 +28,15 @@ export const getStaticProps = async ({ locale }: any) => ({
 const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
-	);
+	const parseInput = (input: any) => {
+		try {
+			return input ? sanitizeProductsInquiry(JSON.parse(input as string), initialInput) : sanitizeProductsInquiry(initialInput);
+		} catch (err: any) {
+			console.log('ERROR, parseInput:', err.message);
+			return sanitizeProductsInquiry(initialInput);
+		}
+	};
+	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(parseInput(router?.query?.input));
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurautomaticPage] = useState<number>(1);
@@ -63,7 +70,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			refetch: getProductsRefetch,
 		} = useQuery(GET_PRODUCTS, {
 			fetchPolicy: 'network-only',
-			variables: { input: searchFilter },
+			variables: { input: sanitizeProductsInquiry(searchFilter, initialInput) },
 			notifyOnNetworkStatusChange: true,
 			onCompleted: (data: T) => {
 				setProducts(data?.getProducts?.list);
@@ -73,22 +80,20 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
-		}
+		const nextInput = parseInput(router.query.input);
+		setSearchFilter(nextInput);
 
-		setCurautomaticPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
+		setCurautomaticPage(nextInput.page === undefined ? 1 : nextInput.page);
+	}, [router.query.input]);
 
 	useEffect(() => {}, [searchFilter]);
 
 	/** HANDLERS **/
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
+		const nextInput = sanitizeProductsInquiry({ ...searchFilter, page: value }, initialInput);
 		await router.push(
-			`/cars?input=${JSON.stringify(searchFilter)}`,
-			`/cars?input=${JSON.stringify(searchFilter)}`,
+			`/cars?input=${JSON.stringify(nextInput)}`,
+			`/cars?input=${JSON.stringify(nextInput)}`,
 			{
 				scroll: false,
 			},
@@ -106,20 +111,27 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 		setAnchorEl(null);
 	};
 
-	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
+	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextInput = searchFilter;
 		switch (e.currentTarget.id) {
 			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC });
+				nextInput = sanitizeProductsInquiry({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC }, initialInput);
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.ASC });
+				nextInput = sanitizeProductsInquiry({ ...searchFilter, sort: 'productPrice', direction: Direction.ASC }, initialInput);
 				setFilterSortName('Lowest Price');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'productPrice', direction: Direction.DESC });
+				nextInput = sanitizeProductsInquiry({ ...searchFilter, sort: 'productPrice', direction: Direction.DESC }, initialInput);
 				setFilterSortName('Highest Price');
 		}
+		setSearchFilter(nextInput);
+		await router.push(
+			`/cars?input=${JSON.stringify(nextInput)}`,
+			`/cars?input=${JSON.stringify(nextInput)}`,
+			{ scroll: false },
+		);
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};

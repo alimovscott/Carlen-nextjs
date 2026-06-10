@@ -31,9 +31,8 @@ interface PISearch {
 	typeList?: ProductType[];
 	transmissionList?: ProductTransmission[];
 	fuelTypeList?: ProductFuelType[];
-	roomsList?: Number[];
-	options?: string[];
-	bedsList?: Number[];
+	seatsList?: Number[];
+	doorsList?: Number[];
 	pricesRange?: Range;
 	periodsRange?: PeriodsRange;
 	mileageRange?: Range;

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Stack,
 	Typography,
@@ -13,12 +13,13 @@ import {
 	IconButton,
 } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
+import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { productMileageRange } from '../../config';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { sanitizeProductsInquiry } from '../../utils';
 
 const MenuProps = {
 	PaperProps: {
@@ -38,458 +39,83 @@ const Filter = (props: FilterType) => {
 	const { searchFilter, setSearchFilter, initialInput } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
-	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
-	const [searchText, setSearchText] = useState<string>('');
+	const [productLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
+	const [productType] = useState<ProductType[]>(Object.values(ProductType));
+	const [productFuelType] = useState<ProductFuelType[]>(Object.values(ProductFuelType));
+	const [productTransmission] = useState<ProductTransmission[]>(Object.values(ProductTransmission));
+	const [searchText, setSearchText] = useState<string>(searchFilter?.search?.text ?? '');
 	const [showMore, setShowMore] = useState<boolean>(false);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (searchFilter?.search?.locationList?.length == 0) {
-			delete searchFilter.search.locationList;
-			setShowMore(false);
-			router.push(`/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, `/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, { scroll: false }).then();
-		}
-
-		if (searchFilter?.search?.typeList?.length == 0) {
-			delete searchFilter.search.typeList;
-			router.push(`/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, `/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, { scroll: false }).then();
-		}
-
-		if (searchFilter?.search?.roomsList?.length == 0) {
-			delete searchFilter.search.roomsList;
-			router.push(`/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, `/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, { scroll: false }).then();
-		}
-
-		if (searchFilter?.search?.options?.length == 0) {
-			delete searchFilter.search.options;
-			router.push(`/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, `/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, { scroll: false }).then();
-		}
-
-		if (searchFilter?.search?.bedsList?.length == 0) {
-			delete searchFilter.search.bedsList;
-			router.push(`/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, `/cars?input=${JSON.stringify({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-			},
-		})}`, { scroll: false }).then();
-		}
-
-		if (searchFilter?.search?.locationList) setShowMore(true);
+		setShowMore(Boolean(searchFilter?.search?.locationList));
+		setSearchText(searchFilter?.search?.text ?? '');
 	}, [searchFilter]);
 
 	/** HANDLERS **/
-	const productLocationSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, locationList: [...(searchFilter?.search?.locationList || []), value] },
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, locationList: [...(searchFilter?.search?.locationList || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.locationList?.includes(value)) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								locationList: searchFilter?.search?.locationList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								locationList: searchFilter?.search?.locationList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
+	const pushFilter = async (input: ProductsInquiry) => {
+		const cleanInput = sanitizeProductsInquiry(input, initialInput);
+		setSearchFilter(cleanInput);
+		await router.push(
+			`/cars?input=${JSON.stringify(cleanInput)}`,
+			`/cars?input=${JSON.stringify(cleanInput)}`,
+			{ scroll: false },
+		);
+	};
 
-				if (searchFilter?.search?.typeList?.length == 0) {
-					alert('error');
-				}
+	const updateListFilter = async (key: keyof ProductsInquiry['search'], value: string | number, isChecked: boolean) => {
+		const search: any = { ...searchFilter.search };
+		const currentList = Array.isArray(search[key]) ? [...search[key]] : [];
+		const nextList = isChecked ? Array.from(new Set([...currentList, value])) : currentList.filter((item: any) => item !== value);
 
-				console.log('productLocationSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productLocationSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
+		if (nextList.length > 0) search[key] = nextList;
+		else delete search[key];
 
-	const productTypeSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, typeList: [...(searchFilter?.search?.typeList || []), value] },
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, typeList: [...(searchFilter?.search?.typeList || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.typeList?.includes(value)) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								typeList: searchFilter?.search?.typeList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								typeList: searchFilter?.search?.typeList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
+		await pushFilter({ ...searchFilter, page: 1, search });
+	};
 
-				if (searchFilter?.search?.typeList?.length == 0) {
-					alert('error');
-				}
+	const clearListFilter = async (key: keyof ProductsInquiry['search']) => {
+		const search: any = { ...searchFilter.search };
+		delete search[key];
+		await pushFilter({ ...searchFilter, page: 1, search });
+	};
 
-				console.log('productTypeSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productTypeSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
+	const productMileageHandler = async (e: any, type: string) => {
+		const value = Number(e.target.value);
+		const currentRange = searchFilter.search.mileageRange ?? initialInput.search.mileageRange ?? { start: 0, end: 0 };
+		await pushFilter({
+			...searchFilter,
+			page: 1,
+			search: {
+				...searchFilter.search,
+				mileageRange: { ...currentRange, [type]: value },
+			},
+		});
+	};
 
-	const productSeatsSelectHandler = useCallback(
-		async (number: Number) => {
-			try {
-				if (number != 0) {
-					if (searchFilter?.search?.roomsList?.includes(number)) {
-						await router.push(
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: {
-									...searchFilter.search,
-									roomsList: searchFilter?.search?.roomsList?.filter((item: Number) => item !== number),
-								},
-							})}`,
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: {
-									...searchFilter.search,
-									roomsList: searchFilter?.search?.roomsList?.filter((item: Number) => item !== number),
-								},
-							})}`,
-							{ scroll: false },
-						);
-					} else {
-						await router.push(
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: { ...searchFilter.search, doorsList: [...(searchFilter?.search?.roomsList || []), number] },
-							})}`,
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: { ...searchFilter.search, doorsList: [...(searchFilter?.search?.roomsList || []), number] },
-							})}`,
-							{ scroll: false },
-						);
-					}
-				} else {
-					delete searchFilter?.search.roomsList;
-					setSearchFilter({ ...searchFilter });
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-							},
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
+	const productPriceHandler = async (value: number, type: string) => {
+		const currentRange = searchFilter.search.pricesRange ?? initialInput.search.pricesRange ?? { start: 0, end: 0 };
+		await pushFilter({
+			...searchFilter,
+			page: 1,
+			search: {
+				...searchFilter.search,
+				pricesRange: { ...currentRange, [type]: value * 1 },
+			},
+		});
+	};
 
-				console.log('productRoomSelectHandler:', number);
-			} catch (err: any) {
-				console.log('ERROR, productRoomSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productOptionSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, options: [...(searchFilter?.search?.options || []), value] },
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, options: [...(searchFilter?.search?.options || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.options?.includes(value)) {
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								options: searchFilter?.search?.options?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								options: searchFilter?.search?.options?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
-
-				console.log('productOptionSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productOptionSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productBedSelectHandler = useCallback(
-		async (number: Number) => {
-			try {
-				if (number != 0) {
-					if (searchFilter?.search?.bedsList?.includes(number)) {
-						await router.push(
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: {
-									...searchFilter.search,
-									bedsList: searchFilter?.search?.bedsList?.filter((item: Number) => item !== number),
-								},
-							})}`,
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: {
-									...searchFilter.search,
-									bedsList: searchFilter?.search?.bedsList?.filter((item: Number) => item !== number),
-								},
-							})}`,
-							{ scroll: false },
-						);
-					} else {
-						await router.push(
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: { ...searchFilter.search, bedsList: [...(searchFilter?.search?.bedsList || []), number] },
-							})}`,
-							`/cars?input=${JSON.stringify({
-								...searchFilter,
-								search: { ...searchFilter.search, bedsList: [...(searchFilter?.search?.bedsList || []), number] },
-							})}`,
-							{ scroll: false },
-						);
-					}
-				} else {
-					delete searchFilter?.search.bedsList;
-					setSearchFilter({ ...searchFilter });
-					await router.push(
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-							},
-						})}`,
-						`/cars?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
-
-				console.log('productBedSelectHandler:', number);
-			} catch (err: any) {
-				console.log('ERROR, productBedSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productMileageHandler = useCallback(
-		async (e: any, type: string) => {
-			const value = e.target.value;
-
-			if (type == 'start') {
-				await router.push(
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							mileageRange: { ...searchFilter.search.mileageRange, start: value },
-						},
-					})}`,
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							mileageRange: { ...searchFilter.search.mileageRange, start: value },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			} else {
-				await router.push(
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							mileageRange: { ...searchFilter.search.mileageRange, end: value },
-						},
-					})}`,
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							mileageRange: { ...searchFilter.search.mileageRange, end: value },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productPriceHandler = useCallback(
-		async (value: number, type: string) => {
-			if (type == 'start') {
-				await router.push(
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-						},
-					})}`,
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			} else {
-				await router.push(
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-						},
-					})}`,
-					`/cars?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			}
-		},
-		[searchFilter],
-	);
+	const textSearchHandler = async (text: string) => {
+		const search: any = { ...searchFilter.search };
+		if (text.trim()) search.text = text.trim();
+		else delete search.text;
+		await pushFilter({ ...searchFilter, page: 1, search });
+	};
 
 	const refreshHandler = async () => {
 		try {
 			setSearchText('');
-			await router.push(
-				`/cars?input=${JSON.stringify(initialInput)}`,
-				`/cars?input=${JSON.stringify(initialInput)}`,
-				{ scroll: false },
-			);
+			await pushFilter(sanitizeProductsInquiry(initialInput));
 		} catch (err: any) {
 			console.log('ERROR, refreshHandler:', err);
 		}
@@ -511,10 +137,7 @@ const Filter = (props: FilterType) => {
 							onChange={(e: any) => setSearchText(e.target.value)}
 							onKeyDown={(event: any) => {
 								if (event.key == 'Enter') {
-									setSearchFilter({
-										...searchFilter,
-										search: { ...searchFilter.search, text: searchText },
-									});
+									textSearchHandler(searchText);
 								}
 							}}
 							endAdornment={
@@ -522,10 +145,7 @@ const Filter = (props: FilterType) => {
 									<CancelRoundedIcon
 										onClick={() => {
 											setSearchText('');
-											setSearchFilter({
-												...searchFilter,
-												search: { ...searchFilter.search, text: '' },
-											});
+											textSearchHandler('');
 										}}
 									/>
 								</>
@@ -563,7 +183,7 @@ const Filter = (props: FilterType) => {
 										size="small"
 										value={location}
 										checked={(searchFilter?.search?.locationList || []).includes(location as ProductLocation)}
-										onChange={productLocationSelectHandler}
+										onChange={(e: any) => updateListFilter('locationList', e.target.value, e.target.checked)}
 									/>
 									<label htmlFor={location} style={{ cursor: 'pointer' }}>
 										<Typography className="product-type">{location}</Typography>
@@ -583,7 +203,7 @@ const Filter = (props: FilterType) => {
 								color="default"
 								size="small"
 								value={type}
-								onChange={productTypeSelectHandler}
+								onChange={(e: any) => updateListFilter('typeList', e.target.value, e.target.checked)}
 								checked={(searchFilter?.search?.typeList || []).includes(type as ProductType)}
 							/>
 							<label style={{ cursor: 'pointer' }}>
@@ -598,162 +218,96 @@ const Filter = (props: FilterType) => {
 						<Button
 							sx={{
 								borderRadius: '12px 0 0 12px',
-								border: !searchFilter?.search?.roomsList ? '2px solid #181A20' : '1px solid #b9b9b9',
+								border: !searchFilter?.search?.seatsList ? '2px solid #181A20' : '1px solid #b9b9b9',
 							}}
-							onClick={() => productSeatsSelectHandler(0)}
+							onClick={() => clearListFilter('seatsList')}
 						>
 							Any
 						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(1) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(1) ? undefined : 'none',
-							}}
-							onClick={() => productSeatsSelectHandler(1)}
-						>
-							1
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(2) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(2) ? undefined : 'none',
-							}}
-							onClick={() => productSeatsSelectHandler(2)}
-						>
-							2
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(3) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(3) ? undefined : 'none',
-							}}
-							onClick={() => productSeatsSelectHandler(3)}
-						>
-							3
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(4) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
-								borderRight: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
-							}}
-							onClick={() => productSeatsSelectHandler(4)}
-						>
-							4
-						</Button>
-						<Button
-							sx={{
-								borderRadius: '0 12px 12px 0',
-								border: searchFilter?.search?.roomsList?.includes(5) ? '2px solid #181A20' : '1px solid #b9b9b9',
-							}}
-							onClick={() => productSeatsSelectHandler(5)}
-						>
-							5+
-						</Button>
+						{[1, 2, 3, 4, 5].map((seat: number) => (
+							<Button
+								key={seat}
+								sx={{
+									borderRadius: seat === 5 ? '0 12px 12px 0' : 0,
+									border: searchFilter?.search?.seatsList?.includes(seat) ? '2px solid #181A20' : '1px solid #b9b9b9',
+									borderLeft: searchFilter?.search?.seatsList?.includes(seat) ? undefined : 'none',
+									borderRight: seat === 4 && !searchFilter?.search?.seatsList?.includes(seat) ? 'none' : undefined,
+								}}
+								onClick={() => updateListFilter('seatsList', seat, !searchFilter?.search?.seatsList?.includes(seat))}
+							>
+								{seat === 5 ? '5+' : seat}
+							</Button>
+						))}
 					</Stack>
 				</Stack>
 				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Bedrooms</Typography>
+					<Typography className={'title'}>Doors</Typography>
 					<Stack className="button-group">
 						<Button
 							sx={{
 								borderRadius: '12px 0 0 12px',
-								border: !searchFilter?.search?.bedsList ? '2px solid #181A20' : '1px solid #b9b9b9',
+								border: !searchFilter?.search?.doorsList ? '2px solid #181A20' : '1px solid #b9b9b9',
 							}}
-							onClick={() => productBedSelectHandler(0)}
+							onClick={() => clearListFilter('doorsList')}
 						>
 							Any
 						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(1) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(1) ? undefined : 'none',
-							}}
-							onClick={() => productBedSelectHandler(1)}
-						>
-							1
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(2) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(2) ? undefined : 'none',
-							}}
-							onClick={() => productBedSelectHandler(2)}
-						>
-							2
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(3) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(3) ? undefined : 'none',
-							}}
-							onClick={() => productBedSelectHandler(3)}
-						>
-							3
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(4) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(4) ? undefined : 'none',
-								// borderRight: false ? undefined : 'none',
-							}}
-							onClick={() => productBedSelectHandler(4)}
-						>
-							4
-						</Button>
-						<Button
-							sx={{
-								borderRadius: '0 12px 12px 0',
-								border: searchFilter?.search?.bedsList?.includes(5) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(5) ? undefined : 'none',
-							}}
-							onClick={() => productBedSelectHandler(5)}
-						>
-							5+
-						</Button>
+						{[1, 2, 3, 4, 5].map((door: number) => (
+							<Button
+								key={door}
+								sx={{
+									borderRadius: door === 5 ? '0 12px 12px 0' : 0,
+									border: searchFilter?.search?.doorsList?.includes(door) ? '2px solid #181A20' : '1px solid #b9b9b9',
+									borderLeft: searchFilter?.search?.doorsList?.includes(door) ? undefined : 'none',
+									borderRight: door === 4 && !searchFilter?.search?.doorsList?.includes(door) ? 'none' : undefined,
+								}}
+								onClick={() => updateListFilter('doorsList', door, !searchFilter?.search?.doorsList?.includes(door))}
+							>
+								{door === 5 ? '5+' : door}
+							</Button>
+						))}
 					</Stack>
 				</Stack>
 				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Options</Typography>
-					<Stack className={'input-box'}>
-						<Checkbox
-							id={'Fuel'}
-							className="product-checkbox"
-							color="default"
-							size="small"
-							value={'productFuelType'}
-							checked={(searchFilter?.search?.options || []).includes('productFuelType')}
-							onChange={productOptionSelectHandler}
-						/>
-						<label htmlFor={'Fuel'} style={{ cursor: 'pointer' }}>
-							<Typography className="product-type">Fuel</Typography>
-						</label>
-					</Stack>
-					<Stack className={'input-box'}>
-						<Checkbox
-							id={'Automatic'}
-							className="product-checkbox"
-							color="default"
-							size="small"
-							value={'productTransmission'}
-							checked={(searchFilter?.search?.options || []).includes('productTransmission')}
-							onChange={productOptionSelectHandler}
-						/>
-						<label htmlFor={'Automatic'} style={{ cursor: 'pointer' }}>
-							<Typography className="product-type">Automatic</Typography>
-						</label>
-					</Stack>
+					<Typography className={'title'}>Fuel Type</Typography>
+					{productFuelType.map((fuelType: string) => (
+						<Stack className={'input-box'} key={fuelType}>
+							<Checkbox
+								id={fuelType}
+								className="product-checkbox"
+								color="default"
+								size="small"
+								value={fuelType}
+								checked={(searchFilter?.search?.fuelTypeList || []).includes(fuelType as ProductFuelType)}
+								onChange={(e: any) => updateListFilter('fuelTypeList', e.target.value, e.target.checked)}
+							/>
+							<label htmlFor={fuelType} style={{ cursor: 'pointer' }}>
+								<Typography className="product-type">{fuelType}</Typography>
+							</label>
+						</Stack>
+					))}
 				</Stack>
 				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Square meter</Typography>
+					<Typography className={'title'}>Transmission</Typography>
+					{productTransmission.map((transmission: string) => (
+						<Stack className={'input-box'} key={transmission}>
+							<Checkbox
+								id={transmission}
+								className="product-checkbox"
+								color="default"
+								size="small"
+								value={transmission}
+								checked={(searchFilter?.search?.transmissionList || []).includes(transmission as ProductTransmission)}
+								onChange={(e: any) => updateListFilter('transmissionList', e.target.value, e.target.checked)}
+							/>
+							<label htmlFor={transmission} style={{ cursor: 'pointer' }}>
+								<Typography className="product-type">{transmission}</Typography>
+							</label>
+						</Stack>
+					))}
+				</Stack>
+				<Stack className={'find-your-home'} mb={'30px'}>
+					<Typography className={'title'}>Mileage</Typography>
 					<Stack className="square-year-input">
 						<FormControl>
 							<InputLabel id="demo-simple-select-label">Min</InputLabel>

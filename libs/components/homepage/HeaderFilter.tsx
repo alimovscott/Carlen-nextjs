@@ -7,10 +7,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { productMileageRange, productYears } from '../../config';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
+import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { sanitizeProductsInquiry } from '../../utils';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -147,50 +148,51 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		[searchFilter],
 	);
 
-	const productRoomSelectHandler = useCallback(
+	const productDoorSelectHandler = useCallback(
 		async (value: any) => {
 			try {
-				setSearchFilter({
+				setSearchFilter(sanitizeProductsInquiry({
 					...searchFilter,
 					search: {
 						...searchFilter.search,
-						roomsList: [value],
+						doorsList: [value],
 					},
-				});
+				}, initialInput));
 				disableAllStateHandler();
 			} catch (err: any) {
-				console.log('ERROR, productRoomSelectHandler:', err);
+				console.log('ERROR, productDoorSelectHandler:', err);
 			}
 		},
 		[searchFilter],
 	);
 
-	const productBedSelectHandler = useCallback(
+	const productSeatsSelectHandler = useCallback(
 		async (number: Number) => {
 			try {
 				if (number != 0) {
-					if (searchFilter?.search?.bedsList?.includes(number)) {
-						setSearchFilter({
+					if (searchFilter?.search?.seatsList?.includes(number)) {
+						setSearchFilter(sanitizeProductsInquiry({
 							...searchFilter,
 							search: {
 								...searchFilter.search,
-								bedsList: searchFilter?.search?.bedsList?.filter((item: Number) => item !== number),
+								seatsList: searchFilter?.search?.seatsList?.filter((item: Number) => item !== number),
 							},
-						});
+						}, initialInput));
 					} else {
-						setSearchFilter({
+						setSearchFilter(sanitizeProductsInquiry({
 							...searchFilter,
-							search: { ...searchFilter.search, bedsList: [...(searchFilter?.search?.bedsList || []), number] },
-						});
+							search: { ...searchFilter.search, seatsList: [...(searchFilter?.search?.seatsList || []), number] },
+						}, initialInput));
 					}
 				} else {
-					delete searchFilter?.search.bedsList;
-					setSearchFilter({ ...searchFilter });
+					const search = { ...searchFilter.search };
+					delete search.seatsList;
+					setSearchFilter(sanitizeProductsInquiry({ ...searchFilter, search }, initialInput));
 				}
 
-				console.log('productBedSelectHandler:', number);
+				console.log('productSeatsSelectHandler:', number);
 			} catch (err: any) {
-				console.log('ERROR, productBedSelectHandler:', err);
+				console.log('ERROR, productSeatsSelectHandler:', err);
 			}
 		},
 		[searchFilter],
@@ -201,23 +203,21 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 			try {
 				const value = e.target.value;
 				setOptionCheck(value);
+				const search: any = { ...searchFilter.search };
+
+				delete search.fuelTypeList;
+				delete search.transmissionList;
+
+				if (value.startsWith('fuelTypeList:')) {
+					search.fuelTypeList = [value.replace('fuelTypeList:', '')];
+				} else if (value.startsWith('transmissionList:')) {
+					search.transmissionList = [value.replace('transmissionList:', '')];
+				}
 
 				if (value !== 'all') {
-					setSearchFilter({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							options: [value],
-						},
-					});
+					setSearchFilter(sanitizeProductsInquiry({ ...searchFilter, search }, initialInput));
 				} else {
-					delete searchFilter.search.options;
-					setSearchFilter({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					});
+					setSearchFilter(sanitizeProductsInquiry({ ...searchFilter, search }, initialInput));
 				}
 			} catch (err: any) {
 				console.log('ERROR, productOptionSelectHandler:', err);
@@ -278,28 +278,18 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	};
 
 	const resetFilterHandler = () => {
-		setSearchFilter(initialInput);
+		setSearchFilter(sanitizeProductsInquiry(initialInput));
 		setOptionCheck('all');
 		setYearCheck({ start: 1970, end: thisYear });
 	};
 
 	const pushSearchHandler = async () => {
 		try {
-			if (searchFilter?.search?.locationList?.length == 0) {
-				delete searchFilter.search.locationList;
-			}
-
-			if (searchFilter?.search?.typeList?.length == 0) {
-				delete searchFilter.search.typeList;
-			}
-
-			delete searchFilter.search.roomsList;
-			delete searchFilter.search.options;
-			delete searchFilter.search.bedsList;
+			const cleanInput = sanitizeProductsInquiry(searchFilter, initialInput);
 
 			await router.push(
-				`/cars?input=${JSON.stringify(searchFilter)}`,
-				`/cars?input=${JSON.stringify(searchFilter)}`,
+				`/cars?input=${JSON.stringify(cleanInput)}`,
+				`/cars?input=${JSON.stringify(cleanInput)}`,
 			);
 		} catch (err: any) {
 			console.log('ERROR, pushSearchHandler:', err);
@@ -323,7 +313,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						</Box>
 						<Box className={`box ${openRooms ? 'on' : ''}`} onClick={doorStateChangeHandler}>
 							<span>
-								{searchFilter?.search?.roomsList ? `${searchFilter?.search?.roomsList[0]} doors}` : t('Rooms')}
+								{searchFilter?.search?.doorsList ? `${searchFilter?.search?.doorsList[0]} doors` : t('Rooms')}
 							</span>
 							<ExpandMoreIcon />
 						</Box>
@@ -367,7 +357,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					<div className={`filter-rooms ${openRooms ? 'on' : ''}`} ref={doorsRef}>
 						{[1, 2, 3, 4, 5].map((room: number) => {
 							return (
-								<span onClick={() => productRoomSelectHandler(room)} key={room}>
+								<span onClick={() => productDoorSelectHandler(room)} key={room}>
 									{room} door{room > 1 ? 's' : ''}
 								</span>
 							);
@@ -412,15 +402,15 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 										<span>seats</span>
 										<div className={'inside'}>
 											<div
-												className={`room ${!searchFilter?.search?.bedsList ? 'active' : ''}`}
-												onClick={() => productBedSelectHandler(0)}
+												className={`room ${!searchFilter?.search?.seatsList ? 'active' : ''}`}
+												onClick={() => productSeatsSelectHandler(0)}
 											>
 												Any
 											</div>
 											{[1, 2, 3, 4, 5].map((bed: number) => (
 												<div
-													className={`room ${searchFilter?.search?.bedsList?.includes(bed) ? 'active' : ''}`}
-													onClick={() => productBedSelectHandler(bed)}
+													className={`room ${searchFilter?.search?.seatsList?.includes(bed) ? 'active' : ''}`}
+													onClick={() => productSeatsSelectHandler(bed)}
 													key={bed}
 												>
 													{bed == 0 ? 'Any' : bed}
@@ -439,8 +429,16 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 													inputProps={{ 'aria-label': 'Without label' }}
 												>
 													<MenuItem value={'all'}>All Options</MenuItem>
-													<MenuItem value={'productFuelType'}>Fuel</MenuItem>
-													<MenuItem value={'productTransmission'}>Automatic</MenuItem>
+													{Object.values(ProductFuelType).map((fuelType) => (
+														<MenuItem value={`fuelTypeList:${fuelType}`} key={fuelType}>
+															{fuelType}
+														</MenuItem>
+													))}
+													{Object.values(ProductTransmission).map((transmission) => (
+														<MenuItem value={`transmissionList:${transmission}`} key={transmission}>
+															{transmission}
+														</MenuItem>
+													))}
 												</Select>
 											</FormControl>
 										</div>
