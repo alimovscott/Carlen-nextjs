@@ -98,7 +98,7 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>{total} property available</Typography>
+							<Typography>{total} product available</Typography>
 						</Stack>
 					</Stack>
 				)}

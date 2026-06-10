@@ -20,7 +20,7 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 				memberDesc
 				memberWarnings
 				memberBlocks
-				memberProperties
+				memberProducts
 				memberRank
 				memberArticles
 				memberPoints
@@ -39,33 +39,36 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *        PRODUCT         *
  *************************/
 
-export const GET_ALL_PROPERTIES_BY_ADMIN = gql`
-	query GetAllPropertiesByAdmin($input: AllPropertiesInquiry!) {
-		getAllPropertiesByAdmin(input: $input) {
+export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
+	query GetAllProductsByAdmin($input: AllProductsInquiry!) {
+		getAllProductsByAdmin(input: $input) {
 			list {
 				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
+				productType
+				productModel
+				productStatus
+				productLocation
+				productAddress
+				productYear
+				productTitle
+				productPrice
+				productTransmission
+				productMileage
+				productFuelType
+				productDoors
+				productSeats
+				productViews
+				productLikes
+				productComments
+				productRank
+				productImages
+				productDesc
 				memberId
 				soldAt
 				deletedAt
-				constructedAt
 				createdAt
 				updatedAt
 				memberData {
@@ -81,7 +84,7 @@ export const GET_ALL_PROPERTIES_BY_ADMIN = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberProducts
 					memberRank
 					memberPoints
 					memberLikes
@@ -131,7 +134,7 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberProducts
 					memberRank
 					memberPoints
 					memberLikes
@@ -178,7 +181,7 @@ export const GET_COMMENTS = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberProducts
 					memberRank
 					memberPoints
 					memberLikes

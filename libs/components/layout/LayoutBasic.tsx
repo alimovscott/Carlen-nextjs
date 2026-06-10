@@ -28,7 +28,7 @@ const withLayoutBasic = (Component: any) => {
 				bgImage = '';
 
 			switch (router.pathname) {
-				case '/property':
+				case '/cars':
 					title = 'Property Search';
 					desc = 'We are glad to see you again!';
 					bgImage = '/img/banner/properties.png';
@@ -93,8 +93,8 @@ const withLayoutBasic = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Carlen</title>
+						<meta name={'title'} content={`Carlen`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -115,8 +115,8 @@ const withLayoutBasic = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Carlen</title>
+						<meta name={'title'} content={`Carlen`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>

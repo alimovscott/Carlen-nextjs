@@ -4,10 +4,10 @@ import { NextPage } from 'next';
 import { Stack } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import MyProperties from '../../libs/components/mypage/MyProperties';
+import MyProducts from '../../libs/components/mypage/MyProducts';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
 import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
-import AddProperty from '../../libs/components/mypage/AddNewProperty';
+import AddProduct from '../../libs/components/mypage/AddNewProduct';
 import MyProfile from '../../libs/components/mypage/MyProfile';
 import MyArticles from '../../libs/components/mypage/MyArticles';
 import { useMutation, useReactiveVar } from '@apollo/client';
@@ -32,6 +32,12 @@ const MyPage: NextPage = () => {
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 	const category: any = router.query?.category ?? 'myProfile';
+	const normalizedCategory =
+		category === 'addProduct' || category === 'addProperty'
+			? 'addCar'
+			: category === 'myProducts' || category === 'myProperties'
+			? 'myCars'
+			: category;
 
 	/** APOLLO REQUESTS **/
 	const [subscribe] = useMutation(SUBSCRIBE);
@@ -120,14 +126,14 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 							</Stack>
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
-									{category === 'addProperty' && <AddProperty />}
-									{category === 'myProperties' && <MyProperties />}
-									{category === 'myFavorites' && <MyFavorites />}
-									{category === 'recentlyVisited' && <RecentlyVisited />}
-									{category === 'myArticles' && <MyArticles />}
-									{category === 'writeArticle' && <WriteArticle />}
-									{category === 'myProfile' && <MyProfile />}
-									{category === 'followers' && (
+									{normalizedCategory === 'addCar' && <AddProduct />}
+									{normalizedCategory === 'myCars' && <MyProducts />}
+									{normalizedCategory === 'myFavorites' && <MyFavorites />}
+									{normalizedCategory === 'recentlyVisited' && <RecentlyVisited />}
+									{normalizedCategory === 'myArticles' && <MyArticles />}
+									{normalizedCategory === 'writeArticle' && <WriteArticle />}
+									{normalizedCategory === 'myProfile' && <MyProfile />}
+									{normalizedCategory === 'followers' && (
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
@@ -135,7 +141,7 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
 										/>
 									)}
-									{category === 'followings' && (
+									{normalizedCategory === 'followings' && (
 										<MemberFollowings
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}

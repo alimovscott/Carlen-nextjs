@@ -14,11 +14,11 @@ import {
 } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { Stack } from '@mui/material';
-import { Property } from '../../../types/property/property';
+import { Product } from '../../../types/product/product';
 import { REACT_APP_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
-import { PropertyStatus } from '../../../enums/property.enum';
+import { ProductStatus } from '../../../enums/product.enum';
 
 interface Data {
 	id: string;
@@ -86,7 +86,7 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
 	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
 	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
@@ -114,7 +114,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 interface PropertyPanelListType {
-	properties: Property[];
+	products: Product[];
 	anchorEl: any;
 	menuIconClickHandler: any;
 	menuIconCloseHandler: any;
@@ -124,7 +124,7 @@ interface PropertyPanelListType {
 
 export const PropertyPanelList = (props: PropertyPanelListType) => {
 	const {
-		properties,
+		products,
 		anchorEl,
 		menuIconClickHandler,
 		menuIconCloseHandler,
@@ -139,7 +139,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 					{/*@ts-ignore*/}
 					<EnhancedTableHead />
 					<TableBody>
-						{properties.length === 0 && (
+						{products.length === 0 && (
 							<TableRow>
 								<TableCell align="center" colSpan={8}>
 									<span className={'no-data'}>data not found!</span>
@@ -147,57 +147,57 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 							</TableRow>
 						)}
 
-						{properties.length !== 0 &&
-							properties.map((property: Property, index: number) => {
-								const propertyImage = `${REACT_APP_API_URL}/${property?.propertyImages[0]}`;
+						{products.length !== 0 &&
+							products.map((product: Product, index: number) => {
+								const productImage = `${REACT_APP_API_URL}/${product?.productImages[0]}`;
 
 								return (
-									<TableRow hover key={property?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-										<TableCell align="left">{property._id}</TableCell>
+									<TableRow hover key={product?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+										<TableCell align="left">{product._id}</TableCell>
 										<TableCell align="left" className={'name'}>
-											{property.propertyStatus === PropertyStatus.ACTIVE ?
+											{product.productStatus === ProductStatus.ACTIVE ?
 											 <Stack direction={'row'}>
-												<Link href={`/property/detail?id=${property?._id}`}>
+												<Link href={`/cars/detail?id=${product?._id}`}>
 													<div>
-														<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
+														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
 													</div>
 												</Link>
-												<Link href={`/property/detail?id=${property?._id}`}>
-													<div>{property.propertyTitle}</div>
+												<Link href={`/cars/detail?id=${product?._id}`}>
+													<div>{product.productTitle}</div>
 												</Link>
 											</Stack> : <Stack direction={'row'}>
 											
 													<div>
-														<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
+														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
 													</div>
-													<div style={{marginTop: "10px"}}>{property.propertyTitle}</div>
+													<div style={{marginTop: "10px"}}>{product.productTitle}</div>
 											
 											</Stack> }
 											
 										</TableCell>
-										<TableCell align="center">{property.propertyPrice}</TableCell>
-										<TableCell align="center">{property.memberData?.memberNick}</TableCell>
-										<TableCell align="center">{property.propertyLocation}</TableCell>
-										<TableCell align="center">{property.propertyType}</TableCell>
+										<TableCell align="center">{product.productPrice}</TableCell>
+										<TableCell align="center">{product.memberData?.memberNick}</TableCell>
+										<TableCell align="center">{product.productLocation}</TableCell>
+										<TableCell align="center">{product.productType}</TableCell>
 										<TableCell align="center">
-											{property.propertyStatus === PropertyStatus.DELETE && (
+											{product.productStatus === ProductStatus.DELETE && (
 												<Button
 													variant="outlined"
 													sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
-													onClick={() => removePropertyHandler(property._id)}
+													onClick={() => removePropertyHandler(product._id)}
 												>
 													<DeleteIcon fontSize="small" />
 												</Button>
 											)}
 
-											{property.propertyStatus === PropertyStatus.SOLD && (
-												<Button className={'badge warning'}>{property.propertyStatus}</Button>
+											{product.productStatus === ProductStatus.SOLD && (
+												<Button className={'badge warning'}>{product.productStatus}</Button>
 											)}
 
-											{property.propertyStatus === PropertyStatus.ACTIVE && (
+											{product.productStatus === ProductStatus.ACTIVE && (
 												<>
 													<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-														{property.propertyStatus}
+														{product.productStatus}
 													</Button>
 
 													<Menu
@@ -211,11 +211,11 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 														TransitionComponent={Fade}
 														sx={{ p: 1 }}
 													>
-														{Object.values(PropertyStatus)
-															.filter((ele) => ele !== property.propertyStatus)
+														{Object.values(ProductStatus)
+															.filter((ele) => ele !== product.productStatus)
 															.map((status: string) => (
 																<MenuItem
-																	onClick={() => updatePropertyHandler({ _id: property._id, propertyStatus: status })}
+																	onClick={() => updatePropertyHandler({ _id: product._id, productStatus: status })}
 																	key={status}
 																>
 																	<Typography variant={'subtitle1'} component={'span'}>

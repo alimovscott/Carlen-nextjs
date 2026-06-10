@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import Top from '../Top';
 import Footer from '../Footer';
 import { Stack } from '@mui/material';
-import FiberContainer from '../common/FiberContainer';
 import HeaderFilter from '../homepage/HeaderFilter';
 import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
@@ -13,6 +13,8 @@ import Chat from '../Chat';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+
+const FiberContainer = dynamic(() => import('../common/FiberContainer'), { ssr: false });
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
@@ -31,8 +33,8 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Carlen</title>
+						<meta name={'title'} content={`Carlen`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -53,8 +55,8 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Carlen</title>
+						<meta name={'title'} content={`Carlen`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>

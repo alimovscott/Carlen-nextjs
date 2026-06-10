@@ -34,7 +34,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 	);
 	const [agents, setAgents] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
-	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [currentPage, setCurautomaticPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
 
 	/** APOLLO REQUESTS **/
@@ -66,7 +66,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 		} else
 			router.replace(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`);
 
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
+		setCurautomaticPage(searchFilter.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
 
 	/** HANDLERS **/
@@ -108,7 +108,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 		await router.push(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`, {
 			scroll: false,
 		});
-		setCurrentPage(value);
+		setCurautomaticPage(value);
 	};
 
 
@@ -228,11 +228,11 @@ AgentList.defaultProps = {
 };
 
 export default withLayoutBasic(AgentList);
-function likeTargetProperty(arg0: { variables: { input: string; }; }) {
+function likeTargetProduct(arg0: { variables: { input: string; }; }) {
 	throw new Error('Function not implemented.');
 }
 
-function getPropertiesRefetch(arg0: { input: any; }) {
+function getProductsRefetch(arg0: { input: any; }) {
 	throw new Error('Function not implemented.');
 }
 

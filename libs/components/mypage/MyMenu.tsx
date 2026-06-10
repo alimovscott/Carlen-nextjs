@@ -16,6 +16,12 @@ const MyMenu = () => {
 	const router = useRouter();
 	const pathname = router.query.category ?? 'myProfile';
 	const category: any = router.query?.category ?? 'myProfile';
+	const normalizedCategory =
+		category === 'addProduct' || category === 'addProperty'
+			? 'addCar'
+			: category === 'myProducts' || category === 'myProperties'
+			? 'myCars'
+			: category;
 	const user = useReactiveVar(userVar);
 
 	/** HANDLERS **/
@@ -62,22 +68,22 @@ const MyMenu = () => {
 						<List className={'sub-section'}>
 							{user.memberType === 'AGENT' && (
 								<>
-									<ListItem className={pathname === 'addProperty' ? 'focus' : ''}>
+									<ListItem className={normalizedCategory === 'addCar' ? 'focus' : ''}>
 										<Link
 											href={{
 												pathname: '/mypage',
-												query: { category: 'addProperty' },
+												query: { category: 'addCar' },
 											}}
 											scroll={false}
 										>
 											<div className={'flex-box'}>
-												{category === 'addProperty' ? (
+												{normalizedCategory === 'addCar' ? (
 													<img className={'com-icon'} src={'/img/icons/whiteTab.svg'} alt={'com-icon'} />
 												) : (
 													<img className={'com-icon'} src={'/img/icons/newTab.svg'} alt={'com_icon'} />
 												)}
 												<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-													Add Property
+													Add Car
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '40px' }}>
 													<PortraitIcon style={{ color: 'red' }} />
@@ -85,22 +91,22 @@ const MyMenu = () => {
 											</div>
 										</Link>
 									</ListItem>
-									<ListItem className={pathname === 'myProperties' ? 'focus' : ''}>
+									<ListItem className={normalizedCategory === 'myCars' ? 'focus' : ''}>
 										<Link
 											href={{
 												pathname: '/mypage',
-												query: { category: 'myProperties' },
+												query: { category: 'myCars' },
 											}}
 											scroll={false}
 										>
 											<div className={'flex-box'}>
-												{category === 'myProperties' ? (
+												{normalizedCategory === 'myCars' ? (
 													<img className={'com-icon'} src={'/img/icons/homeWhite.svg'} alt={'com-icon'} />
 												) : (
 													<img className={'com-icon'} src={'/img/icons/home.svg'} alt={'com-icon'} />
 												)}
 												<Typography className={'sub-title'} variant={'subtitle1'} component={'p'}>
-													My Properties
+													My Cars
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '36px' }}>
 													<PortraitIcon style={{ color: 'red' }} />

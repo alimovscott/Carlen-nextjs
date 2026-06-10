@@ -11,7 +11,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { userVar } from '../../../apollo/store';
 import { GET_MEMBER_FOLLOWINGS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
-import { get } from 'http';
 
 interface MemberFollowingsProps {
 	initialInput: FollowInquiry;
@@ -26,7 +25,7 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [total, setTotal] = useState<number>(0);
-	const category: any = router.query?.category ?? 'properties';
+	const category: any = router.query?.category ?? 'products';
 	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>(initialInput);
 	const [memberFollowings, setMemberFollowings] = useState<Following[]>([]);
 	const user = useReactiveVar(userVar);

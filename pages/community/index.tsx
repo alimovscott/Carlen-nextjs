@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -117,7 +117,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								<Stack className={'image-info'}>
 									<img src={'/img/logo/logoText.svg'} />
 									<Stack className={'community-name'}>
-										<Typography className={'name'}>Nestar Community</Typography>
+										<Typography className={'name'}>Carlen Community</Typography>
 									</Stack>
 								</Stack>
 

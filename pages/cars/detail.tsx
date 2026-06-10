@@ -1,9 +1,9 @@
-import React, { ChangeEvent, use, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, CircularProgress, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import { NextPage } from 'next';
-import Review from '../../libs/components/property/Review';
+import Review from '../../libs/components/product/Review';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
 import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
@@ -13,7 +13,7 @@ import WestIcon from '@mui/icons-material/West';
 import EastIcon from '@mui/icons-material/East';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { Property } from '../../libs/types/property/property';
+import { Product } from '../../libs/types/product/product';
 import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
 import { REACT_APP_API_URL } from '../../libs/config';
@@ -27,14 +27,12 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { GET_COMMENTS, GET_PROPERTIES, GET_PROPERTY } from '../../apollo/user/query';
+import { GET_COMMENTS, GET_PRODUCTS, GET_PRODUCT } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
-import { dir } from 'console';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
-import { PropertyLocation } from '../../libs/enums/property.enum';
-import { get } from 'http';
+import { ProductLocation } from '../../libs/enums/product.enum';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -48,15 +46,15 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
-	const [propertyId, setPropertyId] = useState<string | null>(null);
-	const [property, setProperty] = useState<Property | null>(null);
+	const [productId, setPropertyId] = useState<string | null>(null);
+	const [product, setProduct] = useState<Product | null>(null);
 	const [slideImage, setSlideImage] = useState<string>('');
-	const [destinationProperties, setDestinationProperties] = useState<Property[]>([]);
+	const [destinationProducts, setDestinationProducts] = useState<Product[]>([]);
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
-	const [propertyComments, setPropertyComments] = useState<Comment[]>([]);
+	const [productComments, setPropertyComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
-		commentGroup: CommentGroup.PROPERTY,
+		commentGroup: CommentGroup.PRODUCT,
 		commentContent: '',
 		commentRefId: '',
 	});
@@ -64,32 +62,32 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	/** APOLLO REQUESTS **/
 
 
-	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const [createComment] = useMutation(CREATE_COMMENT);
 	const {
-			loading: getPropertyLoading,
-			data: getPropertyData,
-			error: getPropertyError,
-			refetch: getPropertyRefetch,
-		} = useQuery(GET_PROPERTY, {
+			loading: getProductLoading,
+			data: getProductData,
+			error: getProductError,
+			refetch: getProductRefetch,
+		} = useQuery(GET_PRODUCT, {
 			fetchPolicy: 'network-only',
-			variables: { input: propertyId },
-			skip: !propertyId,
+			variables: { input: productId },
+			skip: !productId,
 			notifyOnNetworkStatusChange: true,
 			onCompleted: (data: T) => {
-				if(data?.getProperty) setProperty(data?.getProperty);
-				if(data?.getProperty) setSlideImage(data?.getProperty?.propertyImages[0]);
+				if(data?.getProduct) setProduct(data?.getProduct);
+				if(data?.getProduct) setSlideImage(data?.getProduct?.productImages[0]);
 				
 			},
 		});
 
 
 	const {
-			loading: getPropertiesLoading,
-			data: getPropertiesData,
-			error: getPropertiesError,
-			refetch: getPropertiesRefetch,
-		} = useQuery(GET_PROPERTIES, {
+			loading: getProductsLoading,
+			data: getProductsData,
+			error: getProductsError,
+			refetch: getProductsRefetch,
+		} = useQuery(GET_PRODUCTS, {
 			fetchPolicy: 'cache-and-network',
 			variables: { 
 				input: {
@@ -98,14 +96,14 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 					sort:'createdAt',
 					direction: Direction.DESC,
 					search: {
-						locationList: property?.propertyLocation ? [property?.propertyLocation] : [],
+						locationList: product?.productLocation ? [product?.productLocation] : [],
 					}
 				} 
 			},
-			skip:!propertyId && !property,
+			skip:!productId && !product,
 			notifyOnNetworkStatusChange: true,
 			onCompleted: (data: T) => {
-				if(data?.getProperties?.list) setDestinationProperties(data?.getProperties?.list);
+				if(data?.getProducts?.list) setDestinationProducts(data?.getProducts?.list);
 			},
 		});
 
@@ -165,17 +163,17 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 				if (!id) return;
 				if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 	
-				await likeTargetProperty({ variables: { input: id } });
-				await getPropertyRefetch({ input: id });
+				await likeTargetProduct({ variables: { input: id } });
+				await getProductRefetch({ input: id });
 	
-				await getPropertiesRefetch({ 
+				await getProductsRefetch({ 
 				input:{
 					page:1,
 					limit:4,
 					sort:'createdAt',
 					direction: Direction.DESC,
 					search: {
-						locationList: [property?.propertyLocation],
+						locationList: [product?.productLocation],
 					},
 				  },
 				 });
@@ -210,7 +208,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	}
 
 
-	if(getPropertyLoading) {
+	if(getProductLoading) {
 		return <Stack sx={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%", height:"1000px"}}>
 			<CircularProgress size={"4rem"} />
 		</Stack>
@@ -220,36 +218,36 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 		return <div>PROPERTY DETAIL PAGE</div>;
 	} else {
 		return (
-			<div id={'property-detail-page'}>
+			<div id={'product-detail-page'}>
 				<div className={'container'}>
-					<Stack className={'property-detail-config'}>
-						<Stack className={'property-info-config'}>
+					<Stack className={'product-detail-config'}>
+						<Stack className={'product-info-config'}>
 							<Stack className={'info'}>
 								<Stack className={'left-box'}>
-									<Typography className={'title-main'}>{property?.propertyTitle}</Typography>
+									<Typography className={'title-main'}>{product?.productTitle}</Typography>
 									<Stack className={'top-box'}>
-										<Typography className={'city'}>{property?.propertyLocation}</Typography>
+										<Typography className={'city'}>{product?.productLocation}</Typography>
 										<Stack className={'divider'}></Stack>
-										<Stack className={'buy-rent-box'}>
-											{property?.propertyBarter && (
+										<Stack className={'buy-automatic-box'}>
+											{product?.productFuelType && (
 												<>
 													<Stack className={'circle'}>
 														<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
 															<circle cx="3" cy="3" r="3" fill="#EB6753" />
 														</svg>
 													</Stack>
-													<Typography className={'buy-rent'}>Barter</Typography>
+													<Typography className={'buy-automatic'}>Fuel</Typography>
 												</>
 											)}
 
-											{property?.propertyRent && (
+											{product?.productTransmission && (
 												<>
 													<Stack className={'circle'}>
 														<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
 															<circle cx="3" cy="3" r="3" fill="#EB6753" />
 														</svg>
 													</Stack>
-													<Typography className={'buy-rent'}>rent</Typography>
+													<Typography className={'buy-automatic'}>automatic</Typography>
 												</>
 											)}
 										</Stack>
@@ -271,17 +269,17 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 												</clipPath>
 											</defs>
 										</svg>
-										<Typography className={'date'}>{moment().diff(property?.createdAt, 'days')} days ago</Typography>
+										<Typography className={'date'}>{moment().diff(product?.createdAt, 'days')} days ago</Typography>
 									</Stack>
 									<Stack className={'bottom-box'}>
 										<Stack className="option">
-											<img src="/img/icons/bed.svg" alt="" /> <Typography>{property?.propertyBeds} bed</Typography>
+											<img src="/img/icons/bed.svg" alt="" /> <Typography>{product?.productSeats} seats</Typography>
 										</Stack>
 										<Stack className="option">
-											<img src="/img/icons/room.svg" alt="" /> <Typography>{property?.propertyRooms} room</Typography>
+											<img src="/img/icons/room.svg" alt="" /> <Typography>{product?.productDoors} door</Typography>
 										</Stack>
 										<Stack className="option">
-											<img src="/img/icons/expand.svg" alt="" /> <Typography>{property?.propertySquare} m2</Typography>
+											<img src="/img/icons/expand.svg" alt="" /> <Typography>{product?.productMileage} km</Typography>
 										</Stack>
 									</Stack>
 								</Stack>
@@ -289,33 +287,33 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 									<Stack className="buttons">
 										<Stack className="button-box">
 											<RemoveRedEyeIcon fontSize="medium" />
-											<Typography>{property?.propertyViews}</Typography>
+											<Typography>{product?.productViews}</Typography>
 										</Stack>
 										<Stack className="button-box">
-											{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
+											{product?.meLiked && product?.meLiked[0]?.myFavorite ? (
 												<FavoriteIcon color="primary" fontSize={'medium'} />
 											) : (
 												<FavoriteBorderIcon
 													fontSize={'medium'}
 													// @ts-ignore
-													onClick={() => likePropertyHandler(user, property?._id)}
+													onClick={() => likePropertyHandler(user, product?._id)}
 												/>
 											)}
-											<Typography>{property?.propertyLikes}</Typography>
+											<Typography>{product?.productLikes}</Typography>
 										</Stack>
 									</Stack>
-									<Typography>${formatterStr(property?.propertyPrice)}</Typography>
+									<Typography>${formatterStr(product?.productPrice)}</Typography>
 								</Stack>
 							</Stack>
 							<Stack className={'images'}>
 								<Stack className={'main-image'}>
 									<img
-										src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/property/bigImage.png'}
+										src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/cars/bigImage.png'}
 										alt={'main-image'}
 									/>
 								</Stack>
 								<Stack className={'sub-images'}>
-									{property?.propertyImages.map((subImg: string) => {
+									{product?.productImages.map((subImg: string) => {
 										const imagePath: string = `${REACT_APP_API_URL}/${subImg}`;
 										return (
 											<Stack className={'sub-img-box'} onClick={() => changeImageHandler(subImg)} key={subImg}>
@@ -326,7 +324,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								</Stack>
 							</Stack>
 						</Stack>
-						<Stack className={'property-desc-config'}>
+						<Stack className={'product-desc-config'}>
 							<Stack className={'left-config'}>
 								<Stack className={'options-config'}>
 									<Stack className={'option'}>
@@ -340,7 +338,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className={'option-includes'}>
 											<Typography className={'title'}>Bedroom</Typography>
-											<Typography className={'option-data'}>{property?.propertyBeds}</Typography>
+											<Typography className={'option-data'}>{product?.productSeats}</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -349,7 +347,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className={'option-includes'}>
 											<Typography className={'title'}>Room</Typography>
-											<Typography className={'option-data'}>{property?.propertyRooms}</Typography>
+											<Typography className={'option-data'}>{product?.productDoors}</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -367,7 +365,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className={'option-includes'}>
 											<Typography className={'title'}>Year Build</Typography>
-											<Typography className={'option-data'}>{moment(property?.createdAt).format('YYYY')}</Typography>
+											<Typography className={'option-data'}>{moment(product?.createdAt).format('YYYY')}</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -395,7 +393,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className={'option-includes'}>
 											<Typography className={'title'}>Size</Typography>
-											<Typography className={'option-data'}>{property?.propertySquare} m2</Typography>
+											<Typography className={'option-data'}>{product?.productMileage} km</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -409,50 +407,50 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											</svg>
 										</Stack>
 										<Stack className={'option-includes'}>
-											<Typography className={'title'}>Property Type</Typography>
-											<Typography className={'option-data'}>{property?.propertyType}</Typography>
+											<Typography className={'title'}>Product Type</Typography>
+											<Typography className={'option-data'}>{product?.productType}</Typography>
 										</Stack>
 									</Stack>
 								</Stack>
 								<Stack className={'prop-desc-config'}>
 									<Stack className={'top'}>
-										<Typography className={'title'}>Property Description</Typography>
-										<Typography className={'desc'}>{property?.propertyDesc ?? 'No Description!'}</Typography>
+										<Typography className={'title'}>Product Description</Typography>
+										<Typography className={'desc'}>{product?.productDesc ?? 'No Description!'}</Typography>
 									</Stack>
 									<Stack className={'bottom'}>
-										<Typography className={'title'}>Property Details</Typography>
+										<Typography className={'title'}>Product Details</Typography>
 										<Stack className={'info-box'}>
 											<Stack className={'left'}>
 												<Box component={'div'} className={'info'}>
 													<Typography className={'title'}>Price</Typography>
-													<Typography className={'data'}>${formatterStr(property?.propertyPrice)}</Typography>
+													<Typography className={'data'}>${formatterStr(product?.productPrice)}</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
-													<Typography className={'title'}>Property Size</Typography>
-													<Typography className={'data'}>{property?.propertySquare} m2</Typography>
+													<Typography className={'title'}>Product Size</Typography>
+													<Typography className={'data'}>{product?.productMileage} km</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
 													<Typography className={'title'}>Rooms</Typography>
-													<Typography className={'data'}>{property?.propertyRooms}</Typography>
+													<Typography className={'data'}>{product?.productDoors}</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
 													<Typography className={'title'}>Bedrooms</Typography>
-													<Typography className={'data'}>{property?.propertyBeds}</Typography>
+													<Typography className={'data'}>{product?.productSeats}</Typography>
 												</Box>
 											</Stack>
 											<Stack className={'right'}>
 												<Box component={'div'} className={'info'}>
 													<Typography className={'title'}>Year Built</Typography>
-													<Typography className={'data'}>{moment(property?.createdAt).format('YYYY')}</Typography>
+													<Typography className={'data'}>{moment(product?.createdAt).format('YYYY')}</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
-													<Typography className={'title'}>Property Type</Typography>
-													<Typography className={'data'}>{property?.propertyType}</Typography>
+													<Typography className={'title'}>Product Type</Typography>
+													<Typography className={'data'}>{product?.productType}</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
-													<Typography className={'title'}>Property Options</Typography>
+													<Typography className={'title'}>Product Options</Typography>
 													<Typography className={'data'}>
-														For {property?.propertyBarter && 'Barter'} {property?.propertyRent && 'Rent'}
+														For {product?.productFuelType && 'Fuel'} {product?.productTransmission && 'Automatic'}
 													</Typography>
 												</Box>
 											</Stack>
@@ -462,7 +460,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack className={'floor-plans-config'}>
 									<Typography className={'title'}>Floor Plans</Typography>
 									<Stack className={'image-box'}>
-										<img src={'/img/property/floorPlan.png'} alt={'image'} />
+										<img src={'/img/cars/floorPlan.png'} alt={'image'} />
 									</Stack>
 								</Stack>
 								<Stack className={'address-config'}>
@@ -500,7 +498,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											</Stack>
 										</Stack>
 										<Stack className={'review-list'}>
-											{propertyComments?.map((comment: Comment) => {
+											{productComments?.map((comment: Comment) => {
 												return <Review comment={comment} key={comment?._id} />;
 											})}
 											<Box component={'div'} className={'pagination-box'}>
@@ -555,14 +553,14 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										<img
 											className={'member-image'}
 											src={
-												property?.memberData?.memberImage
-													? `${REACT_APP_API_URL}/${property?.memberData?.memberImage}`
+												product?.memberData?.memberImage
+													? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
 													: '/img/profile/defaultUser.svg'
 											}
 										/>
 										<Stack className={'name-phone-listings'}>
-											<Link href={`/member?memberId=${property?.memberData?._id}`}>
-												<Typography className={'name'}>{property?.memberData?.memberNick}</Typography>
+											<Link href={`/member?memberId=${product?.memberData?._id}`}>
+												<Typography className={'name'}>{product?.memberData?.memberNick}</Typography>
 											</Link>
 											<Stack className={'phone-number'}>
 												<svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
@@ -578,7 +576,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 														</clipPath>
 													</defs>
 												</svg>
-												<Typography className={'number'}>{property?.memberData?.memberPhone}</Typography>
+												<Typography className={'number'}>{product?.memberData?.memberPhone}</Typography>
 											</Stack>
 											<Typography className={'listings'}>View Listings</Typography>
 										</Stack>
@@ -598,7 +596,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								</Stack>
 								<Stack className={'info-box'}>
 									<Typography className={'sub-title'}>Message</Typography>
-									<textarea placeholder={'Hello, I am interested in \n' + '[Renovated property at  floor]'}></textarea>
+									<textarea placeholder={'Hello, I am interested in \n' + '[Renovated product at  floor]'}></textarea>
 								</Stack>
 								<Stack className={'info-box'}>
 									<Button className={'send-message'}>
@@ -620,11 +618,11 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								</Stack>
 							</Stack>
 						</Stack>
-						{destinationProperties.length !== 0 && (
-							<Stack className={'similar-properties-config'}>
+						{destinationProducts.length !== 0 && (
+							<Stack className={'similar-products-config'}>
 								<Stack className={'title-pagination-box'}>
 									<Stack className={'title-box'}>
-										<Typography className={'main-title'}>Destination Property</Typography>
+										<Typography className={'main-title'}>Destination Product</Typography>
 										<Typography className={'sub-title'}>Aliquam lacinia diam quis lacus euismod</Typography>
 									</Stack>
 									<Stack className={'pagination-box'}>
@@ -647,13 +645,13 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											el: '.swiper-similar-pagination',
 										}}
 									>
-										{destinationProperties.map((property: Property) => {
+										{destinationProducts.map((product: Product) => {
 											return (
-												<SwiperSlide className={'similar-homes-slide'} key={property.propertyTitle}>
+												<SwiperSlide className={'similar-homes-slide'} key={product.productTitle}>
 													<PropertyBigCard 
-													property={property} 
+													product={product} 
 													likePropertyHandler={likePropertyHandler} 
-													key={property?._id} />
+													key={product?._id} />
 												</SwiperSlide>
 											);
 										})}
