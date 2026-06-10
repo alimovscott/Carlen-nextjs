@@ -301,24 +301,28 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	} else {
 		return (
 			<>
-				<Stack className={'search-box'}>
+				<Stack className={'search-box carlen-home-search'}>
 					<Stack className={'select-box'}>
-						<Box component={'div'} className={`box ${openLocation ? 'on' : ''}`} onClick={locationStateChangeHandler}>
+						<Box
+							component={'div'}
+							className={`box carlen-filter-control ${openLocation ? 'on' : ''}`}
+							onClick={locationStateChangeHandler}
+						>
 							<span>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : t('Location')} </span>
 							<ExpandMoreIcon />
 						</Box>
-						<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
+						<Box className={`box carlen-filter-control ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
 							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Product type')} </span>
 							<ExpandMoreIcon />
 						</Box>
-						<Box className={`box ${openRooms ? 'on' : ''}`} onClick={doorStateChangeHandler}>
+						<Box className={`box carlen-filter-control ${openRooms ? 'on' : ''}`} onClick={doorStateChangeHandler}>
 							<span>
 								{searchFilter?.search?.doorsList ? `${searchFilter?.search?.doorsList[0]} doors` : t('Rooms')}
 							</span>
 							<ExpandMoreIcon />
 						</Box>
 					</Stack>
-					<Stack className={'search-box-other'}>
+					<Stack className={'search-box-other carlen-search-actions'}>
 						<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
 							<img src="/img/icons/tune.svg" alt="" />
 							<span>{t('Advanced')}</span>
@@ -329,7 +333,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					</Stack>
 
 					{/*MENU */}
-					<div className={`filter-location ${openLocation ? 'on' : ''}`} ref={locationRef}>
+					<div className={`filter-location carlen-filter-dropdown ${openLocation ? 'on' : ''}`} ref={locationRef}>
 						{productLocation.map((location: string) => {
 							return (
 								<div onClick={() => productLocationSelectHandler(location)} key={location}>
@@ -340,7 +344,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						})}
 					</div>
 
-					<div className={`filter-type ${openType ? 'on' : ''}`} ref={typeRef}>
+					<div className={`filter-type carlen-filter-dropdown ${openType ? 'on' : ''}`} ref={typeRef}>
 						{productType.map((type: string) => {
 							return (
 								<div
@@ -354,7 +358,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						})}
 					</div>
 
-					<div className={`filter-rooms ${openRooms ? 'on' : ''}`} ref={doorsRef}>
+					<div className={`filter-rooms carlen-filter-dropdown ${openRooms ? 'on' : ''}`} ref={doorsRef}>
 						{[1, 2, 3, 4, 5].map((room: number) => {
 							return (
 								<span onClick={() => productDoorSelectHandler(room)} key={room}>
@@ -374,7 +378,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				>
 					{/* @ts-ignore */}
 					<Box sx={style}>
-						<Box className={'advanced-filter-modal'}>
+						<Box className={'advanced-filter-modal carlen-advanced-search-modal'}>
 							<div className={'close'} onClick={() => advancedFilterHandler(false)}>
 								<CloseIcon />
 							</div>
