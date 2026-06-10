@@ -16,6 +16,7 @@ import { GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import ProductCard from '../../libs/components/product/PropductCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -23,7 +24,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
+const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
@@ -177,7 +178,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									</div>
 								) : (
 									products.map((product: Product) => {
-										return <PropertyCard product={product} likePropertyHandler={likePropertyHandler} key={product?._id} />;
+										return <ProductCard product={product} likePropertyHandler={likePropertyHandler} key={product?._id} />;
 									})
 								)}
 							</Stack>
@@ -210,7 +211,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	}
 };
 
-PropertyList.defaultProps = {
+ProductList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 9,
@@ -219,14 +220,14 @@ PropertyList.defaultProps = {
 		search: {
 			mileageRange: {
 				start: 0,
-				end: 500,
+				end: 999999,
 			},
 			pricesRange: {
 				start: 0,
-				end: 2000000,
+				end: 20000000,
 			},
 		},
 	},
 };
 
-export default withLayoutBasic(PropertyList);
+export default withLayoutBasic(ProductList);

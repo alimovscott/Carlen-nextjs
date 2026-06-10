@@ -223,7 +223,7 @@ const Filter = (props: FilterType) => {
 		[searchFilter],
 	);
 
-	const productRoomSelectHandler = useCallback(
+	const productSeatsSelectHandler = useCallback(
 		async (number: Number) => {
 			try {
 				if (number != 0) {
@@ -593,14 +593,14 @@ const Filter = (props: FilterType) => {
 					))}
 				</Stack>
 				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Rooms</Typography>
+					<Typography className={'title'}>Seats</Typography>
 					<Stack className="button-group">
 						<Button
 							sx={{
 								borderRadius: '12px 0 0 12px',
 								border: !searchFilter?.search?.roomsList ? '2px solid #181A20' : '1px solid #b9b9b9',
 							}}
-							onClick={() => productRoomSelectHandler(0)}
+							onClick={() => productSeatsSelectHandler(0)}
 						>
 							Any
 						</Button>
@@ -610,7 +610,7 @@ const Filter = (props: FilterType) => {
 								border: searchFilter?.search?.roomsList?.includes(1) ? '2px solid #181A20' : '1px solid #b9b9b9',
 								borderLeft: searchFilter?.search?.roomsList?.includes(1) ? undefined : 'none',
 							}}
-							onClick={() => productRoomSelectHandler(1)}
+							onClick={() => productSeatsSelectHandler(1)}
 						>
 							1
 						</Button>
@@ -620,7 +620,7 @@ const Filter = (props: FilterType) => {
 								border: searchFilter?.search?.roomsList?.includes(2) ? '2px solid #181A20' : '1px solid #b9b9b9',
 								borderLeft: searchFilter?.search?.roomsList?.includes(2) ? undefined : 'none',
 							}}
-							onClick={() => productRoomSelectHandler(2)}
+							onClick={() => productSeatsSelectHandler(2)}
 						>
 							2
 						</Button>
@@ -630,7 +630,7 @@ const Filter = (props: FilterType) => {
 								border: searchFilter?.search?.roomsList?.includes(3) ? '2px solid #181A20' : '1px solid #b9b9b9',
 								borderLeft: searchFilter?.search?.roomsList?.includes(3) ? undefined : 'none',
 							}}
-							onClick={() => productRoomSelectHandler(3)}
+							onClick={() => productSeatsSelectHandler(3)}
 						>
 							3
 						</Button>
@@ -641,7 +641,7 @@ const Filter = (props: FilterType) => {
 								borderLeft: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
 								borderRight: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
 							}}
-							onClick={() => productRoomSelectHandler(4)}
+							onClick={() => productSeatsSelectHandler(4)}
 						>
 							4
 						</Button>
@@ -650,7 +650,7 @@ const Filter = (props: FilterType) => {
 								borderRadius: '0 12px 12px 0',
 								border: searchFilter?.search?.roomsList?.includes(5) ? '2px solid #181A20' : '1px solid #b9b9b9',
 							}}
-							onClick={() => productRoomSelectHandler(5)}
+							onClick={() => productSeatsSelectHandler(5)}
 						>
 							5+
 						</Button>
