@@ -126,7 +126,7 @@ const Filter = (props: FilterType) => {
 	} else {
 		return (
 			<Stack className={'filter-main'}>
-				<Stack className={'find-your-home'} mb={'40px'}>
+				<Stack className={'find-your-car'} mb={'40px'}>
 					<Typography className={'title-main'}>Find Your Home</Typography>
 					<Stack className={'input-box'}>
 						<OutlinedInput
@@ -159,7 +159,7 @@ const Filter = (props: FilterType) => {
 						</Tooltip>
 					</Stack>
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<p className={'title'} style={{ textShadow: '0px 3px 4px #b9b9b9' }}>
 						Location
 					</p>
@@ -193,7 +193,7 @@ const Filter = (props: FilterType) => {
 						})}
 					</Stack>
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Product Type</Typography>
 					{productType.map((type: string) => (
 						<Stack className={'input-box'} key={type}>
@@ -212,7 +212,7 @@ const Filter = (props: FilterType) => {
 						</Stack>
 					))}
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Seats</Typography>
 					<Stack className="button-group">
 						<Button
@@ -240,7 +240,7 @@ const Filter = (props: FilterType) => {
 						))}
 					</Stack>
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Doors</Typography>
 					<Stack className="button-group">
 						<Button
@@ -268,7 +268,7 @@ const Filter = (props: FilterType) => {
 						))}
 					</Stack>
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Fuel Type</Typography>
 					{productFuelType.map((fuelType: string) => (
 						<Stack className={'input-box'} key={fuelType}>
@@ -287,7 +287,7 @@ const Filter = (props: FilterType) => {
 						</Stack>
 					))}
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Transmission</Typography>
 					{productTransmission.map((transmission: string) => (
 						<Stack className={'input-box'} key={transmission}>
@@ -306,7 +306,7 @@ const Filter = (props: FilterType) => {
 						</Stack>
 					))}
 				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
+				<Stack className={'find-your-car'} mb={'30px'}>
 					<Typography className={'title'}>Mileage</Typography>
 					<Stack className="square-year-input">
 						<FormControl>
@@ -354,7 +354,7 @@ const Filter = (props: FilterType) => {
 						</FormControl>
 					</Stack>
 				</Stack>
-				<Stack className={'find-your-home'}>
+				<Stack className={'find-your-car'}>
 					<Typography className={'title'}>Price Range</Typography>
 					<Stack className="square-year-input">
 						<input

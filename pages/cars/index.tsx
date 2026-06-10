@@ -232,7 +232,7 @@ ProductList.defaultProps = {
 		search: {
 			mileageRange: {
 				start: 0,
-				end: 999999,
+				end: 99999999,
 			},
 			pricesRange: {
 				start: 0,
