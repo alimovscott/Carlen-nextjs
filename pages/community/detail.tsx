@@ -242,7 +242,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 					<Stack className="main-box">
 						<Stack className="left-config">
 							<Stack className={'image-info'}>
-								<img src={'/img/logo/logoText.svg'} />
+								<img src={'/img/logo/logoText.svg'} alt="Carlen" className={'carlen-logo-hover'} />
 								<Stack className={'community-name'}>
 									<Typography className={'name'}>Community Board Article</Typography>
 								</Stack>

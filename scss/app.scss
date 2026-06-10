@@ -47,6 +47,33 @@ hr {
 	margin: auto;
 }
 
+.carlen-logo-hover {
+	transform-origin: center;
+	transition: transform 220ms ease, filter 220ms ease;
+	will-change: transform, filter;
+
+	&:hover,
+	&:focus-visible,
+	a:focus-visible & {
+		transform: translateY(-2px) scale(1.04);
+		filter: brightness(1.12) drop-shadow(0 8px 14px rgba(235, 103, 83, 0.28));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.carlen-logo-hover {
+		transition: none;
+		will-change: auto;
+
+		&:hover,
+		&:focus-visible,
+		a:focus-visible & {
+			transform: none;
+			filter: brightness(1.08);
+		}
+	}
+}
+
 /** VERSION: PC **/
 #pc-wrap {
 	width: 100%;
