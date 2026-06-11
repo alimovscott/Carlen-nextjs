@@ -149,46 +149,93 @@
 					.trend-card-box {
 						position: relative;
 						width: 300px;
-						height: 375px;
+						height: 390px;
 						display: flex;
 						flex-direction: column;
-						transition: transform 0.3s;
+						overflow: hidden;
+						border: 1px solid rgba(24, 26, 32, 0.08);
+						border-radius: 12px;
+						background: #ffffff;
+						box-shadow: 0 18px 45px rgba(24, 26, 32, 0.08);
+						transform-origin: center;
+						transition: border-color 0.25s ease, box-shadow 0.25s ease;
 						&:hover {
-							opacity: 1;
-							transform: scale(1.05);
+							border-color: rgba(45, 118, 87, 0.24);
+							box-shadow: 0 24px 55px rgba(24, 26, 32, 0.13);
 						}
 						.card-img {
 							position: relative;
 							width: 100%;
-							height: 203px;
+							height: 205px;
+							overflow: hidden;
 							background-size: cover;
-							border-radius: 12px 12px 0px 0px;
+							background-position: center;
 							cursor: pointer;
-							div {
+							&:after {
 								position: absolute;
-								padding: 8px 12px;
-								left: 12px;
-								bottom: 12px;
-								border-radius: 6px;
+								content: '';
+								inset: 0;
+								background: linear-gradient(180deg, rgba(24, 26, 32, 0.08) 0%, rgba(24, 26, 32, 0.52) 100%);
+								pointer-events: none;
+							}
+							.trend-badge {
+								position: absolute;
+								z-index: 1;
+								top: 14px;
+								left: 14px;
+								padding: 7px 10px;
+								border: 1px solid rgba(255, 255, 255, 0.46);
+								border-radius: 999px;
+								background: rgba(255, 255, 255, 0.88);
+								backdrop-filter: blur(8px);
+								color: #26342e;
+								font-family: $font;
+								font-size: 11px;
+								font-weight: 700;
+								line-height: 1;
+								text-transform: uppercase;
+							}
+							.price-badge {
+								position: absolute;
+								z-index: 1;
+								padding: 9px 13px;
+								left: 14px;
+								bottom: 14px;
+								border-radius: 8px;
 								background: #fff;
 								color: #181a20;
 								font-family: $font;
 								font-size: 15px;
 								font-style: normal;
-								font-weight: 600;
+								font-weight: 700;
 								line-height: normal;
+								box-shadow: 0 10px 24px rgba(24, 26, 32, 0.16);
 							}
 						}
 						.info {
-							padding: 20px 22px 17px;
+							flex: 1;
+							padding: 17px 18px 16px;
 							display: flex;
 							flex-direction: column;
 							box-sizing: border-box;
-							border-radius: 0px 0px 12px 12px;
-							border: 1px solid rgba(196, 196, 196, 0.71);
-							border-top: none;
-							background: #fff;
-							box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+							background: linear-gradient(180deg, #ffffff 0%, #fbfcfa 100%);
+							.meta-row {
+								display: flex;
+								align-items: center;
+								gap: 7px;
+								margin-bottom: 9px;
+								span {
+									padding: 5px 8px;
+									border-radius: 999px;
+									background: #eef5f1;
+									color: #2d7657;
+									font-family: $font;
+									font-size: 11px;
+									font-weight: 700;
+									line-height: 1;
+									text-transform: capitalize;
+								}
+							}
 							.title {
 								overflow: hidden;
 								color: #181a20;
@@ -197,77 +244,119 @@
 								font-family: $font;
 								font-size: 15px;
 								font-style: normal;
-								font-weight: 600;
+								font-weight: 700;
 								line-height: normal;
 								text-transform: capitalize;
 								cursor: pointer;
 							}
 							.desc {
-								margin-top: 5px;
+								margin-top: 7px;
 								overflow: hidden;
-								color: #717171;
+								color: #66716b;
 								font-family: $font;
 								font-size: 13px;
 								font-style: normal;
 								font-weight: 400;
-								line-height: normal;
+								line-height: 18px;
 								text-overflow: ellipsis;
 								white-space: nowrap;
 							}
 							.options {
-								margin-top: 15px;
+								margin-top: 14px;
 								display: flex;
 								flex-direction: row;
 								justify-content: space-between;
+								gap: 7px;
 								div {
+									min-width: 0;
+									height: 34px;
+									padding: 0 9px;
 									display: flex;
 									flex-direction: row;
+									align-items: center;
+									border: 1px solid rgba(24, 26, 32, 0.07);
+									border-radius: 8px;
+									background: #f7f9f6;
 									img {
 										margin-right: 5px;
-										width: 17px;
-										height: 17px;
+										width: 15px;
+										height: 15px;
+										opacity: 0.72;
 									}
 									span {
 										color: #181a20;
 										font-family: $font;
-										font-size: 13px;
+										font-size: 12px;
 										font-style: normal;
-										font-weight: 400;
+										font-weight: 600;
 										line-height: normal;
+										white-space: nowrap;
 									}
 								}
 							}
 							.bott {
+								margin-top: auto;
+								padding-top: 14px;
+								border-top: 1px solid rgba(24, 26, 32, 0.08);
 								display: flex;
 								flex-direction: row;
 								justify-content: space-between;
 								align-items: center;
 								p {
-									color: #181a20;
+									color: #4b5b52;
 									font-family: $font;
 									font-size: 13px;
 									font-style: normal;
-									font-weight: 400;
+									font-weight: 600;
 									line-height: normal;
 									text-transform: capitalize;
 								}
 								button {
-									margin-left: 7px;
-									width: 16px;
-									height: 16px;
+									margin-left: 0;
+									width: 32px;
+									height: 32px;
 									box-sizing: border-box;
 								}
 								.view-like-box {
 									display: flex;
 									flex-direction: row;
-									gap: 7px;
+									gap: 6px;
 									align-items: center;
+									.stat-chip {
+										height: 32px;
+										padding: 0 9px;
+										display: inline-flex;
+										align-items: center;
+										gap: 5px;
+										border-radius: 999px;
+										background: #f2f5f2;
+										svg {
+											width: 16px;
+											height: 16px;
+											color: #5e6962;
+										}
+									}
+									.like-button {
+										border: 1px solid rgba(24, 26, 32, 0.08);
+										background: #fff;
+										color: #6a746d;
+										transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+										svg {
+											width: 17px;
+											height: 17px;
+										}
+										&.active {
+											border-color: rgba(220, 38, 38, 0.18);
+											background: #fff1f1;
+											color: #dc2626;
+										}
+									}
 									.view-cnt {
-										color: #717171;
+										color: #66716b;
 										font-family: $font;
-										font-size: 13px;
+										font-size: 12px;
 										font-style: normal;
-										font-weight: 400;
+										font-weight: 700;
 										line-height: normal;
 										text-overflow: ellipsis;
 									}

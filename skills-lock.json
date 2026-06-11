@@ -13,6 +13,12 @@
       "skillPath": "frontend/framer-motion-animator/SKILL.md",
       "computedHash": "d0137ba04049bf8926bc80f6a5e2b82d94b5633b6445a85dbfb26ab4f1b104c6"
     },
+    "shadcn-ui": {
+      "source": "google-labs-code/stitch-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/stitch-build/skills/shadcn-ui/SKILL.md",
+      "computedHash": "dadbca54d35a33fe73e40018611af2179689305bf6da812ab2643987fefd9da3"
+    },
     "swiftui-liquid-glass": {
       "source": "dimillian/skills",
       "sourceType": "github",
