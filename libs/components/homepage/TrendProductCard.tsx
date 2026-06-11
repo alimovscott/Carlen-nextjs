@@ -60,6 +60,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 				<div className="meta-row">
 					<span>{product.productYear}</span>
 					<span>{product.productType}</span>
+					<span>{product.productLocation}</span>
 				</div>
 				<strong
 					className={'title'}
@@ -72,15 +73,15 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 				<p className={'desc'}>{product.productDesc ?? 'Fresh vehicle listing with verified details.'}</p>
 				<div className={'options'}>
 					<div>
-						<img src="/img/icons/bed.svg" alt="" />
+						<img src="/img/icons/car-seat.svg" alt="" />
 						<span>{product.productSeats} seats</span>
 					</div>
 					<div>
-						<img src="/img/icons/room.svg" alt="" />
+						<img src="/img/icons/car-door.svg" alt="" />
 						<span>{product.productDoors} doors</span>
 					</div>
 					<div>
-						<img src="/img/icons/expand.svg" alt="" />
+						<img src="/img/icons/odometer.svg" alt="" />
 						<span>{formatterStr(product.productMileage)} km</span>
 					</div>
 				</div>

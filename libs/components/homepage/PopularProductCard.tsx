@@ -49,15 +49,15 @@ const PopularProductCard = (props: PopularProductCardProps) => {
 					<p className={'desc'}>{product.productAddress}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
+							<img src="/img/icons/car-seat.svg" alt="" />
 							<span>{product?.productSeats} seats</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
+							<img src="/img/icons/car-door.svg" alt="" />
 							<span>{product?.productDoors} doors</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
+							<img src="/img/icons/odometer.svg" alt="" />
 							<span>{product?.productMileage} km</span>
 						</div>
 					</div>
@@ -99,15 +99,15 @@ const PopularProductCard = (props: PopularProductCardProps) => {
 					<p className={'desc'}>{product.productAddress}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
+							<img src="/img/icons/car-seat.svg" alt="" />
 							<span>{product?.productSeats} seats</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
+							<img src="/img/icons/car-door.svg" alt="" />
 							<span>{product?.productDoors} doors</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
+							<img src="/img/icons/odometer.svg" alt="" />
 							<span>{product?.productMileage} km</span>
 						</div>
 					</div>

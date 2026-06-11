@@ -71,13 +71,13 @@ const ProductCard = (props: ProductCardType) => {
 					</Stack>
 					<Stack className="options">
 						<Stack className="option">
-							<img src="/img/icons/bed.svg" alt="" /> <Typography>{product.productSeats} seats</Typography>
+							<img src="/img/icons/car-seat.svg" alt="" /> <Typography>{product.productSeats} seats</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/room.svg" alt="" /> <Typography>{product.productDoors} door</Typography>
+							<img src="/img/icons/car-door.svg" alt="" /> <Typography>{product.productDoors} door</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/expand.svg" alt="" /> <Typography>{product.productMileage} km</Typography>
+							<img src="/img/icons/odometer.svg" alt="" /> <Typography>{product.productMileage} km</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="divider"></Stack>
