@@ -1,63 +1,47 @@
-import React, { useRef } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-import { Suspense } from 'react';
-import { Preload, Image as ImageImpl } from '@react-three/drei';
-import { ScrollControls, Scroll } from './ScrollControls';
-import * as THREE from 'three';
+import React, { CSSProperties } from 'react';
 
-function Image(props: any) {
-	const ref = useRef<THREE.Group>();
-	const group = useRef<THREE.Group>();
+/**
+ * Carlen premium automotive showcase.
+ *
+ * A lightweight, CSS-only layered "floating gallery" that replaces the previous
+ * Three.js / @react-three/fiber WebGL canvas. Purely decorative: it lives on the
+ * hero right side, never intercepts pointer events, and is hidden from assistive
+ * tech. All positioning, glass styling and motion live in scss/pc/main.scss
+ * (`.carlen-showcase`); only the per-card depth/stagger index `--i` is inline.
+ */
 
-	return (
-		// @ts-ignore
-		<group ref={group}>
-			<ImageImpl ref={ref} {...props} />
-		</group>
-	);
-}
+type ShowcaseCard = {
+	src: string;
+	/** depth/stagger layer — drives float amplitude, delay and z-order in SCSS */
+	depth: number;
+};
 
-function Page({ m = 0.4, urls, ...props }: any) {
-	const { width } = useThree((state) => state.viewport);
-	const w = width < 10 ? 1.5 / 3 : 1 / 3;
-
-	return (
-		<group {...props}>
-			<Image position={[-width * w, 0, -1]} scale={[width * w - m * 2, 5, 1]} url={urls[0]} />
-			<Image position={[0, 0, 0]} scale={[width * w - m * 2, 5, 1]} url={urls[1]} />
-			<Image position={[width * w, 0, 1]} scale={[width * w - m * 2, 5, 1]} url={urls[2]} />
-		</group>
-	);
-}
-
-function Pages() {
-	const { width } = useThree((state) => state.viewport);
-
-	return (
-		<>
-			<Page position={[width * 0, 0, 0]} urls={['/img/fiber/img7.jpg', '/img/fiber/img8.jpg', '/img/fiber/img1.jpg']} />
-			<Page position={[width * 1, 0, 0]} urls={['/img/fiber/img4.jpg', '/img/fiber/img5.jpg', '/img/fiber/img6.jpg']} />
-			<Page position={[width * 2, 0, 0]} urls={['/img/fiber/img2.jpg', '/img/fiber/img3.jpg', '/img/fiber/img4.jpg']} />
-			<Page position={[width * 3, 0, 0]} urls={['/img/fiber/img7.jpg', '/img/fiber/img8.jpg', '/img/fiber/img1.jpg']} />
-			<Page position={[width * 4, 0, 0]} urls={['/img/fiber/img4.jpg', '/img/fiber/img5.jpg', '/img/fiber/img6.jpg']} />
-		</>
-	);
-}
+// Same 8 assets the old WebGL gallery used, composed into an editorial stack.
+const CARDS: ShowcaseCard[] = [
+	{ src: '/img/fiber/img7.jpg', depth: 0 },
+	{ src: '/img/fiber/img1.jpg', depth: 1 },
+	{ src: '/img/fiber/img4.jpg', depth: 2 },
+	{ src: '/img/fiber/img5.jpg', depth: 3 },
+	{ src: '/img/fiber/img8.jpg', depth: 4 },
+	{ src: '/img/fiber/img2.jpg', depth: 5 },
+];
 
 export default function FiberContainer() {
 	return (
-		<div className="threeJSContainer" style={{ marginTop: '100px', width: '100%', height: '512px' }}>
-			<Canvas gl={{ antialias: false }} dpr={[1, 1.5]}>
-				<Suspense fallback={null}>
-					<ScrollControls infinite horizontal damping={4} pages={4} distance={1}>
-						<Scroll>
-							<Pages />
-						</Scroll>
-					</ScrollControls>
-					<Preload />
-				</Suspense>
-			</Canvas>
+		<div className="carlen-showcase" aria-hidden="true">
+			<div className="carlen-showcase__ambient" />
+			<div className="carlen-showcase__stage">
+				{CARDS.map((card, index) => (
+					<figure
+						key={`${card.src}-${index}`}
+						className={`carlen-showcase__card depth-${card.depth}`}
+						style={{ '--i': card.depth } as CSSProperties}
+					>
+						<img src={card.src} alt="" loading="lazy" decoding="async" draggable={false} />
+						<span className="carlen-showcase__sheen" />
+					</figure>
+				))}
+			</div>
 		</div>
-
 	);
 }

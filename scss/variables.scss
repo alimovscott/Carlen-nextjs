@@ -3,3 +3,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 $font: 'Poppins', sans-serif;
+
+/**
+ * CARLEN HOMEPAGE DESIGN TOKENS (dark premium automotive)
+ * Referenced only by homepage SCSS, so visual output stays homepage-scoped.
+ */
+// Surfaces
+$c-base: #0b0f17; // page base
+$c-raised: #0e131d; // raised section surface
+$c-glass: rgba(255, 255, 255, 0.045); // card / panel glass fill
+$c-glass-hover: rgba(255, 255, 255, 0.08); // hover glass fill
+$c-border: rgba(255, 255, 255, 0.1); // hairline border on dark
+$c-border-strong: rgba(255, 255, 255, 0.16);
+// Accent
+$c-red: #e92c28;
+$c-orange: #ff6a3d;
+$c-accent-grad: linear-gradient(120deg, #e92c28 0%, #ff6a3d 100%);
+$c-blue: #1646c1;
+$c-blue-glow: #2f6bff;
+// Text
+$c-text: #f4f6fb;
+$c-muted: #aab2c0;
+$c-faint: #7c8696;
+// Radius
+$c-radius: 16px;
+$c-radius-sm: 12px;
+$c-radius-pill: 999px;
+// Shadow / glow
+$c-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+$c-glow-red: 0 18px 46px -18px rgba(233, 44, 40, 0.55);
+$c-glow-blue: 0 18px 46px -22px rgba(47, 107, 255, 0.5);
+// Motion curves (Emil Kowalski)
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+$ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);

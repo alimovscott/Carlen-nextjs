@@ -1,6 +1,13 @@
 @import '/scss/variables.scss';
 
 #mobile-wrap {
+  .home-page {
+    background: #0b0f17;
+    background-image:
+      radial-gradient(circle at 100% 0%, rgba(47, 107, 255, 0.07), transparent 30%),
+      radial-gradient(circle at 0% 30%, rgba(233, 44, 40, 0.06), transparent 26%);
+  }
+
   .top {
     height: 100px;
     display: flex;
@@ -9,13 +16,301 @@
     align-items: center;
   }
 
+  .header-main.mobile-header-main {
+    position: relative;
+    width: 100%;
+    padding: 36px 16px 42px;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(circle at 16% 10%, rgba(47, 107, 255, 0.22), transparent 42%),
+      radial-gradient(circle at 86% 16%, rgba(233, 44, 40, 0.26), transparent 44%),
+      linear-gradient(180deg, #0b0f17 0%, #0c1119 60%, #0b0f17 100%);
+    &::after {
+      content: '';
+      position: absolute;
+      right: -16%;
+      bottom: 16%;
+      z-index: 0;
+      width: 84%;
+      aspect-ratio: 2.6 / 1;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 106, 61, 0.24), rgba(47, 107, 255, 0.16));
+      filter: blur(40px);
+      opacity: 0.82;
+      pointer-events: none;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      flex-direction: column;
+      .carlen-hero-copy {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .eyebrow {
+          margin-bottom: 14px;
+          padding: 7px 12px;
+          border: 1px solid $c-border;
+          border-radius: $c-radius-pill;
+          background: $c-glass;
+          color: $c-muted;
+          font-family: $font;
+          font-size: 11px;
+          font-weight: 700;
+          line-height: 1;
+          letter-spacing: 0.1em;
+        }
+        strong {
+          color: $c-text;
+          font-family: $font;
+          font-size: clamp(30px, 8.4vw, 42px);
+          font-weight: 800;
+          line-height: 1.02;
+          letter-spacing: -0.03em;
+          text-wrap: balance;
+        }
+        p {
+          margin: 14px 0 0;
+          color: $c-muted;
+          font-family: $font;
+          font-size: 15px;
+          font-weight: 500;
+          line-height: 23px;
+        }
+      }
+      .search-box {
+        position: relative;
+        width: 100%;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        border: 1px solid $c-border;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)), rgba(14, 19, 29, 0.62);
+        box-shadow: $c-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(22px) saturate(150%);
+        -webkit-backdrop-filter: blur(22px) saturate(150%);
+        box-sizing: border-box;
+        .select-box {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          .box {
+            position: relative;
+            padding: 0 16px;
+            height: 58px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            border-radius: $c-radius-sm;
+            border: 1px solid $c-border;
+            background: $c-glass;
+            cursor: pointer;
+            .seg-icon {
+              flex-shrink: 0;
+              width: 20px;
+              height: 20px;
+              color: $c-orange;
+            }
+            .seg-text {
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              min-width: 0;
+              .seg-label {
+                color: $c-muted;
+                font-family: $font;
+                font-size: 10px;
+                font-weight: 700;
+                line-height: 1;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+              }
+              .seg-value {
+                color: $c-text;
+                font-family: $font;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1.2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                text-transform: capitalize;
+              }
+            }
+            .seg-caret {
+              flex-shrink: 0;
+              margin-left: auto;
+              width: 20px;
+              height: 20px;
+              color: $c-muted;
+              transition: transform 200ms $ease-out, color 200ms $ease-out;
+            }
+            &.on {
+              border-color: rgba(255, 106, 61, 0.6);
+              background: $c-glass-hover;
+              .seg-caret {
+                transform: rotate(180deg);
+                color: $c-orange;
+              }
+            }
+          }
+        }
+        .search-box-other {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 10px;
+          .advanced-filter {
+            flex: 1;
+            padding: 0 16px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: $c-radius-sm;
+            border: 1px solid $c-border;
+            background: $c-glass;
+            gap: 8px;
+            cursor: pointer;
+            svg {
+              width: 20px;
+              height: 20px;
+              color: $c-text;
+            }
+            span {
+              color: $c-text;
+              font-family: $font;
+              font-size: 14px;
+              font-weight: 600;
+            }
+          }
+          .search-btn {
+            width: 56px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: $c-radius-sm;
+            background: $c-accent-grad;
+            box-shadow: $c-glow-red;
+            cursor: pointer;
+            img {
+              width: 20px;
+              height: 20px;
+            }
+            svg {
+              width: 18px;
+              height: 18px;
+              color: #fff;
+            }
+          }
+        }
+        .carlen-filter-dropdown {
+          transform-origin: top center;
+        }
+        .filter-location,
+        .filter-type,
+        .filter-rooms {
+          position: absolute;
+          left: 0;
+          top: calc(100% + 10px);
+          width: 100%;
+          padding: 18px;
+          border-radius: 18px;
+          border: 1px solid $c-border;
+          background: rgba(14, 19, 29, 0.96);
+          box-shadow: $c-shadow;
+          backdrop-filter: blur(20px);
+          box-sizing: border-box;
+          z-index: 20;
+          div span,
+          span {
+            color: $c-text;
+            font-family: $font;
+          }
+        }
+        .filter-location {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          div {
+            width: calc((100% - 12px) / 2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            img {
+              width: 64px;
+              height: 46px;
+              border-radius: 10px;
+              object-fit: cover;
+            }
+          }
+        }
+        .filter-type {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          div {
+            position: relative;
+            flex: 1 1 calc(50% - 12px);
+            height: 96px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            cursor: pointer;
+            &::before {
+              content: '';
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(180deg, rgba(11, 15, 23, 0.1), rgba(11, 15, 23, 0.8));
+            }
+            span {
+              position: absolute;
+              right: 10px;
+              bottom: 10px;
+              color: #fff;
+              font-weight: 700;
+              font-size: 13px;
+            }
+          }
+        }
+        .filter-rooms {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          span {
+            flex: 1 1 calc(33% - 10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid $c-border;
+            background: $c-glass;
+            font-weight: 700;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
   .info-box {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     span {
-      color: #181a20;
+      color: $c-text;
       font-family: $font;
       font-size: 34px;
       font-style: normal;
@@ -50,6 +345,10 @@
           display: flex;
           justify-content: center;
           align-items: center;
+          color: $c-muted;
+          font-family: $font;
+          font-size: 15px;
+          font-weight: 500;
         }
         .trend-product-swiper {
           width: 100%;
@@ -63,9 +362,9 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(24, 26, 32, 0.08);
+            border: 1px solid $c-border;
             border-radius: 12px;
-            background: #ffffff;
+            background: $c-raised;
             box-shadow: 0 18px 42px rgba(24, 26, 32, 0.09);
             .card-img {
               position: relative;
@@ -88,11 +387,11 @@
                 top: 14px;
                 left: 14px;
                 padding: 7px 10px;
-                border: 1px solid rgba(255, 255, 255, 0.46);
+                border: 1px solid transparent;
                 border-radius: 999px;
-                background: rgba(255, 255, 255, 0.88);
+                background: $c-accent-grad;
                 backdrop-filter: blur(8px);
-                color: #26342e;
+                color: #fff;
                 font-family: $font;
                 font-size: 11px;
                 font-weight: 700;
@@ -106,8 +405,8 @@
                 left: 14px;
                 bottom: 14px;
                 border-radius: 8px;
-                background: #fff;
-                color: #181a20;
+                background: rgba(11, 15, 23, 0.66);
+                color: $c-text;
                 font-family: $font;
                 font-size: 15px;
                 font-style: normal;
@@ -122,7 +421,7 @@
               display: flex;
               flex-direction: column;
               box-sizing: border-box;
-              background: linear-gradient(180deg, #ffffff 0%, #fbfcfa 100%);
+              background: linear-gradient(180deg, $c-raised 0%, #0c111a 100%);
               .meta-row {
                 display: flex;
                 align-items: center;
@@ -131,8 +430,8 @@
                 span {
                   padding: 5px 8px;
                   border-radius: 999px;
-                  background: #eef5f1;
-                  color: #2d7657;
+                  background: $c-glass;
+                  color: $c-muted;
                   font-family: $font;
                   font-size: 11px;
                   font-weight: 700;
@@ -142,7 +441,7 @@
               }
               .title {
                 overflow: hidden;
-                color: #181a20;
+                color: $c-text;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 font-family: $font;
@@ -156,7 +455,7 @@
               .desc {
                 margin-top: 7px;
                 overflow: hidden;
-                color: #66716b;
+                color: $c-muted;
                 font-family: $font;
                 font-size: 13px;
                 font-style: normal;
@@ -178,9 +477,9 @@
                   display: flex;
                   flex-direction: row;
                   align-items: center;
-                  border: 1px solid rgba(24, 26, 32, 0.07);
+                  border: 1px solid $c-border;
                   border-radius: 8px;
-                  background: #f7f9f6;
+                  background: $c-glass;
                   img {
                     margin-right: 5px;
                     width: 15px;
@@ -188,7 +487,7 @@
                     opacity: 0.72;
                   }
                   span {
-                    color: #181a20;
+                    color: $c-text;
                     font-family: $font;
                     font-size: 12px;
                     font-style: normal;
@@ -201,13 +500,13 @@
               .bott {
                 margin-top: auto;
                 padding-top: 14px;
-                border-top: 1px solid rgba(24, 26, 32, 0.08);
+                border-top: 1px solid $c-border;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
                 p {
-                  color: #4b5b52;
+                  color: $c-muted;
                   font-family: $font;
                   font-size: 13px;
                   font-style: normal;
@@ -233,17 +532,17 @@
                     align-items: center;
                     gap: 5px;
                     border-radius: 999px;
-                    background: #f2f5f2;
+                    background: $c-glass;
                     svg {
                       width: 16px;
                       height: 16px;
-                      color: #5e6962;
+                      color: $c-muted;
                     }
                   }
                   .like-button {
-                    border: 1px solid rgba(24, 26, 32, 0.08);
-                    background: #fff;
-                    color: #6a746d;
+                    border: 1px solid $c-border;
+                    background: rgba(11, 15, 23, 0.66);
+                    color: $c-muted;
                     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
                     svg {
                       width: 17px;
@@ -251,12 +550,12 @@
                     }
                     &.active {
                       border-color: rgba(220, 38, 38, 0.18);
-                      background: #fff1f1;
+                      background: rgba(233, 44, 40, 0.14);
                       color: #dc2626;
                     }
                   }
                   .view-cnt {
-                    color: #66716b;
+                    color: $c-muted;
                     font-family: $font;
                     font-size: 12px;
                     font-style: normal;
@@ -287,7 +586,7 @@
     height: auto;
     display: flex;
     flex-direction: row;
-    background: #f6f6f6;
+    background: transparent;
     .container {
       width: 100%;
       flex-direction: column;
@@ -331,7 +630,7 @@
               display: flex;
               align-items: center;
               border-radius: 6px;
-              background: #eb6753;
+              background: $c-accent-grad;
               img {
                 width: 14px;
                 height: 14px;
@@ -353,8 +652,8 @@
               left: 20px;
               bottom: 20px;
               border-radius: 6px;
-              background: #fff;
-              color: #181a20;
+              background: rgba(11, 15, 23, 0.66);
+              color: $c-text;
               font-family: $font;
               font-size: 15px;
               font-style: normal;
@@ -370,11 +669,11 @@
             border-radius: 0px 0px 12px 12px;
             border: 1px solid rgba(196, 196, 196, 0.71);
             border-top: none;
-            background: #fff;
+            background: rgba(11, 15, 23, 0.66);
             box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
             .title {
               overflow: hidden;
-              color: #181a20;
+              color: $c-text;
               text-overflow: ellipsis;
               white-space: nowrap;
               font-family: $font;
@@ -388,7 +687,7 @@
             .desc {
               margin-top: 5px;
               overflow: hidden;
-              color: #717171;
+              color: $c-muted;
               font-family: $font;
               font-size: 13px;
               font-style: normal;
@@ -411,7 +710,7 @@
                   height: 17px;
                 }
                 span {
-                  color: #181a20;
+                  color: $c-text;
                   font-family: $font;
                   font-size: 13px;
                   font-style: normal;
@@ -426,7 +725,7 @@
               justify-content: space-between;
               align-items: center;
               p {
-                color: #181a20;
+                color: $c-text;
                 font-family: $font;
                 font-size: 13px;
                 font-style: normal;
@@ -446,7 +745,7 @@
                 gap: 7px;
                 align-items: center;
                 .view-cnt {
-                  color: #717171;
+                  color: $c-muted;
                   font-family: $font;
                   font-size: 13px;
                   font-style: normal;
@@ -531,8 +830,8 @@
                   left: 12px;
                   bottom: 12px;
                   border-radius: 6px;
-                  background: #fff;
-                  color: #181a20;
+                  background: rgba(11, 15, 23, 0.66);
+                  color: $c-text;
                   font-family: $font;
                   font-size: 15px;
                   font-style: normal;
@@ -548,11 +847,11 @@
                 border-radius: 0px 0px 12px 12px;
                 border: 1px solid rgba(196, 196, 196, 0.71);
                 border-top: none;
-                background: #fff;
+                background: rgba(11, 15, 23, 0.66);
                 box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
                 .title {
                   overflow: hidden;
-                  color: #181a20;
+                  color: $c-text;
                   text-overflow: ellipsis;
                   white-space: nowrap;
                   font-family: $font;
@@ -566,7 +865,7 @@
                 .desc {
                   margin-top: 5px;
                   overflow: hidden;
-                  color: #717171;
+                  color: $c-muted;
                   font-family: $font;
                   font-size: 13px;
                   font-style: normal;
@@ -589,7 +888,7 @@
                       height: 17px;
                     }
                     span {
-                      color: #181a20;
+                      color: $c-text;
                       font-family: $font;
                       font-size: 13px;
                       font-style: normal;
@@ -604,7 +903,7 @@
                   justify-content: space-between;
                   align-items: center;
                   p {
-                    color: #181a20;
+                    color: $c-text;
                     font-family: $font;
                     font-size: 13px;
                     font-style: normal;
@@ -624,7 +923,7 @@
                     gap: 7px;
                     align-items: center;
                     .view-cnt {
-                      color: #717171;
+                      color: $c-muted;
                       font-family: $font;
                       font-size: 13px;
                       font-style: normal;
@@ -650,7 +949,7 @@
     height: auto;
     display: flex;
     flex-direction: row;
-    background: #f6f6f6;
+    background: transparent;
     .container {
       position: relative;
       width: 100%;
@@ -686,7 +985,7 @@
               }
               strong {
                 margin-top: 10px;
-                color: #181a20;
+                color: $c-text;
                 text-align: center;
                 font-family: $font;
                 font-size: 24px;
@@ -697,7 +996,7 @@
                 cursor: pointer;
               }
               span {
-                color: #181a20;
+                color: $c-text;
                 text-align: center;
                 font-family: $font;
                 font-size: 15px;

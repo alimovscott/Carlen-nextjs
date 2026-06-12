@@ -1,11 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Stack, Box, Modal, Divider, Button } from '@mui/material';
+import { Box, Modal, Divider, Button } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
+import SensorDoorOutlinedIcon from '@mui/icons-material/SensorDoorOutlined';
+import TuneIcon from '@mui/icons-material/Tune';
+import SearchIcon from '@mui/icons-material/Search';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { productMileageRange, productYears } from '../../config';
 import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
@@ -19,10 +25,28 @@ const style = {
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
 	width: 'auto',
-	bgcolor: 'background.paper',
-	borderRadius: '12px',
+	bgcolor: 'transparent',
+	borderRadius: '22px',
 	outline: 'none',
-	boxShadow: 24,
+	boxShadow: 'none',
+};
+
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+
+/** Origin-aware dropdown reveal with staggered children (emil/framer) */
+const dropdownVariants = {
+	hidden: { opacity: 0, y: 8, scale: 0.99 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		scale: 1,
+		transition: { duration: 0.18, ease: EASE_OUT, staggerChildren: 0.035 },
+	},
+	exit: { opacity: 0, y: 6, scale: 0.99, transition: { duration: 0.12, ease: EASE_OUT } },
+};
+const dropdownItemVariants = {
+	hidden: { opacity: 0, y: 8 },
+	visible: { opacity: 1, y: 0, transition: { duration: 0.18, ease: EASE_OUT } },
 };
 
 const MenuProps = {
@@ -56,6 +80,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
 	const [yearCheck, setYearCheck] = useState({ start: 1970, end: thisYear });
 	const [optionCheck, setOptionCheck] = useState('all');
+	const reduce = useReducedMotion();
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -296,78 +321,163 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>HEADER FILTER MOBILE</div>;
-	} else {
-		return (
-			<>
-				<Stack className={'search-box carlen-home-search'}>
-					<Stack className={'select-box'}>
-						<Box
-							component={'div'}
-							className={`box carlen-filter-control ${openLocation ? 'on' : ''}`}
-							onClick={locationStateChangeHandler}
-						>
-							<span>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : t('Location')} </span>
-							<ExpandMoreIcon />
-						</Box>
-						<Box className={`box carlen-filter-control ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
-							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Product type')} </span>
-							<ExpandMoreIcon />
-						</Box>
-						<Box className={`box carlen-filter-control ${openRooms ? 'on' : ''}`} onClick={doorStateChangeHandler}>
-							<span>
-								{searchFilter?.search?.doorsList ? `${searchFilter?.search?.doorsList[0]} doors` : t('Rooms')}
-							</span>
-							<ExpandMoreIcon />
-						</Box>
-					</Stack>
-					<Stack className={'search-box-other carlen-search-actions'}>
-						<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
-							<img src="/img/icons/tune.svg" alt="" />
-							<span>{t('Advanced')}</span>
-						</Box>
-						<Box className={'search-btn'} onClick={pushSearchHandler}>
-							<img src="/img/icons/search_white.svg" alt="" />
-						</Box>
-					</Stack>
+	return (
+		<>
+			<motion.div
+				className={`search-box carlen-home-search ${device === 'mobile' ? 'mobile-search-box' : ''}`}
+				initial={reduce ? false : { opacity: 0, y: 18 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.45, ease: EASE_OUT }}
+			>
+				<div className={'select-box'}>
+					<motion.div
+						className={`box carlen-filter-control ${openLocation ? 'on' : ''}`}
+						onClick={locationStateChangeHandler}
+						whileTap={reduce ? undefined : { scale: 0.98 }}
+						role={'button'}
+						tabIndex={0}
+						aria-expanded={openLocation}
+						onKeyDown={(e: any) => (e.key === 'Enter' || e.key === ' ') && locationStateChangeHandler()}
+					>
+						<LocationOnOutlinedIcon className={'seg-icon'} />
+						<div className={'seg-text'}>
+							<span className={'seg-label'}>Location</span>
+							<span className={'seg-value'}>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : 'Anywhere'}</span>
+						</div>
+						<ExpandMoreIcon className={'seg-caret'} />
+					</motion.div>
+					<motion.div
+						className={`box carlen-filter-control ${openType ? 'on' : ''}`}
+						onClick={typeStateChangeHandler}
+						whileTap={reduce ? undefined : { scale: 0.98 }}
+						role={'button'}
+						tabIndex={0}
+						aria-expanded={openType}
+						onKeyDown={(e: any) => (e.key === 'Enter' || e.key === ' ') && typeStateChangeHandler()}
+					>
+						<DirectionsCarFilledOutlinedIcon className={'seg-icon'} />
+						<div className={'seg-text'}>
+							<span className={'seg-label'}>Brand</span>
+							<span className={'seg-value'}>{searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : 'Any brand'}</span>
+						</div>
+						<ExpandMoreIcon className={'seg-caret'} />
+					</motion.div>
+					<motion.div
+						className={`box carlen-filter-control ${openRooms ? 'on' : ''}`}
+						onClick={doorStateChangeHandler}
+						whileTap={reduce ? undefined : { scale: 0.98 }}
+						role={'button'}
+						tabIndex={0}
+						aria-expanded={openRooms}
+						onKeyDown={(e: any) => (e.key === 'Enter' || e.key === ' ') && doorStateChangeHandler()}
+					>
+						<SensorDoorOutlinedIcon className={'seg-icon'} />
+						<div className={'seg-text'}>
+							<span className={'seg-label'}>Doors</span>
+							<span className={'seg-value'}>{searchFilter?.search?.doorsList ? `${searchFilter?.search?.doorsList[0]} doors` : 'Any'}</span>
+						</div>
+						<ExpandMoreIcon className={'seg-caret'} />
+					</motion.div>
+				</div>
+				<div className={'search-box-other carlen-search-actions'}>
+					<motion.div
+						className={'advanced-filter'}
+						onClick={() => advancedFilterHandler(true)}
+						whileTap={reduce ? undefined : { scale: 0.97 }}
+						role={'button'}
+						tabIndex={0}
+						aria-label={'Advanced car search'}
+						onKeyDown={(e: any) => (e.key === 'Enter' || e.key === ' ') && advancedFilterHandler(true)}
+					>
+						<TuneIcon />
+						<span>{t('Advanced')}</span>
+					</motion.div>
+					<motion.div
+						className={'search-btn'}
+						onClick={pushSearchHandler}
+						whileHover={reduce ? undefined : { y: -2 }}
+						whileTap={reduce ? undefined : { scale: 0.96 }}
+						transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+						role={'button'}
+						tabIndex={0}
+						aria-label={'Search cars'}
+						onKeyDown={(e: any) => (e.key === 'Enter' || e.key === ' ') && pushSearchHandler()}
+					>
+						<SearchIcon />
+					</motion.div>
+				</div>
 
-					{/*MENU */}
-					<div className={`filter-location carlen-filter-dropdown ${openLocation ? 'on' : ''}`} ref={locationRef}>
-						{productLocation.map((location: string) => {
-							return (
-								<div onClick={() => productLocationSelectHandler(location)} key={location}>
+				<AnimatePresence>
+					{openLocation && (
+						<motion.div
+							className={'filter-location carlen-filter-dropdown'}
+							ref={locationRef}
+							variants={reduce ? undefined : dropdownVariants}
+							initial={reduce ? { opacity: 0 } : 'hidden'}
+							animate={reduce ? { opacity: 1 } : 'visible'}
+							exit={reduce ? { opacity: 0 } : 'exit'}
+						>
+							{productLocation.map((location: string) => (
+								<motion.div
+									variants={reduce ? undefined : dropdownItemVariants}
+									onClick={() => productLocationSelectHandler(location)}
+									key={location}
+								>
 									<img src={`img/banner/cities/${location}.webp`} alt="" />
 									<span>{location}</span>
-								</div>
-							);
-						})}
-					</div>
+								</motion.div>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
 
-					<div className={`filter-type carlen-filter-dropdown ${openType ? 'on' : ''}`} ref={typeRef}>
-						{productType.map((type: string) => {
-							return (
-								<div
+				<AnimatePresence>
+					{openType && (
+						<motion.div
+							className={'filter-type carlen-filter-dropdown'}
+							ref={typeRef}
+							variants={reduce ? undefined : dropdownVariants}
+							initial={reduce ? { opacity: 0 } : 'hidden'}
+							animate={reduce ? { opacity: 1 } : 'visible'}
+							exit={reduce ? { opacity: 0 } : 'exit'}
+						>
+							{productType.map((type: string) => (
+								<motion.div
+									variants={reduce ? undefined : dropdownItemVariants}
 									style={{ backgroundImage: `url(/img/banner/types/${type.toLowerCase()}.webp)` }}
 									onClick={() => productTypeSelectHandler(type)}
 									key={type}
 								>
 									<span>{type}</span>
-								</div>
-							);
-						})}
-					</div>
+								</motion.div>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
 
-					<div className={`filter-rooms carlen-filter-dropdown ${openRooms ? 'on' : ''}`} ref={doorsRef}>
-						{[1, 2, 3, 4, 5].map((room: number) => {
-							return (
-								<span onClick={() => productDoorSelectHandler(room)} key={room}>
+				<AnimatePresence>
+					{openRooms && (
+						<motion.div
+							className={'filter-rooms carlen-filter-dropdown'}
+							ref={doorsRef}
+							variants={reduce ? undefined : dropdownVariants}
+							initial={reduce ? { opacity: 0 } : 'hidden'}
+							animate={reduce ? { opacity: 1 } : 'visible'}
+							exit={reduce ? { opacity: 0 } : 'exit'}
+						>
+							{[1, 2, 3, 4, 5].map((room: number) => (
+								<motion.span
+									variants={reduce ? undefined : dropdownItemVariants}
+									onClick={() => productDoorSelectHandler(room)}
+									key={room}
+								>
 									{room} door{room > 1 ? 's' : ''}
-								</span>
-							);
-						})}
-					</div>
-				</Stack>
+								</motion.span>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</motion.div>
 
 				{/* ADVANCED FILTER MODAL */}
 				<Modal
@@ -378,7 +488,12 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				>
 					{/* @ts-ignore */}
 					<Box sx={style}>
-						<Box className={'advanced-filter-modal carlen-advanced-search-modal'}>
+						<motion.div
+							className={'advanced-filter-modal carlen-advanced-search-modal'}
+							initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+							animate={{ opacity: 1, scale: 1, y: 0 }}
+							transition={{ duration: 0.22, ease: EASE_OUT }}
+						>
 							<div className={'close'} onClick={() => advancedFilterHandler(false)}>
 								<CloseIcon />
 							</div>
@@ -548,12 +663,11 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 									Search
 								</Button>
 							</div>
-						</Box>
+						</motion.div>
 					</Box>
 				</Modal>
 			</>
 		);
-	}
 };
 
 HeaderFilter.defaultProps = {

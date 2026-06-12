@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import Top from '../Top';
 import Footer from '../Footer';
 import { Stack } from '@mui/material';
@@ -41,6 +42,17 @@ const withLayoutMain = (Component: any) => {
 							<Top />
 						</Stack>
 
+						<Stack className={'header-main mobile-header-main'}>
+							<Stack className={'container'}>
+								<Stack className={'carlen-hero-copy'}>
+									<span className={'eyebrow'}>CARLEN · PREMIUM MARKETPLACE</span>
+									<strong>Find the car you&apos;ll love to drive.</strong>
+									<p>Premium listings and smart filters in one place.</p>
+								</Stack>
+								<HeaderFilter />
+							</Stack>
+						</Stack>
+
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
@@ -64,8 +76,23 @@ const withLayoutMain = (Component: any) => {
 						</Stack>
 
 						<Stack className={'header-main'}>
-							<FiberContainer />
+							<Stack className={'carlen-hero-fiber'} aria-hidden={'true'}>
+								<FiberContainer />
+							</Stack>
 							<Stack className={'container'}>
+								<Stack className={'carlen-hero-copy'}>
+									<span className={'eyebrow'}>CARLEN · PREMIUM MARKETPLACE</span>
+									<strong>Find the car you&apos;ll love to drive.</strong>
+									<p>Premium listings, smart filters, and a faster road from first look to test drive.</p>
+									<Stack className={'carlen-hero-cta'}>
+										<Link href={'/cars'} className={'cta-primary'}>
+											Explore all cars
+										</Link>
+										<Link href={'/agent'} className={'cta-secondary'}>
+											Browse dealers
+										</Link>
+									</Stack>
+								</Stack>
 								<HeaderFilter />
 							</Stack>
 						</Stack>
