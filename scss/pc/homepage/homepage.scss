@@ -397,218 +397,279 @@
 			padding: 132px 0px 94px;
 			width: 100%;
 			height: 816px;
+			margin-bottom: 200px;
 			display: flex;
 			flex-direction: row;
 			.container {
 				flex-direction: column;
 				align-items: center;
-				.card-box {
+				.carlen-popular-grid {
 					margin-top: 34px;
+					height: 780px;
+					
 					width: 100%;
-					height: auto;
-					display: flex;
-					flex-direction: row;
-					justify-content: space-between;
-					.popular-product-swiper {
-						width: 100%;
-						height: 425px;
-						display: flex;
-						flex-direction: row;
-						.popular-product-slide {
-							width: auto;
-							height: auto;
-							display: flex;
-							margin: 10px 0 10px 10px;
-						}
-					}
-					.popular-card-box {
-				position: relative;
-				width: 400px;
-				height: 425px;
-				display: flex;
-				flex-direction: column;
-				overflow: hidden;
-				border: 1px solid $c-border;
-				border-radius: $c-radius;
-				background: $c-raised;
-				box-shadow: $c-shadow;
-				transition: transform 250ms $ease-out, border-color 250ms $ease-out, box-shadow 250ms $ease-out;
-				@media (hover: hover) and (pointer: fine) {
-					&:hover {
-						transform: translateY(-6px);
-						border-color: rgba(255, 106, 61, 0.42);
-						box-shadow: $c-shadow, $c-glow-red;
-						.card-img { transform: scale(1.06); }
+					display: grid;
+					grid-template-columns: 1.35fr 1fr;
+					gap: 24px;
+					align-items: stretch;
+					.carlen-popular-stack {
+						display: grid;
+						grid-template-rows: 1fr 1fr;
+						gap: 24px;
+						min-height: 0;
 					}
 				}
-				.card-img {
+				.carlen-popular-card {
 					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+					border-radius: 26px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					box-shadow: $c-shadow;
+					cursor: pointer;
+					isolation: isolate;
+					opacity: 0;
+					animation: carlen-rise 720ms $ease-out forwards;
+					transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+						border-color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+						box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+					&::before {
+						content: '';
+						position: absolute;
+						inset: 0;
+						z-index: 0;
+						background: radial-gradient(120% 80% at 12% 0%, rgba(233, 44, 40, 0.16), transparent 55%),
+							radial-gradient(120% 90% at 100% 100%, rgba(22, 70, 193, 0.18), transparent 55%),
+							linear-gradient(180deg, $c-raised 0%, $c-base 100%);
+						pointer-events: none;
+					}
+					@media (hover: hover) and (pointer: fine) {
+						&:hover {
+							transform: translateY(-8px);
+							border-color: rgba(233, 44, 40, 0.35);
+							box-shadow: $c-shadow, $c-glow-red;
+							.carlen-popular-image { transform: scale(1.04); }
+						}
+					}
+					&.featured {
+						.carlen-popular-image { height: 300px; }
+						.carlen-popular-meta { padding: 22px 24px 24px; }
+						.carlen-popular-price { font-size: 22px; }
+						.model { font-size: 22px; }
+					}
+					&.standard {
+						flex-direction: row;
+						.carlen-popular-image {
+							width: 44%;
+							min-width: 44%;
+							height: auto;
+						}
+						.carlen-popular-meta {
+							flex: 1;
+							padding: 16px 18px;
+						}
+						.carlen-popular-price { font-size: 16px; bottom: 12px; left: 12px; }
+						.carlen-popular-badge { top: 12px; left: 12px; }
+						.model { font-size: 16px; }
+					}
+				}
+				.carlen-popular-image {
+					position: relative;
+					z-index: 1;
 					width: 100%;
-					height: 222px;
 					background-size: cover;
 					background-position: center;
-					cursor: pointer;
-					transition: transform 600ms $ease-out;
+					background-color: #05070b;
+					transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 					&::after {
 						content: '';
 						position: absolute;
 						inset: 0;
-						background: linear-gradient(180deg, rgba(11, 15, 23, 0.04), rgba(11, 15, 23, 0.5));
+						background: linear-gradient(180deg, transparent 40%, rgba(10, 11, 13, 0.85) 100%);
 						pointer-events: none;
 					}
-					div.status {
-						position: absolute;
-						z-index: 1;
-						padding: 6px 16px;
-						left: 16px;
-						top: 16px;
-						display: flex;
-						align-items: center;
-						border-radius: 999px;
+				}
+				.carlen-popular-badge {
+					position: absolute;
+					z-index: 2;
+					top: 16px;
+					left: 16px;
+					padding: 6px 13px;
+					border-radius: $c-radius-pill;
+					color: #fff;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 700;
+					letter-spacing: 0.04em;
+					line-height: 1;
+					text-transform: uppercase;
+					&.red {
 						background: $c-accent-grad;
 						box-shadow: $c-glow-red;
-						img { width: 14px; height: 14px; }
-						span {
-							margin-left: 6px;
-							color: #fff;
-							font-family: $font;
-							font-size: 12px;
-							font-weight: 700;
-							line-height: normal;
-							text-transform: uppercase;
-						}
 					}
-					div.price {
-						position: absolute;
-						z-index: 1;
-						padding: 8px 13px;
-						left: 16px;
-						bottom: 16px;
-						border-radius: 10px;
-						border: 1px solid $c-border;
-						background: rgba(11, 15, 23, 0.66);
-						backdrop-filter: blur(10px);
-						color: #fff;
-						font-family: $font;
-						font-size: 15px;
-						font-weight: 700;
-						line-height: normal;
+					&.blue {
+						background: rgba(22, 70, 193, 0.92);
+						box-shadow: $c-glow-blue;
 					}
 				}
-				.info {
+				.carlen-popular-price {
+					position: absolute;
+					z-index: 2;
+					left: 16px;
+					bottom: 16px;
+					padding: 9px 14px;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background: rgba(10, 11, 13, 0.6);
+					backdrop-filter: blur(10px);
+					color: #fff;
+					font-family: $font;
+					font-weight: 800;
+					line-height: 1;
+				}
+				.carlen-popular-meta {
+					position: relative;
+					z-index: 1;
 					flex: 1;
-					padding: 18px 20px 16px;
 					display: flex;
 					flex-direction: column;
 					box-sizing: border-box;
-					background: linear-gradient(180deg, $c-raised 0%, #0c111a 100%);
-					.MuiDivider-root { border-color: $c-border; }
-					.title {
-						overflow: hidden;
-						color: $c-text;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						font-family: $font;
-						font-size: 16px;
-						font-weight: 700;
-						line-height: normal;
-						text-transform: capitalize;
-						cursor: pointer;
-						transition: color 200ms $ease-out;
-						@media (hover: hover) and (pointer: fine) {
-							&:hover { color: $c-orange; }
-						}
-					}
-					.desc {
-						margin-top: 5px;
-						overflow: hidden;
+					padding: 18px 20px 20px;
+					.meta-top {
+						display: flex;
+						align-items: center;
+						gap: 8px;
 						color: $c-muted;
 						font-family: $font;
-						font-size: 13px;
-						font-weight: 400;
-						line-height: normal;
+						font-size: 12px;
+						font-weight: 600;
+						text-transform: capitalize;
+						.dot {
+							width: 3px;
+							height: 3px;
+							border-radius: 50%;
+							background: $c-faint;
+						}
+					}
+					.model {
+						margin-top: 6px;
+						overflow: hidden;
+						color: $c-text;
+						font-family: $font;
+						font-weight: 700;
+						line-height: 1.25;
+						letter-spacing: -0.01em;
 						text-overflow: ellipsis;
 						white-space: nowrap;
+						text-transform: capitalize;
 					}
-					.options {
-						margin-top: 15px;
+					.spec-row {
+						margin-top: 12px;
 						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						div {
-							display: flex;
-							flex-direction: row;
-							align-items: center;
-							img {
-								margin-right: 6px;
-								width: 17px;
-								height: 17px;
-								opacity: 0.78;
-								filter: brightness(0) invert(1);
-							}
-							span {
-								color: $c-muted;
-								font-family: $font;
-								font-size: 13px;
-								font-weight: 500;
-								line-height: normal;
-							}
-						}
-					}
-					.bott {
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						align-items: center;
-						p {
+						flex-wrap: wrap;
+						gap: 8px;
+						span {
+							padding: 5px 11px;
+							border-radius: $c-radius-pill;
+							border: 1px solid $c-border;
+							background: $c-glass;
 							color: $c-muted;
 							font-family: $font;
-							font-size: 13px;
-							font-weight: 500;
-							line-height: normal;
+							font-size: 11px;
+							font-weight: 600;
+							line-height: 1;
 							text-transform: capitalize;
 						}
-						button {
-							margin-left: 7px;
-							width: 16px;
-							height: 16px;
-							box-sizing: border-box;
-						}
-						.view-like-box {
+					}
+					.carlen-popular-actions {
+						margin-top: auto;
+						padding-top: 16px;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						.stats {
 							display: flex;
-							flex-direction: row;
-							gap: 7px;
 							align-items: center;
-							svg { color: $c-muted; }
-							.view-cnt {
+							gap: 6px;
+							.stat {
+								display: inline-flex;
+								align-items: center;
+								gap: 5px;
+								height: 32px;
+								padding: 0 10px;
+								border-radius: $c-radius-pill;
+								border: 1px solid $c-border;
+								background: $c-glass;
+								svg { width: 16px; height: 16px; color: $c-muted; }
+								.cnt {
+									color: $c-muted;
+									font-family: $font;
+									font-size: 12px;
+									font-weight: 700;
+								}
+							}
+							.like {
+								height: 32px;
+								padding: 0 10px;
+								gap: 5px;
+								border-radius: $c-radius-pill;
+								border: 1px solid $c-border;
+								background: $c-glass;
 								color: $c-muted;
-								font-family: $font;
-								font-size: 13px;
-								font-weight: 400;
-								line-height: normal;
-								text-overflow: ellipsis;
+								transition: background 200ms $ease-out, color 200ms $ease-out, border-color 200ms $ease-out;
+								svg { width: 16px; height: 16px; }
+								.cnt {
+									color: inherit;
+									font-family: $font;
+									font-size: 12px;
+									font-weight: 700;
+								}
+								&.active {
+									border-color: rgba(233, 44, 40, 0.4);
+									background: rgba(233, 44, 40, 0.14);
+									color: #ff5a4d;
+								}
+							}
+						}
+						.go {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 40px;
+							height: 40px;
+							border-radius: 50%;
+							border: 1px solid $c-border;
+							background: $c-glass;
+							color: $c-text;
+							cursor: pointer;
+							transition: background 220ms $ease-out, border-color 220ms $ease-out, transform 220ms $ease-out;
+							svg { width: 18px; height: 18px; }
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									background: $c-glass-hover;
+									border-color: rgba(233, 44, 40, 0.5);
+									transform: translateX(2px);
+								}
 							}
 						}
 					}
 				}
-			}
+				@keyframes carlen-rise {
+					from { opacity: 0; transform: translateY(18px); }
+					to { opacity: 1; transform: none; }
 				}
-				.pagination-box {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-					.swiper-pagination-bullet.swiper-pagination-bullet-active {
-						background: #000000;
+				.carlen-popular-card:nth-child(1) { animation-delay: 0ms; }
+				.carlen-popular-stack .carlen-popular-card:nth-child(1) { animation-delay: 90ms; }
+				.carlen-popular-stack .carlen-popular-card:nth-child(2) { animation-delay: 170ms; }
+				@media (prefers-reduced-motion: reduce) {
+					.carlen-popular-card {
+						opacity: 1;
+						animation: none;
+						transition: none;
 					}
-					.swiper-popular-next {
-						margin-left: 20px;
-						cursor: pointer;
-					}
-					.swiper-popular-prev {
-						margin-right: 20px;
-						cursor: pointer;
-					}
+					.carlen-popular-image { transition: none; }
 				}
 			}
 		}
