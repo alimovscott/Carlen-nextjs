@@ -430,10 +430,7 @@
 					box-shadow: $c-shadow;
 					cursor: pointer;
 					isolation: isolate;
-					opacity: 0;
-					animation: carlen-rise 720ms $ease-out forwards;
-					transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-						border-color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+					transition: border-color 420ms cubic-bezier(0.22, 1, 0.36, 1),
 						box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
 					&::before {
 						content: '';
@@ -447,10 +444,8 @@
 					}
 					@media (hover: hover) and (pointer: fine) {
 						&:hover {
-							transform: translateY(-8px);
 							border-color: rgba(233, 44, 40, 0.35);
 							box-shadow: $c-shadow, $c-glow-red;
-							.carlen-popular-image { transform: scale(1.04); }
 						}
 					}
 					&.featured {
@@ -482,7 +477,6 @@
 					background-size: cover;
 					background-position: center;
 					background-color: #05070b;
-					transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 					&::after {
 						content: '';
 						position: absolute;
@@ -655,21 +649,6 @@
 							}
 						}
 					}
-				}
-				@keyframes carlen-rise {
-					from { opacity: 0; transform: translateY(18px); }
-					to { opacity: 1; transform: none; }
-				}
-				.carlen-popular-card:nth-child(1) { animation-delay: 0ms; }
-				.carlen-popular-stack .carlen-popular-card:nth-child(1) { animation-delay: 90ms; }
-				.carlen-popular-stack .carlen-popular-card:nth-child(2) { animation-delay: 170ms; }
-				@media (prefers-reduced-motion: reduce) {
-					.carlen-popular-card {
-						opacity: 1;
-						animation: none;
-						transition: none;
-					}
-					.carlen-popular-image { transition: none; }
 				}
 			}
 		}

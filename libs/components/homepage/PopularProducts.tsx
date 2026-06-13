@@ -110,15 +110,17 @@ const PopularProducts = (props: PopularProductsProps) => {
 								product={popularProducts[0]}
 								variant={'featured'}
 								likePropertyHandler={likePropertyHandler}
+								index={0}
 							/>
 						)}
 						<div className={'carlen-popular-stack'}>
-							{popularProducts.slice(1, 3).map((product: Product) => (
+							{popularProducts.slice(1, 3).map((product: Product, i: number) => (
 								<PopularProductCard
 									key={product._id}
 									product={product}
 									variant={'standard'}
 									likePropertyHandler={likePropertyHandler}
+									index={i + 1}
 								/>
 							))}
 						</div>

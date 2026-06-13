@@ -11,11 +11,13 @@ import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { formatterStr } from '../../utils';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface PopularProductCardProps {
 	product: Product;
 	variant?: 'featured' | 'standard';
 	likePropertyHandler?: any;
+	index?: number;
 }
 
 const getBadge = (p: Product): { label: string; tone: 'red' | 'blue' } => {
@@ -26,12 +28,13 @@ const getBadge = (p: Product): { label: string; tone: 'red' | 'blue' } => {
 };
 
 const PopularProductCard = (props: PopularProductCardProps) => {
-	const { product, variant = 'standard', likePropertyHandler } = props;
+	const { product, variant = 'standard', likePropertyHandler, index = 0 } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const isLiked = product?.meLiked?.[0]?.myFavorite;
 	const badge = getBadge(product);
+	const shouldReduceMotion = useReducedMotion();
 
 	/** HANDLERS **/
 	const pushDetailHandler = async (productId: string) => {
@@ -90,17 +93,32 @@ const PopularProductCard = (props: PopularProductCardProps) => {
 		);
 	} else {
 		return (
-			<article
+			<motion.article
 				className={`carlen-popular-card ${variant}`}
 				onClick={() => pushDetailHandler(product._id)}
+				initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+				whileInView={
+					shouldReduceMotion
+						? undefined
+						: {
+								opacity: 1,
+								y: 0,
+								transition: { type: 'spring', stiffness: 300, damping: 26, delay: index * 0.08 },
+						  }
+				}
+				viewport={{ once: true, margin: '-60px' }}
+				whileHover={shouldReduceMotion ? undefined : 'hover'}
+				variants={{ hover: { y: -8, transition: { type: 'spring', stiffness: 300, damping: 26 } } }}
 			>
-				<div
+				<motion.div
 					className={'carlen-popular-image'}
 					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})` }}
+					variants={{ hover: { scale: 1.04 } }}
+					transition={{ type: 'spring', stiffness: 220, damping: 28 }}
 				>
 					<span className={`carlen-popular-badge ${badge.tone}`}>{badge.label}</span>
 					<div className={'carlen-popular-price'}>${formatterStr(product.productPrice)}</div>
-				</div>
+				</motion.div>
 				<div className={'carlen-popular-meta'}>
 					<div className={'meta-top'}>
 						<span className={'year'}>{product.productYear}</span>
@@ -144,7 +162,7 @@ const PopularProductCard = (props: PopularProductCardProps) => {
 						</span>
 					</div>
 				</div>
-			</article>
+			</motion.article>
 		);
 	}
 };
