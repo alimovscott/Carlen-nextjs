@@ -11,7 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { productMileageRange, productYears } from '../../config';
 import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
@@ -33,20 +33,32 @@ const style = {
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-/** Origin-aware dropdown reveal with staggered children (emil/framer) */
-const dropdownVariants = {
-	hidden: { opacity: 0, y: 8, scale: 0.99 },
-	visible: {
-		opacity: 1,
-		y: 0,
-		scale: 1,
-		transition: { duration: 0.18, ease: EASE_OUT, staggerChildren: 0.035 },
-	},
-	exit: { opacity: 0, y: 6, scale: 0.99, transition: { duration: 0.12, ease: EASE_OUT } },
+/** framer-motion spring presets (framer-motion-animator) */
+const SPRING = { type: 'spring', stiffness: 300, damping: 24 } as const;
+
+/** Staggered entrance for the glass filter controls */
+const controlsContainerVariants = {
+	hidden: {},
+	visible: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } },
 };
-const dropdownItemVariants = {
-	hidden: { opacity: 0, y: 8 },
-	visible: { opacity: 1, y: 0, transition: { duration: 0.18, ease: EASE_OUT } },
+const controlItemVariants = {
+	hidden: { opacity: 0, y: 14, scale: 0.98 },
+	visible: { opacity: 1, y: 0, scale: 1, transition: SPRING },
+};
+
+/** Inline options accordion + chip stagger */
+const optionsPanelVariants = {
+	hidden: { height: 0, opacity: 0 },
+	visible: {
+		height: 'auto',
+		opacity: 1,
+		transition: { ...SPRING, opacity: { duration: 0.18 }, staggerChildren: 0.04, delayChildren: 0.06 },
+	},
+	exit: { height: 0, opacity: 0, transition: { duration: 0.2, ease: EASE_OUT } },
+};
+const optionChipVariants = {
+	hidden: { opacity: 0, y: 10, scale: 0.96 },
+	visible: { opacity: 1, y: 0, scale: 1, transition: SPRING },
 };
 
 const MenuProps = {
@@ -68,9 +80,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const device = useDeviceDetect();
 	const { t, i18n } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
-	const locationRef: any = useRef();
-	const typeRef: any = useRef();
-	const doorsRef: any = useRef();
+	const panelRef: any = useRef();
 	const router = useRouter();
 	const [openAdvancedFilter, setOpenAdvancedFilter] = useState(false);
 	const [openLocation, setOpenLocation] = useState(false);
@@ -82,18 +92,29 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const [optionCheck, setOptionCheck] = useState('all');
 	const reduce = useReducedMotion();
 
+	/** Pointer-reactive specular highlight (liquid glass) **/
+	const sheenX = useMotionValue(50);
+	const sheenY = useMotionValue(0);
+	const sheenBackground = useMotionTemplate`radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.18), transparent 42%)`;
+
+	const sheenMoveHandler = (e: React.PointerEvent<HTMLDivElement>) => {
+		if (reduce) return;
+		const rect = e.currentTarget.getBoundingClientRect();
+		sheenX.set(((e.clientX - rect.left) / rect.width) * 100);
+		sheenY.set(((e.clientY - rect.top) / rect.height) * 100);
+	};
+
+	const sheenLeaveHandler = () => {
+		sheenX.set(50);
+		sheenY.set(0);
+	};
+
 	/** LIFECYCLES **/
 	useEffect(() => {
 		const clickHandler = (event: MouseEvent) => {
-			if (!locationRef?.current?.contains(event.target)) {
+			if (!panelRef?.current?.contains(event.target)) {
 				setOpenLocation(false);
-			}
-
-			if (!typeRef?.current?.contains(event.target)) {
 				setOpenType(false);
-			}
-
-			if (!doorsRef?.current?.contains(event.target)) {
 				setOpenRooms(false);
 			}
 		};
@@ -324,16 +345,33 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	return (
 		<>
 			<motion.div
+				ref={panelRef}
 				className={`search-box carlen-home-search ${device === 'mobile' ? 'mobile-search-box' : ''}`}
 				initial={reduce ? false : { opacity: 0, y: 18 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.45, ease: EASE_OUT }}
+				transition={reduce ? undefined : { ...SPRING, delay: 0.05 }}
+				onPointerMove={sheenMoveHandler}
+				onPointerLeave={sheenLeaveHandler}
 			>
-				<div className={'select-box'}>
+				<motion.span
+					className={'carlen-glass-sheen'}
+					aria-hidden={'true'}
+					style={reduce ? undefined : { background: sheenBackground }}
+				/>
+				<div className={'carlen-search-bar-row'}>
+				<motion.div
+					className={'select-box'}
+					variants={reduce ? undefined : controlsContainerVariants}
+					initial={reduce ? false : 'hidden'}
+					animate={reduce ? false : 'visible'}
+				>
 					<motion.div
 						className={`box carlen-filter-control ${openLocation ? 'on' : ''}`}
 						onClick={locationStateChangeHandler}
+						variants={reduce ? undefined : controlItemVariants}
+						whileHover={reduce ? undefined : { y: -2, scale: 1.02 }}
 						whileTap={reduce ? undefined : { scale: 0.98 }}
+						transition={SPRING}
 						role={'button'}
 						tabIndex={0}
 						aria-expanded={openLocation}
@@ -349,7 +387,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					<motion.div
 						className={`box carlen-filter-control ${openType ? 'on' : ''}`}
 						onClick={typeStateChangeHandler}
+						variants={reduce ? undefined : controlItemVariants}
+						whileHover={reduce ? undefined : { y: -2, scale: 1.02 }}
 						whileTap={reduce ? undefined : { scale: 0.98 }}
+						transition={SPRING}
 						role={'button'}
 						tabIndex={0}
 						aria-expanded={openType}
@@ -365,7 +406,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					<motion.div
 						className={`box carlen-filter-control ${openRooms ? 'on' : ''}`}
 						onClick={doorStateChangeHandler}
+						variants={reduce ? undefined : controlItemVariants}
+						whileHover={reduce ? undefined : { y: -2, scale: 1.02 }}
 						whileTap={reduce ? undefined : { scale: 0.98 }}
+						transition={SPRING}
 						role={'button'}
 						tabIndex={0}
 						aria-expanded={openRooms}
@@ -378,12 +422,14 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						</div>
 						<ExpandMoreIcon className={'seg-caret'} />
 					</motion.div>
-				</div>
+				</motion.div>
 				<div className={'search-box-other carlen-search-actions'}>
 					<motion.div
 						className={'advanced-filter'}
 						onClick={() => advancedFilterHandler(true)}
+						whileHover={reduce ? undefined : { y: -2, scale: 1.02 }}
 						whileTap={reduce ? undefined : { scale: 0.97 }}
+						transition={SPRING}
 						role={'button'}
 						tabIndex={0}
 						aria-label={'Advanced car search'}
@@ -395,7 +441,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					<motion.div
 						className={'search-btn'}
 						onClick={pushSearchHandler}
-						whileHover={reduce ? undefined : { y: -2 }}
+						whileHover={reduce ? undefined : { y: -2, scale: 1.04 }}
 						whileTap={reduce ? undefined : { scale: 0.96 }}
 						transition={{ type: 'spring', stiffness: 400, damping: 20 }}
 						role={'button'}
@@ -406,74 +452,92 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						<SearchIcon />
 					</motion.div>
 				</div>
+				</div>
 
-				<AnimatePresence>
-					{openLocation && (
+				<AnimatePresence initial={false}>
+					{(openLocation || openType || openRooms) && (
 						<motion.div
-							className={'filter-location carlen-filter-dropdown'}
-							ref={locationRef}
-							variants={reduce ? undefined : dropdownVariants}
+							className={'carlen-options-panel'}
+							key={openLocation ? 'location' : openType ? 'type' : 'rooms'}
+							variants={reduce ? undefined : optionsPanelVariants}
 							initial={reduce ? { opacity: 0 } : 'hidden'}
 							animate={reduce ? { opacity: 1 } : 'visible'}
 							exit={reduce ? { opacity: 0 } : 'exit'}
 						>
-							{productLocation.map((location: string) => (
-								<motion.div
-									variants={reduce ? undefined : dropdownItemVariants}
-									onClick={() => productLocationSelectHandler(location)}
-									key={location}
-								>
-									<img src={`img/banner/cities/${location}.webp`} alt="" />
-									<span>{location}</span>
-								</motion.div>
-							))}
-						</motion.div>
-					)}
-				</AnimatePresence>
-
-				<AnimatePresence>
-					{openType && (
-						<motion.div
-							className={'filter-type carlen-filter-dropdown'}
-							ref={typeRef}
-							variants={reduce ? undefined : dropdownVariants}
-							initial={reduce ? { opacity: 0 } : 'hidden'}
-							animate={reduce ? { opacity: 1 } : 'visible'}
-							exit={reduce ? { opacity: 0 } : 'exit'}
-						>
-							{productType.map((type: string) => (
-								<motion.div
-									variants={reduce ? undefined : dropdownItemVariants}
-									style={{ backgroundImage: `url(/img/banner/types/${type.toLowerCase()}.webp)` }}
-									onClick={() => productTypeSelectHandler(type)}
-									key={type}
-								>
-									<span>{type}</span>
-								</motion.div>
-							))}
-						</motion.div>
-					)}
-				</AnimatePresence>
-
-				<AnimatePresence>
-					{openRooms && (
-						<motion.div
-							className={'filter-rooms carlen-filter-dropdown'}
-							ref={doorsRef}
-							variants={reduce ? undefined : dropdownVariants}
-							initial={reduce ? { opacity: 0 } : 'hidden'}
-							animate={reduce ? { opacity: 1 } : 'visible'}
-							exit={reduce ? { opacity: 0 } : 'exit'}
-						>
-							{[1, 2, 3, 4, 5].map((room: number) => (
-								<motion.span
-									variants={reduce ? undefined : dropdownItemVariants}
-									onClick={() => productDoorSelectHandler(room)}
-									key={room}
-								>
-									{room} door{room > 1 ? 's' : ''}
-								</motion.span>
-							))}
+							<div className={'carlen-options-inner'}>
+								{openLocation && (
+									<>
+										<span className={'carlen-options-label'}>Select location</span>
+										<div className={'carlen-options-grid'}>
+											{productLocation.map((location: string) => (
+												<motion.button
+													type={'button'}
+													variants={reduce ? undefined : optionChipVariants}
+													whileHover={reduce ? undefined : { scale: 1.04 }}
+													whileTap={reduce ? undefined : { scale: 0.96 }}
+													transition={SPRING}
+													className={`carlen-option-chip with-thumb ${
+														searchFilter?.search?.locationList?.[0] === location ? 'is-selected' : ''
+													}`}
+													onClick={() => productLocationSelectHandler(location)}
+													key={location}
+												>
+													<img src={`img/banner/cities/${location}.webp`} alt="" />
+													<span>{location}</span>
+												</motion.button>
+											))}
+										</div>
+									</>
+								)}
+								{openType && (
+									<>
+										<span className={'carlen-options-label'}>Select brand</span>
+										<div className={'carlen-options-grid'}>
+											{productType.map((type: string) => (
+												<motion.button
+													type={'button'}
+													variants={reduce ? undefined : optionChipVariants}
+													whileHover={reduce ? undefined : { scale: 1.04 }}
+													whileTap={reduce ? undefined : { scale: 0.96 }}
+													transition={SPRING}
+													className={`carlen-option-chip ${
+														searchFilter?.search?.typeList?.[0] === type ? 'is-selected' : ''
+													}`}
+													onClick={() => productTypeSelectHandler(type)}
+													key={type}
+												>
+													<span>{type}</span>
+												</motion.button>
+											))}
+										</div>
+									</>
+								)}
+								{openRooms && (
+									<>
+										<span className={'carlen-options-label'}>Select doors</span>
+										<div className={'carlen-options-grid'}>
+											{[1, 2, 3, 4, 5].map((room: number) => (
+												<motion.button
+													type={'button'}
+													variants={reduce ? undefined : optionChipVariants}
+													whileHover={reduce ? undefined : { scale: 1.04 }}
+													whileTap={reduce ? undefined : { scale: 0.96 }}
+													transition={SPRING}
+													className={`carlen-option-chip ${
+														searchFilter?.search?.doorsList?.[0] === room ? 'is-selected' : ''
+													}`}
+													onClick={() => productDoorSelectHandler(room)}
+													key={room}
+												>
+													<span>
+														{room} door{room > 1 ? 's' : ''}
+													</span>
+												</motion.button>
+											))}
+										</div>
+									</>
+								)}
+							</div>
 						</motion.div>
 					)}
 				</AnimatePresence>
