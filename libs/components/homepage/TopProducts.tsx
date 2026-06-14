@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay } from 'swiper';
 import TopProductCard from './TopProductCard';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { Product } from '../../types/product/product';
@@ -86,44 +84,27 @@ const TopProducts = (props: TopProductsProps) => {
 		);
 	} else {
 		return (
-			<Stack className={'top-products'}>
+			<Stack className={'top-products carlen-top-rated'}>
 				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Top products</span>
-							<p>Check out our Top Products</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'pagination-box'}>
-								<WestIcon className={'swiper-top-prev'} />
-								<div className={'swiper-top-pagination'}></div>
-								<EastIcon className={'swiper-top-next'} />
-							</div>
+					<Stack className={'carlen-top-rated-header'}>
+						<Box component={'div'} className={'carlen-top-rated-head-left'}>
+							<span className={'carlen-top-rated-eyebrow'}>Premium Picks</span>
+							<h2 className={'carlen-top-rated-title'}>Top Rated Cars</h2>
+							<p className={'carlen-top-rated-subtitle'}>
+								Hand-picked premium vehicles selected for performance and reliability.
+							</p>
 						</Box>
 					</Stack>
-					<Stack className={'card-box'}>
-						<Swiper
-							className={'top-product-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={15}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-top-next',
-								prevEl: '.swiper-top-prev',
-							}}
-							pagination={{
-								el: '.swiper-top-pagination',
-							}}
-						>
-							{topProducts.map((product: Product) => {
-								return (
-									<SwiperSlide className={'top-product-slide'} key={product?._id}>
-										<TopProductCard product={product} likePropertyHandler={likePropertyHandler} />
-									</SwiperSlide>
-								);
-							})}
-						</Swiper>
-					</Stack>
+					<div className={'carlen-top-rated-grid'}>
+						{topProducts.slice(0, 4).map((product: Product, index: number) => (
+							<TopProductCard
+								key={product?._id}
+								product={product}
+								likePropertyHandler={likePropertyHandler}
+								index={index}
+							/>
+						))}
+					</div>
 				</Stack>
 			</Stack>
 		);
@@ -133,7 +114,7 @@ const TopProducts = (props: TopProductsProps) => {
 TopProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 8,
+		limit: 4,
 		sort: 'productRank',
 		direction: 'DESC',
 		search: {},
