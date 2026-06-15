@@ -18,6 +18,8 @@ import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import ProductCard from '../../libs/components/product/PropductCard';
 import { sanitizeProductsInquiry } from '../../libs/utils';
+import { motion, useReducedMotion } from 'framer-motion';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -28,6 +30,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 	const parseInput = (input: any) => {
 		try {
 			return input ? sanitizeProductsInquiry(JSON.parse(input as string), initialInput) : sanitizeProductsInquiry(initialInput);
@@ -139,8 +142,16 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	if (device === 'mobile') {
 		return <h1>PROPERTIES MOBILE</h1>;
 	} else {
+		const listContainer = {
+			hidden: {},
+			visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.05, delayChildren: 0.04 } },
+		};
+		const listItem = {
+			hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+			visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 320, damping: 30 } },
+		};
 		return (
-			<div id="product-list-page" style={{ position: 'relative' }}>
+			<div id="carlen-product-list-page" style={{ position: 'relative' }}>
 				<div className="container">
 					<Box component={'div'} className={'right'}>
 						<span>Sort by</span>
@@ -176,24 +187,37 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 							</Menu>
 						</div>
 					</Box>
-					<Stack className={'product-page'}>
+					<Stack className={'carlen-product-page'}>
 						<Stack className={'filter-config'}>
 							{/* @ts-ignore */}
-							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
+							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} total={total} />
 						</Stack>
 						<Stack className="main-config" mb={'76px'}>
-							<Stack className={'list-config'}>
-								{products?.length === 0 ? (
-									<div className={'no-data'}>
-										<img src="/img/icons/icoAlert.svg" alt="" />
-										<p>No Products found!</p>
-									</div>
-								) : (
-									products.map((product: Product) => {
-										return <ProductCard product={product} likePropertyHandler={likePropertyHandler} key={product?._id} />;
-									})
-								)}
-							</Stack>
+							{getProductsLoading && products.length === 0 ? (
+								<Stack className={'carlen-product-loading'}>
+									<CircularProgress />
+									<p>Finding premium cars…</p>
+								</Stack>
+							) : products?.length === 0 ? (
+								<div className={'no-data'}>
+									<img src="/img/icons/icoAlert.svg" alt="" />
+									<p>No Products found!</p>
+									<span>Try adjusting your filters to see more cars.</span>
+								</div>
+							) : (
+								<motion.div
+									className={'carlen-product-list'}
+									variants={listContainer}
+									initial={'hidden'}
+									animate={'visible'}
+								>
+									{products.map((product: Product) => (
+										<motion.div className={'carlen-product-card-anim'} variants={listItem} key={product?._id}>
+											<ProductCard product={product} likePropertyHandler={likePropertyHandler} />
+										</motion.div>
+									))}
+								</motion.div>
+							)}
 							<Stack className="pagination-config">
 								{products.length !== 0 && (
 									<Stack className="pagination-box">

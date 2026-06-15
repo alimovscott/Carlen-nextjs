@@ -31,7 +31,7 @@ const ProductCard = (props: ProductCardType) => {
 		return <div>PROPERTY CARD</div>;
 	} else {
 		return (
-			<Stack className="card-config">
+			<Stack className="card-config carlen-product-card">
 				<Stack className="top">
 					<Link
 						href={{
