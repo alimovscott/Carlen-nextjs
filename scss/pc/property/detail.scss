@@ -1,752 +1,824 @@
 #pc-wrap {
-	#product-detail-page {
+	#carlen-product-detail-page {
 		position: relative;
-		background: #fff;
-		padding-top: 87px;
-		padding-bottom: 200px;
-		.product-detail-config {
-			width: 100%;
-			height: auto;
-			padding-top: 56px;
-			gap: 30px;
-			.product-info-config {
-				width: 100%;
-				height: auto;
-				gap: 30px;
-				.info {
+		width: 100%;
+		padding: 60px 0 110px;
+		background: $c-base;
+		overflow: hidden;
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			background: radial-gradient(40% 50% at 0% 0%, rgba(233, 44, 40, 0.07), transparent 55%),
+				radial-gradient(45% 55% at 100% 5%, rgba(22, 70, 193, 0.09), transparent 55%);
+			pointer-events: none;
+		}
+		.container {
+			position: relative;
+			z-index: 1;
+			width: 1300px;
+			margin: 0 auto;
+			display: flex;
+			flex-direction: column;
+			gap: 56px;
+		}
+
+		.section-title {
+			margin: 0 0 18px;
+			color: $c-text;
+			font-family: $font;
+			font-size: 22px;
+			font-weight: 700;
+			letter-spacing: -0.01em;
+		}
+
+		/* 1. HERO GALLERY */
+		.carlen-product-hero {
+			margin-top: 40px;
+			.carlen-product-gallery {
+				display: grid;
+				grid-template-columns: 1fr 132px;
+				gap: 16px;
+				.main-image {
+					position: relative;
 					width: 100%;
-					height: auto;
-					flex-direction: row;
-					justify-content: space-between;
-					.left-box {
-						width: 50%;
-						height: auto;
-						.title-main {
-							color: #181a20;
-							font-family: $font;
-							font-size: 30px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							letter-spacing: 0.6px;
-							text-transform: capitalize;
-						}
-						.top-box {
-							width: auto;
-							height: auto;
-							flex-direction: row;
-							align-items: center;
-							gap: 10px;
-							margin-bottom: 17px;
-							.city {
-								color: #717171;
-								font-family: $font;
-								font-size: 13px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: normal;
-							}
-							.divider {
-								width: 1px;
-								height: 20px;
-								background: #ddd;
-							}
-							.buy-rent-box {
-								flex-direction: row;
-								align-items: center;
-								gap: 7px;
-								.buy-rent {
-									color: #eb6753;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-							}
-							.date {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 28px;
-							}
-						}
-						.bottom-box {
-							width: auto;
-							height: auto;
-							flex-direction: row;
-							gap: 15px;
-							.option {
-								width: auto;
-								height: auto;
-								flex-direction: row;
-								gap: 8px;
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: normal;
-								}
-							}
-						}
-					}
-					.right-box {
-						width: auto;
-						height: auto;
-						align-items: flex-end;
-						.buttons {
-							width: auto;
-							height: auto;
-							flex-direction: row;
-							align-items: center;
-							gap: 11px;
-							margin: 0 10px 27px 0;
-							p {
-								color: #181a20;
-								text-align: right;
-								font-family: $font;
-								font-size: 18px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: normal;
-								letter-spacing: 0.52px;
-								text-transform: capitalize;
-							}
-							.button-box {
-								flex-direction: row;
-								gap: 5px;
-								align-items: center;
-							}
-						}
-						img {
-							width: 28px;
-							height: 27px;
-						}
-						svg {
-							width: 28px;
-							height: 27px;
-							cursor: pointer;
-						}
-						p {
-							color: #181a20;
-							text-align: right;
-							font-family: $font;
-							font-size: 26px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							letter-spacing: 0.52px;
-							text-transform: capitalize;
-						}
-						span {
-							color: #181a20;
-							text-align: right;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: normal;
-							letter-spacing: 0.3px;
-							text-transform: capitalize;
-						}
-					}
-				}
-				.images {
-					width: 100%;
-					height: auto;
-					gap: 10px;
-					.main-image {
+					height: 540px;
+					border-radius: 28px;
+					overflow: hidden;
+					border: 1px solid $c-border;
+					box-shadow: $c-shadow;
+					background: #05070b;
+					img {
+						position: absolute;
+						inset: 0;
 						width: 100%;
-						height: 600px;
-						img {
-							width: 100%;
-							height: 100%;
-							object-fit: cover;
-							border-radius: 12px;
-						}
+						height: 100%;
+						object-fit: cover;
 					}
-					.sub-images {
-						width: 100%;
-						height: auto;
-						flex-direction: row;
-						gap: 10px;
-						.sub-img-box {
-							width: 120px;
-							height: 120px;
-							cursor: pointer;
-							img {
-								width: 100%;
-								height: 100%;
-								object-fit: cover;
-								border-radius: 12px;
-							}
-						}
-					}
-				}
-			}
-			.product-desc-config {
-				width: 100%;
-				height: auto;
-				flex-direction: row;
-				gap: 22px;
-				.left-config {
-					width: 960px;
-					height: auto;
-					gap: 40px;
-					.options-config {
-						width: 100%;
-						height: auto;
-						flex-direction: row;
-						gap: 47.5px;
-						.option {
-							width: auto;
-							height: auto;
-							flex-direction: row;
-							gap: 17px;
-							.svg-box {
-								width: 56px;
-								height: 50px;
-								align-items: center;
-								justify-content: center;
-								border-radius: 12px;
-								border: 1px solid #ddd;
-								img {
-									width: 35px;
-									height: auto;
-								}
-							}
-							.option-includes {
-								width: auto;
-								height: auto;
-								.title {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-								.option-data {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: normal;
-								}
-							}
-						}
-					}
-					.prop-desc-config {
-						width: 100%;
-						height: auto;
-						gap: 50px;
-						padding: 29px 38px 50px 38px;
-						border-radius: 12px;
-						border: 1px solid #c4c4c4;
-						.top {
-							width: 100%;
-							height: auto;
-							gap: 30px;
-							.title {
-								color: #181a20;
-								font-family: $font;
-								font-size: 17px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-							.desc {
-								color: #181a20;
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-								max-height: 104px;
-							}
-						}
-						.bottom {
-							width: 100%;
-							height: auto;
-							gap: 30px;
-							.title {
-								color: #181a20;
-								font-family: $font;
-								font-size: 17px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-							.info-box {
-								width: 100%;
-								height: auto;
-								flex-direction: row;
-								gap: 230px;
-								.left,
-								.right {
-									.info {
-										width: auto;
-										height: auto;
-										display: flex;
-										flex-direction: row;
-										gap: 38px;
-										.title {
-											width: 121px;
-											color: #181a20;
-											font-family: $font;
-											font-size: 14px;
-											font-style: normal;
-											font-weight: 600;
-											line-height: 35px;
-										}
-										.data {
-											width: 88px;
-											color: #181a20;
-											font-family: $font;
-											font-size: 14px;
-											font-style: normal;
-											font-weight: 400;
-											line-height: 35px;
-										}
-									}
-								}
-							}
-						}
-					}
-					.floor-plans-config {
-						width: 100%;
-						height: auto;
-						gap: 30px;
-						padding: 30px 38px;
-						border-radius: 12px;
-						border: 1px solid #c4c4c4;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						.image-box {
-							width: 100%;
-							height: 510px;
-							border: 1px solid #c4c4c4;
-							img {
-								width: 100%;
-								height: 100%;
-								object-fit: cover;
-							}
-						}
-					}
-					.address-config {
-						width: 100%;
-						height: auto;
-						gap: 30px;
-						padding: 30px 38px;
-						border-radius: 12px;
-						border: 1px solid #c4c4c4;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						.map-box {
-							width: 100%;
-							height: 400px;
-							iframe {
-								border-radius: 12px;
-							}
-						}
-					}
-					.reviews-config {
-						width: 100%;
-						height: auto;
-						padding: 30px 38px 45px 38px;
-						border-radius: 12px;
-						border: 1px solid #c4c4c4;
-						.filter-box {
-							width: 100%;
-							height: auto;
-							flex-direction: row;
-							justify-content: space-between;
-							margin-bottom: 30px;
-							.review-cnt {
-								width: auto;
-								height: auto;
-								flex-direction: row;
-								align-items: center;
-								gap: 12px;
-								.reviews {
-									width: 153.6px;
-									color: #181a20;
-									font-family: $font;
-									font-size: 17px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-							}
-							.select-box {
-								width: auto;
-								height: auto;
-								flex-direction: row;
-								gap: 10px;
-								.sort-title {
-									color: #717171;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 26px;
-								}
-								.select-main {
-									width: 140px;
-									border: none;
-									outline: none;
-									color: #181a20;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 26px;
-								}
-							}
-						}
-						.review-list {
-							width: 100%;
-							height: auto;
-							gap: 20px;
-							.review-config {
-								width: 100%;
-								height: auto;
-								padding-bottom: 10px;
-								border-bottom: 1px solid #c4c4c4;
-								.review-mb-info {
-									width: 100%;
-									height: auto;
-									flex-direction: row;
-									justify-content: space-between;
-									.img-name-box {
-										width: 30%;
-										flex-direction: row;
-										align-items: center;
-										gap: 20px;
-										.img-box {
-											width: 65px;
-											height: 65px;
-											align-items: center;
-											justify-content: center;
-											border-radius: 50%;
-											background: #f6f6f6;
-											border: 1px solid #b9b9b9;
-											object-fit: cover;
-										}
-										.name {
-											width: 100%;
-											color: #181a20;
-											font-family: $font;
-											font-size: 15px;
-											font-style: normal;
-											font-weight: 600;
-											line-height: normal;
-											cursor: pointer;
-										}
-										.date {
-											width: 100%;
-											color: #181a20;
-											font-family: $font;
-											font-size: 13px;
-											font-style: normal;
-											font-weight: 400;
-											line-height: normal;
-										}
-									}
-									.review-stars {
-										padding-top: 10px;
-									}
-								}
-								.desc-box {
-									width: 100%;
-									height: auto;
-									margin-top: 15px;
-									.description {
-										color: #181a20;
-										font-family: $font;
-										font-size: 14px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: 26px;
-									}
-								}
-							}
-							.pagination-box {
-								margin-top: 15px;
-								width: 100%;
-								height: auto;
-								display: flex;
-								justify-content: center;
-							}
-						}
-					}
-					.leave-review-config {
-						border-radius: 12px;
-						border: 1px solid #c4c4c4;
-						background: #fff;
-						box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-						padding: 30px 38px;
-						.main-title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						.review-title {
-							margin-top: 20px;
-							color: #181a20;
-							font-family: $font;
-							font-size: 14px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						textarea {
-							width: 100%;
-							height: 120px;
-							margin-top: 8px;
-							padding: 20px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							color: #717171;
-							font-family: $font;
-							font-size: 14px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
-						}
-						.submit-btn {
-							width: 100%;
+					.hero-overlay {
+						position: absolute;
+						inset: 0;
+						z-index: 2;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						padding: 22px;
+						background: linear-gradient(180deg, rgba(5, 7, 11, 0.35) 0%, transparent 28%, transparent 60%, rgba(5, 7, 11, 0.8) 100%);
+						pointer-events: none;
+						.hero-top {
 							display: flex;
-							justify-content: flex-end;
-							button:disabled {
-								background: #dfdfdf;
-							}
-							.submit-review {
-								display: flex;
-								width: 256px;
-								margin-top: 30px;
-								padding: 16px 30px;
-								justify-content: center;
-								align-items: center;
-								gap: 10px;
-								border-radius: 12px;
-								border: 1px solid #c4c4c4;
-								cursor: pointer;
-								.title {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-							}
-						}
-					}
-				}
-				.right-config {
-					width: 318px;
-					height: fit-content;
-					padding: 30px 25px;
-					gap: 20px;
-					border-radius: 12px;
-					border: 1px solid rgba(196, 196, 196, 0.79);
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					.info-box {
-						position: relative;
-						width: 100%;
-						gap: 8px;
-						.main-title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							margin-bottom: 17px;
-						}
-						.image-info {
-							width: 100%;
 							flex-direction: row;
-							gap: 18px;
-							img {
-								width: 95px;
-								height: 95px;
-								border-radius: 50%;
-								object-fit: cover;
-							}
-							.name-phone-listings {
-								gap: 5px;
-								.name {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-								.phone-number {
-									width: 100%;
-									flex-direction: row;
-									align-items: center;
-									gap: 10px;
-									.number {
-										color: #181a20;
-										font-family: $font;
-										font-size: 15px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: 28px;
-									}
-								}
-								.listings {
-									color: #181a20;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-									text-decoration-line: underline;
-								}
-							}
-						}
-						.sub-title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 14px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							width: 100%;
-							height: 55px;
-							padding: 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							background: #fff;
-							outline: none;
-							&::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-							&:focus {
-								border: 1px solid black;
-							}
-						}
-						textarea {
-							width: 100%;
-							height: 120px;
-							padding: 20px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							font-family: $font;
-							font-size: 14px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
-							&::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-							&:focus {
-								border: 1px solid black;
-							}
-						}
-						.send-message {
-							display: flex;
-							width: 100%;
-							padding: 16px 30px;
-							justify-content: center;
-							align-items: center;
 							gap: 10px;
-							border-radius: 12px;
-							background: #eb6753;
-							.title {
+							.hero-badge {
+								display: inline-flex;
+								align-items: center;
+								gap: 5px;
+								padding: 7px 13px;
+								border-radius: $c-radius-pill;
+								border: 1px solid rgba(255, 255, 255, 0.16);
+								background: rgba(255, 255, 255, 0.1);
+								backdrop-filter: blur(12px);
 								color: #fff;
 								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
+								font-size: 12px;
+								font-weight: 700;
+								letter-spacing: 0.03em;
+								text-transform: uppercase;
+								svg { width: 15px; height: 15px; color: $c-blue-glow; }
+								&.type { text-transform: capitalize; }
+							}
+						}
+						.hero-bottom {
+							display: flex;
+							flex-direction: row;
+							align-items: flex-end;
+							justify-content: space-between;
+							pointer-events: auto;
+							.hero-price {
+								padding: 12px 18px;
+								border-radius: 14px;
+								border: 1px solid $c-border;
+								background: rgba(10, 11, 13, 0.55);
+								backdrop-filter: blur(12px);
+								color: #fff;
+								font-family: $font;
+								font-size: 24px;
+								font-weight: 800;
+								line-height: 1;
+							}
+							.hero-stats {
+								display: flex;
+								flex-direction: row;
+								gap: 8px;
+								.stat {
+									display: inline-flex;
+									align-items: center;
+									gap: 6px;
+									height: 36px;
+									padding: 0 13px;
+									border-radius: $c-radius-pill;
+									border: 1px solid $c-border;
+									background: rgba(10, 11, 13, 0.5);
+									backdrop-filter: blur(10px);
+									color: $c-text;
+									font-family: $font;
+									font-size: 13px;
+									font-weight: 600;
+									svg { width: 17px; height: 17px; color: $c-muted; }
+									&.like {
+										cursor: pointer;
+										transition: border-color 200ms $ease-out, color 200ms $ease-out;
+										&:hover { border-color: rgba(233, 44, 40, 0.5); }
+										&.active {
+											border-color: rgba(233, 44, 40, 0.45);
+											color: #ff5a4d;
+											svg { color: #ff5a4d; }
+										}
+									}
+								}
 							}
 						}
 					}
 				}
-			}
-			.similar-products-config {
-				width: 100%;
-				margin-top: 45px;
-				gap: 66px;
-				.title-pagination-box {
-					width: 100%;
-					height: auto;
-					flex-direction: row;
-					justify-content: space-between;
-					align-items: flex-end;
-					.title-box {
-						width: 30%;
-						.main-title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 30px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							letter-spacing: 0.6px;
-							text-transform: capitalize;
+				.thumbs {
+					display: flex;
+					flex-direction: column;
+					gap: 14px;
+					.thumb {
+						position: relative;
+						width: 100%;
+						height: 92px;
+						border-radius: 16px;
+						overflow: hidden;
+						cursor: pointer;
+						border: 1px solid $c-border;
+						box-shadow: $c-shadow;
+						transition: border-color 200ms $ease-out, box-shadow 200ms $ease-out, transform 200ms $ease-out;
+						img { width: 100%; height: 100%; object-fit: cover; }
+						@media (hover: hover) and (pointer: fine) {
+							&:hover { transform: translateY(-2px); border-color: $c-border-strong; }
 						}
-						.sub-title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 14px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
+						&.active {
+							border-color: rgba(233, 44, 40, 0.6);
+							box-shadow: $c-glow-red;
 						}
-					}
-					.pagination-box {
-						flex-direction: row;
-						align-items: center;
-						gap: 22px;
 					}
 				}
-				.cards-box {
+			}
+		}
+
+		/* 2. OVERVIEW SUMMARY */
+		.carlen-product-summary {
+			.title {
+				margin: 0;
+				color: $c-text;
+				font-family: $font;
+				font-size: 36px;
+				font-weight: 700;
+				line-height: 1.15;
+				letter-spacing: -0.02em;
+				text-transform: capitalize;
+			}
+			.sub {
+				margin-top: 10px;
+				.location {
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 500;
+					text-transform: capitalize;
+					svg { width: 18px; height: 18px; color: $c-orange; }
+				}
+			}
+			.pills {
+				margin-top: 18px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				.pill {
+					padding: 9px 16px;
+					border-radius: $c-radius-pill;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					color: $c-text;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 600;
+					text-transform: capitalize;
+				}
+			}
+		}
+
+		/* BODY: left + dealer */
+		.carlen-product-body {
+			display: grid;
+			grid-template-columns: 1fr 380px;
+			gap: 40px;
+			align-items: start;
+			.carlen-product-left {
+				display: flex;
+				flex-direction: column;
+				gap: 48px;
+				min-width: 0;
+			}
+		}
+
+		/* 3. SPECS GRID */
+		.carlen-product-specs {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+			.spec-card {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 14px;
+				padding: 18px;
+				border-radius: 16px;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				box-shadow: $c-shadow;
+				transition: transform 220ms $ease-out, border-color 220ms $ease-out, box-shadow 220ms $ease-out;
+				@media (hover: hover) and (pointer: fine) {
+					&:hover {
+						transform: translateY(-4px);
+						border-color: rgba(233, 44, 40, 0.35);
+						box-shadow: $c-shadow, $c-glow-red;
+					}
+				}
+				.spec-icon {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 44px;
+					height: 44px;
+					flex-shrink: 0;
+					border-radius: 12px;
+					border: 1px solid rgba(233, 44, 40, 0.25);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					svg { width: 22px; height: 22px; }
+				}
+				.spec-text {
+					display: flex;
+					flex-direction: column;
+					gap: 3px;
+					min-width: 0;
+					.spec-label {
+						color: $c-faint;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 600;
+						letter-spacing: 0.04em;
+						text-transform: uppercase;
+					}
+					.spec-value {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 700;
+						text-transform: capitalize;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+			}
+		}
+
+		/* 4. DESCRIPTION */
+		.carlen-product-description {
+			.desc {
+				margin: 0;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 15px;
+				font-weight: 400;
+				line-height: 1.8;
+			}
+		}
+
+		/* 5. VEHICLE FEATURES */
+		.carlen-product-features {
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 12px;
+				.feature-card {
+					display: flex;
+					flex-direction: column;
+					gap: 6px;
+					padding: 16px 18px;
+					border-radius: 14px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					.feature-label {
+						color: $c-faint;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 0.03em;
+					}
+					.feature-value {
+						color: $c-text;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 700;
+						text-transform: capitalize;
+					}
+				}
+			}
+		}
+
+		/* 6. MAP */
+		.carlen-product-map {
+			.map-box {
+				width: 100%;
+				height: 360px;
+				border-radius: 20px;
+				overflow: hidden;
+				border: 1px solid $c-border;
+				box-shadow: $c-shadow;
+				iframe { width: 100%; height: 100%; filter: grayscale(0.3) brightness(0.85) contrast(1.05); }
+				.map-placeholder {
 					width: 100%;
-					padding-bottom: 10px;
-					.similar-homes-swiper {
-						width: 100%;
-						.similar-homes-slide {
-							width: 411px;
+					height: 100%;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					gap: 10px;
+					background: $c-raised;
+					color: $c-faint;
+					font-family: $font;
+					font-size: 14px;
+					svg { width: 32px; height: 32px; }
+				}
+			}
+		}
+
+		/* 8. REVIEWS */
+		.carlen-product-reviews {
+			.reviews-head {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 6px;
+				svg { color: $c-orange; width: 22px; height: 22px; }
+				.section-title { margin: 0; }
+			}
+			.review-list {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				margin-top: 18px;
+				.review-config {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					padding: 20px;
+					border-radius: 18px;
+					border: 1px solid $c-border;
+					background: $c-raised;
+					box-shadow: $c-shadow;
+					.review-mb-info {
+						.img-name-box {
+							display: flex;
+							flex-direction: row;
+							align-items: center;
+							gap: 12px;
+							.img-box {
+								width: 44px;
+								height: 44px;
+								border-radius: 50%;
+								object-fit: cover;
+								border: 1px solid $c-border;
+							}
+							.name {
+								color: $c-text;
+								font-family: $font;
+								font-size: 15px;
+								font-weight: 700;
+								cursor: pointer;
+								transition: color 200ms $ease-out;
+								&:hover { color: $c-orange; }
+							}
+							.date {
+								color: $c-faint;
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 400;
+							}
+						}
+					}
+					.desc-box {
+						.description {
+							color: $c-muted;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 400;
+							line-height: 1.7;
+						}
+					}
+				}
+				.pagination-box {
+					margin-top: 10px;
+					display: flex;
+					justify-content: center;
+					.MuiPaginationItem-root {
+						font-family: $font;
+						color: $c-muted;
+						border-radius: 10px;
+						&.Mui-selected { background: $c-accent-grad; color: #fff; }
+					}
+				}
+			}
+		}
+
+		/* LEAVE A REVIEW */
+		.carlen-leave-review {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			textarea {
+				width: 100%;
+				min-height: 130px;
+				padding: 16px;
+				border-radius: 16px;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				outline: none;
+				resize: vertical;
+				color: $c-text;
+				font-family: $font;
+				font-size: 14px;
+				line-height: 1.6;
+				transition: border-color 180ms $ease-out, box-shadow 180ms $ease-out;
+				&::placeholder { color: $c-faint; }
+				&:focus { border-color: rgba(233, 44, 40, 0.45); box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.08); }
+			}
+			.submit-review {
+				margin-top: 16px;
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 12px 22px;
+				border-radius: 14px;
+				background: $c-accent-grad;
+				color: #fff;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 700;
+				text-transform: none;
+				transition: box-shadow 200ms $ease-out, filter 200ms $ease-out;
+				svg { width: 18px; height: 18px; }
+				&:hover { box-shadow: $c-glow-red; filter: brightness(1.05); }
+				&.Mui-disabled { opacity: 0.45; color: #fff; }
+			}
+		}
+
+		/* 7. DEALER CARD */
+		.carlen-dealer-card {
+			position: sticky;
+			top: 100px;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			padding: 26px 24px;
+			border-radius: 28px;
+			border: 1px solid $c-border;
+			background: $c-raised;
+			box-shadow: $c-shadow;
+			.dealer-title {
+				margin: 0;
+				color: $c-text;
+				font-family: $font;
+				font-size: 18px;
+				font-weight: 700;
+			}
+			.dealer-info {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 14px;
+				padding-bottom: 20px;
+				border-bottom: 1px solid $c-border;
+				.dealer-avatar {
+					width: 64px;
+					height: 64px;
+					border-radius: 50%;
+					object-fit: cover;
+					border: 1px solid $c-border;
+				}
+				.dealer-meta {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+					.dealer-badge {
+						display: inline-flex;
+						align-items: center;
+						gap: 4px;
+						align-self: flex-start;
+						padding: 3px 9px;
+						border-radius: $c-radius-pill;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						color: $c-blue-glow;
+						font-family: $font;
+						font-size: 10px;
+						font-weight: 700;
+						text-transform: uppercase;
+						letter-spacing: 0.03em;
+						svg { width: 12px; height: 12px; }
+					}
+					.dealer-name {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 700;
+						cursor: pointer;
+						transition: color 200ms $ease-out;
+						&:hover { color: $c-orange; }
+					}
+					.dealer-phone { color: $c-muted; font-family: $font; font-size: 13px; }
+					.dealer-listings { color: $c-faint; font-family: $font; font-size: 12px; }
+				}
+			}
+			.dealer-form {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				input,
+				textarea {
+					width: 100%;
+					box-sizing: border-box;
+					padding: 12px 14px;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					outline: none;
+					color: $c-text;
+					font-family: $font;
+					font-size: 14px;
+					transition: border-color 180ms $ease-out, box-shadow 180ms $ease-out;
+					&::placeholder { color: $c-faint; }
+					&:focus { border-color: rgba(233, 44, 40, 0.45); box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.08); }
+				}
+				textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+				.send-inquiry {
+					margin-top: 4px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					padding: 14px;
+					border-radius: 14px;
+					background: $c-accent-grad;
+					color: #fff;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 700;
+					text-transform: none;
+					box-shadow: 0 10px 24px -10px rgba(233, 44, 40, 0.5);
+					transition: box-shadow 200ms $ease-out, filter 200ms $ease-out;
+					svg { width: 18px; height: 18px; }
+					&:hover { box-shadow: $c-glow-red; filter: brightness(1.05); }
+				}
+			}
+		}
+
+		/* 9. SIMILAR CARS */
+		.carlen-similar-products {
+			.carlen-similar-wrapper {
+				position: relative;
+				padding: 36px 32px;
+				border-radius: 28px;
+				border: 1px solid $c-border;
+				background: linear-gradient(180deg, $c-raised 0%, $c-base 100%);
+				box-shadow: $c-shadow;
+				overflow: hidden;
+				&::before {
+					content: '';
+					position: absolute;
+					inset: 0;
+					z-index: 0;
+					background: radial-gradient(45% 60% at 0% 0%, rgba(233, 44, 40, 0.1), transparent 55%),
+						radial-gradient(45% 65% at 100% 100%, rgba(22, 70, 193, 0.12), transparent 55%);
+					pointer-events: none;
+				}
+				> * {
+					position: relative;
+					z-index: 1;
+				}
+				.carlen-similar-header {
+					display: flex;
+					flex-direction: row;
+					align-items: flex-end;
+					justify-content: space-between;
+					gap: 24px;
+					margin-bottom: 28px;
+					.carlen-similar-titles {
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+						.carlen-similar-eyebrow {
+							display: inline-flex;
+							align-self: flex-start;
+							align-items: center;
+							padding: 6px 12px;
+							border-radius: $c-radius-pill;
+							border: 1px solid rgba(233, 44, 40, 0.28);
+							background: rgba(233, 44, 40, 0.1);
+							color: $c-orange;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 700;
+							line-height: 1;
+							letter-spacing: 0.1em;
+							text-transform: uppercase;
+						}
+						.carlen-similar-title {
+							margin: 0;
+							color: $c-text;
+							font-family: $font;
+							font-size: 28px;
+							font-weight: 700;
+							line-height: 1.15;
+							letter-spacing: -0.02em;
+						}
+						.carlen-similar-subtitle {
+							color: $c-muted;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 400;
+						}
+					}
+					.carlen-similar-controls {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 20px;
+						.carlen-similar-pagination {
+							display: flex;
+							align-items: center;
+							gap: 6px;
+							width: 20%;
+							.swiper-pagination-bullet {
+								width: 9px;
+								height: 9px;
+								margin: 0;
+								border-radius: 50%;
+								background: $c-faint;
+								opacity: 1;
+								cursor: pointer;
+								transition: background 220ms $ease-out, transform 220ms $ease-out;
+							}
+							.swiper-pagination-bullet-active {
+								background: $c-orange;
+								transform: scale(1.1);
+							}
+						}
+						.carlen-similar-prev,
+						.carlen-similar-next {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 50px;
+							height: 50px;
+							padding: 0;
+							border-radius: 50%;
+							border: 1px solid $c-border;
+							background: $c-glass;
+							backdrop-filter: blur(10px);
+							color: $c-text;
+							cursor: pointer;
+							box-shadow: $c-shadow;
+							transition: transform 200ms $ease-out, border-color 200ms $ease-out, background 200ms $ease-out,
+								box-shadow 200ms $ease-out;
+							svg { width: 22px; height: 22px; }
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									transform: translateY(-2px);
+									background: $c-glass-hover;
+									border-color: rgba(233, 44, 40, 0.5);
+									box-shadow: $c-glow-red;
+								}
+							}
+							&:active { transform: scale(0.94); }
+							&.swiper-button-disabled {
+								opacity: 0.4;
+								pointer-events: none;
+								box-shadow: none;
+							}
+						}
+					}
+				}
+				.carlen-similar-swiper {
+					width: 100%;
+					padding: 8px 0 14px;
+					.carlen-similar-slide {
+						width: auto;
+						height: auto;
+					}
+				}
+			}
+			.product-big-card-box {
+				height: auto;
+				width: 375px;
+				border-radius: 26px;
+				overflow: hidden;
+				background: $c-raised;
+				border: 1px solid $c-border;
+				box-shadow: $c-shadow;
+				transition: transform 240ms $ease-out, box-shadow 240ms $ease-out, border-color 240ms $ease-out;
+				@media (hover: hover) and (pointer: fine) {
+					&:hover {
+						transform: translateY(-8px);
+						box-shadow: $c-shadow, $c-glow-red;
+						border-color: rgba(233, 44, 40, 0.25);
+						.card-img { transform: scale(1.05); }
+					}
+				}
+				.card-img {
+					height: 248px;
+					border-radius: 0;
+					transform-origin: center;
+					transition: transform 600ms $ease-out;
+					&::after {
+						content: '';
+						position: absolute;
+						inset: 0;
+						z-index: 0;
+						background: linear-gradient(180deg, transparent 45%, rgba(5, 7, 11, 0.7) 100%);
+						pointer-events: none;
+					}
+					div.status {
+						z-index: 2;
+						padding: 6px 14px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(255, 255, 255, 0.16);
+						background: rgba(255, 255, 255, 0.1);
+						backdrop-filter: blur(12px);
+					}
+					div.price {
+						z-index: 2;
+						padding: 9px 13px;
+						border-radius: 12px;
+						border: 1px solid $c-border;
+						background: rgba(10, 11, 13, 0.55);
+						backdrop-filter: blur(12px);
+						color: #fff;
+						font-weight: 800;
+					}
+				}
+				.info {
+					border: none;
+					border-radius: 0;
+					background: linear-gradient(180deg, $c-raised 0%, #0c111a 100%);
+					.title {
+						color: $c-text;
+						font-weight: 700;
+						transition: color 200ms $ease-out;
+						&:hover { color: $c-orange; }
+					}
+					.desc { color: $c-muted; }
+					.options {
+						flex-wrap: wrap;
+						justify-content: flex-start;
+						gap: 8px;
+						div {
+							padding: 6px 10px;
+							gap: 5px;
+							align-items: center;
+							border-radius: $c-radius-pill;
+							border: 1px solid $c-border;
+							background: $c-glass;
+							img {
+								margin-right: 0;
+								filter: brightness(0) invert(1);
+								opacity: 0.7;
+							}
+							span {
+								color: $c-muted;
+								font-size: 12px;
+								font-weight: 600;
+							}
+						}
+					}
+					.MuiDivider-root { border-color: $c-border; }
+					.bott {
+						p { color: $c-muted; }
+						span { color: $c-faint; }
+						.buttons-box {
+							svg { color: $c-muted; }
+							.MuiIconButton-root:hover { background: rgba(233, 44, 40, 0.08); }
+							.view-cnt { color: $c-muted; }
 						}
 					}
 				}
