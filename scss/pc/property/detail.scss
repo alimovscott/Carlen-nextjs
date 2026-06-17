@@ -728,100 +728,10 @@
 					}
 				}
 			}
+			/* Premium card visuals now live in .carlen-product-big-card (scss/pc/general.scss).
+			   Only the swiper-context width is set here. */
 			.product-big-card-box {
-				height: auto;
 				width: 375px;
-				border-radius: 26px;
-				overflow: hidden;
-				background: $c-raised;
-				border: 1px solid $c-border;
-				box-shadow: $c-shadow;
-				transition: transform 240ms $ease-out, box-shadow 240ms $ease-out, border-color 240ms $ease-out;
-				@media (hover: hover) and (pointer: fine) {
-					&:hover {
-						transform: translateY(-8px);
-						box-shadow: $c-shadow, $c-glow-red;
-						border-color: rgba(233, 44, 40, 0.25);
-						.card-img { transform: scale(1.05); }
-					}
-				}
-				.card-img {
-					height: 248px;
-					border-radius: 0;
-					transform-origin: center;
-					transition: transform 600ms $ease-out;
-					&::after {
-						content: '';
-						position: absolute;
-						inset: 0;
-						z-index: 0;
-						background: linear-gradient(180deg, transparent 45%, rgba(5, 7, 11, 0.7) 100%);
-						pointer-events: none;
-					}
-					div.status {
-						z-index: 2;
-						padding: 6px 14px;
-						border-radius: $c-radius-pill;
-						border: 1px solid rgba(255, 255, 255, 0.16);
-						background: rgba(255, 255, 255, 0.1);
-						backdrop-filter: blur(12px);
-					}
-					div.price {
-						z-index: 2;
-						padding: 9px 13px;
-						border-radius: 12px;
-						border: 1px solid $c-border;
-						background: rgba(10, 11, 13, 0.55);
-						backdrop-filter: blur(12px);
-						color: #fff;
-						font-weight: 800;
-					}
-				}
-				.info {
-					border: none;
-					border-radius: 0;
-					background: linear-gradient(180deg, $c-raised 0%, #0c111a 100%);
-					.title {
-						color: $c-text;
-						font-weight: 700;
-						transition: color 200ms $ease-out;
-						&:hover { color: $c-orange; }
-					}
-					.desc { color: $c-muted; }
-					.options {
-						flex-wrap: wrap;
-						justify-content: flex-start;
-						gap: 8px;
-						div {
-							padding: 6px 10px;
-							gap: 5px;
-							align-items: center;
-							border-radius: $c-radius-pill;
-							border: 1px solid $c-border;
-							background: $c-glass;
-							img {
-								margin-right: 0;
-								filter: brightness(0) invert(1);
-								opacity: 0.7;
-							}
-							span {
-								color: $c-muted;
-								font-size: 12px;
-								font-weight: 600;
-							}
-						}
-					}
-					.MuiDivider-root { border-color: $c-border; }
-					.bott {
-						p { color: $c-muted; }
-						span { color: $c-faint; }
-						.buttons-box {
-							svg { color: $c-muted; }
-							.MuiIconButton-root:hover { background: rgba(233, 44, 40, 0.08); }
-							.view-cnt { color: $c-muted; }
-						}
-					}
-				}
 			}
 		}
 	}

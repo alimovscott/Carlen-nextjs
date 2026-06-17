@@ -157,6 +157,221 @@
 		}
 	}
 }
+
+/* ===== CARLEN PREMIUM AUTOMOTIVE CARD (shared, scoped to .carlen-product-big-card) ===== */
+.carlen-product-big-card {
+	margin: 0;
+	height: auto;
+	overflow: hidden;
+	border-radius: 24px;
+	background: $c-raised;
+	border: 1px solid $c-border;
+	box-shadow: $c-shadow;
+	cursor: pointer;
+	transition: box-shadow 240ms $ease-out, border-color 240ms $ease-out;
+
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			box-shadow: $c-shadow, $c-glow-red;
+			border-color: rgba(233, 44, 40, 0.25);
+			.card-img {
+				transform: scale(1.05);
+			}
+		}
+	}
+
+	.card-img {
+		position: relative;
+		overflow: hidden;
+		height: 248px;
+		border-radius: 0;
+		background-size: cover;
+		background-position: center;
+		transform-origin: center;
+		transition: transform 600ms $ease-out;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			background: linear-gradient(180deg, transparent 45%, rgba(5, 7, 11, 0.7) 100%);
+			pointer-events: none;
+		}
+
+		div.status {
+			z-index: 2;
+			left: 16px;
+			top: 16px;
+			padding: 6px 14px;
+			border-radius: $c-radius-pill;
+			border: 1px solid $c-border-strong;
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(12px);
+			img {
+				width: 13px;
+				height: 13px;
+			}
+			span {
+				color: #fff;
+			}
+		}
+
+		.fav-btn {
+			position: absolute;
+			z-index: 2;
+			top: 14px;
+			right: 14px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			padding: 0;
+			border-radius: 50%;
+			border: 1px solid $c-border;
+			background: rgba(10, 11, 13, 0.5);
+			backdrop-filter: blur(12px);
+			box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.7);
+			cursor: pointer;
+			transition: border-color 200ms $ease-out, box-shadow 200ms $ease-out, background 200ms $ease-out;
+			&:hover {
+				border-color: rgba(233, 44, 40, 0.45);
+				box-shadow: 0 8px 20px -8px rgba(233, 44, 40, 0.5);
+			}
+			svg {
+				width: 19px;
+				height: 19px;
+				color: $c-text;
+				&.liked {
+					color: $c-red;
+				}
+			}
+		}
+
+		div.price {
+			z-index: 2;
+			left: 16px;
+			bottom: 16px;
+			padding: 9px 13px;
+			border-radius: 12px;
+			border: 1px solid $c-border;
+			background: rgba(10, 11, 13, 0.55);
+			backdrop-filter: blur(12px);
+			color: #fff;
+			font-weight: 800;
+		}
+	}
+
+	.info {
+		padding: 20px 22px 18px;
+		border: none;
+		border-radius: 0;
+		background: linear-gradient(180deg, $c-raised 0%, #0c111a 100%);
+
+		.title {
+			color: $c-text;
+			font-weight: 700;
+			transition: color 200ms $ease-out;
+			&:hover {
+				color: $c-orange;
+			}
+		}
+		.desc {
+			color: $c-muted;
+		}
+
+		.options {
+			margin-top: 16px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			gap: 8px;
+
+			.spec-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 6px 11px;
+				border-radius: $c-radius-pill;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 600;
+				line-height: 1;
+				white-space: nowrap;
+				img {
+					width: 14px;
+					height: 14px;
+					filter: brightness(0) invert(1);
+					opacity: 0.7;
+				}
+			}
+		}
+
+		.MuiDivider-root {
+			border-color: $c-border;
+		}
+
+		.bott {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+
+			.tags {
+				width: auto;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 6px;
+				.tag-chip {
+					display: inline-flex;
+					align-items: center;
+					padding: 5px 10px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.28);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 700;
+					line-height: 1;
+					letter-spacing: 0.02em;
+					text-transform: capitalize;
+				}
+			}
+
+			.buttons-box {
+				width: auto;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 14px;
+				.stat {
+					display: inline-flex;
+					align-items: center;
+					gap: 5px;
+					svg {
+						width: 18px;
+						height: 18px;
+						color: $c-muted;
+					}
+					.view-cnt {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 500;
+					}
+				}
+			}
+		}
+	}
+}
+
 .agent-general-card {
 	position: relative;
 	margin-right: 27px;

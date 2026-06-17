@@ -1,6 +1,6 @@
 import React from 'react';
-import { Stack, Box, Divider, Typography } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { Box, Divider, Typography } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Product } from '../../types/product/product';
@@ -21,17 +21,26 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 
 	/** HANDLERS **/
-	const goPropertyDetatilPage = (productId: string) => {
+	const goProductDetailPage = (productId: string) => {
 		router.push(`/cars/detail?id=${productId}`);
 	};
 
+	const liked = product?.meLiked && product?.meLiked[0]?.myFavorite;
+
 	if (device === 'mobile') {
-		return <div>APARTMEND BIG CARD</div>;
+		return <div>PRODUCT BIG CARD MOBILE</div>;
 	} else {
 		return (
-			<Stack className="product-big-card-box" onClick={() => goPropertyDetatilPage(product?._id)}>
+			<motion.div
+				className="product-big-card-box carlen-product-big-card"
+				onClick={() => goProductDetailPage(product?._id)}
+				whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+				whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
+				transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+			>
 				<Box
 					component={'div'}
 					className={'card-img'}
@@ -44,54 +53,59 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 						</div>
 					)}
 
+					<motion.button
+						type={'button'}
+						className={'fav-btn'}
+						aria-label={'favorite'}
+						whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
+						whileTap={shouldReduceMotion ? undefined : { scale: 0.9 }}
+						onClick={(e: any) => {
+							e.stopPropagation();
+							e.preventDefault();
+							likePropertyHandler && likePropertyHandler(user, product?._id);
+						}}
+					>
+						{liked ? <FavoriteIcon className={'liked'} /> : <FavoriteIcon />}
+					</motion.button>
+
 					<div className={'price'}>${formatterStr(product?.productPrice)}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'}>{product?.productTitle}</strong>
 					<p className={'desc'}>{product?.productAddress}</p>
 					<div className={'options'}>
-						<div>
+						<span className={'spec-chip'}>
 							<img src="/img/icons/car-seat.svg" alt="" />
-							<span>{product?.productSeats} seats</span>
-						</div>
-						<div>
+							{product?.productSeats} Seats
+						</span>
+						<span className={'spec-chip'}>
 							<img src="/img/icons/car-door.svg" alt="" />
-							<span>{product?.productDoors} doors</span>
-						</div>
-						<div>
+							{product?.productDoors} Doors
+						</span>
+						<span className={'spec-chip'}>
 							<img src="/img/icons/odometer.svg" alt="" />
-							<span>{product?.productMileage} km</span>
-						</div>
+							{formatterStr(product?.productMileage)} km
+						</span>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<div>
-							{product?.productTransmission ? <p>Automatic</p> : <span>Automatic</span>}
-							{product?.productFuelType ? <p>Fuel</p> : <span>Fuel</span>}
+						<div className={'tags'}>
+							<span className={'tag-chip'}>{product?.productTransmission}</span>
+							<span className={'tag-chip'}>{product?.productFuelType}</span>
 						</div>
 						<div className="buttons-box">
-							<IconButton color={'default'}>
+							<span className={'stat'}>
 								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{product?.productViews}</Typography>
-							<IconButton
-								color={'default'}
-								onClick={(e: any) => {
-									e.stopPropagation();
-									likePropertyHandler(user, product?._id);	
-								}}
-							>
-								{product?.meLiked && product?.meLiked[0]?.myFavorite ? (
-									<FavoriteIcon style={{ color: 'red' }} />
-								) : (
-									<FavoriteIcon />
-								)}
-							</IconButton>
-							<Typography className="view-cnt">{product?.productLikes}</Typography>
+								<Typography className="view-cnt">{product?.productViews}</Typography>
+							</span>
+							<span className={'stat'}>
+								<FavoriteIcon />
+								<Typography className="view-cnt">{product?.productLikes}</Typography>
+							</span>
 						</div>
 					</div>
 				</Box>
-			</Stack>
+			</motion.div>
 		);
 	}
 };
