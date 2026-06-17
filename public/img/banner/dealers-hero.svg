@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none" role="img" aria-label="Premium Carlen dealer showroom with verified automotive specialist">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="0.48" stop-color="#0B0F17"/>
+      <stop offset="1" stop-color="#070B12"/>
+    </linearGradient>
+    <radialGradient id="redGlow" cx="0" cy="0" r="1" gradientTransform="translate(180 120) rotate(42) scale(310 240)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E92C28" stop-opacity="0.42"/>
+      <stop offset="0.48" stop-color="#FF5A3C" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FF5A3C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blueGlow" cx="0" cy="0" r="1" gradientTransform="translate(670 430) rotate(-28) scale(330 250)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1646C1" stop-opacity="0.44"/>
+      <stop offset="1" stop-color="#1646C1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glassPanel" x1="126" y1="90" x2="650" y2="432" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="0.55" stop-color="#FFFFFF" stop-opacity="0.055"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="375" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#141B29"/>
+      <stop offset="1" stop-color="#080C14"/>
+    </linearGradient>
+    <linearGradient id="carBody" x1="210" y1="345" x2="638" y2="440" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#384257"/>
+      <stop offset="0.44" stop-color="#1D2636"/>
+      <stop offset="1" stop-color="#101722"/>
+    </linearGradient>
+    <linearGradient id="carWindow" x1="335" y1="298" x2="510" y2="352" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B6E91"/>
+      <stop offset="1" stop-color="#1E2A3D"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="210" y1="342" x2="638" y2="381" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E92C28" stop-opacity="0"/>
+      <stop offset="0.52" stop-color="#FF5A3C"/>
+      <stop offset="1" stop-color="#E92C28" stop-opacity="0.2"/>
+    </linearGradient>
+    <radialGradient id="headlight" cx="0" cy="0" r="1" gradientTransform="translate(620 388) scale(130 70)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE2B7" stop-opacity="0.9"/>
+      <stop offset="0.38" stop-color="#FF8C50" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#FF5A3C" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="22" stdDeviation="20" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#redGlow)"/>
+  <rect width="800" height="600" fill="url(#blueGlow)"/>
+
+  <path d="M0 0H800V112C676 84 560 86 452 118C326 155 202 150 0 104V0Z" fill="#FFFFFF" opacity="0.035"/>
+  <path d="M385 -40L560 382H210L385 -40Z" fill="#FFFFFF" opacity="0.045"/>
+
+  <g opacity="0.72">
+    <rect x="88" y="86" width="596" height="314" rx="28" fill="url(#glassPanel)" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <path d="M136 154H636" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <path d="M162 218H612" stroke="#FFFFFF" stroke-opacity="0.055"/>
+    <path d="M188 282H586" stroke="#FFFFFF" stroke-opacity="0.045"/>
+    <path d="M260 96L224 400" stroke="#FFFFFF" stroke-opacity="0.055"/>
+    <path d="M530 96L570 400" stroke="#FFFFFF" stroke-opacity="0.055"/>
+  </g>
+
+  <rect y="376" width="800" height="224" fill="url(#floor)"/>
+  <g stroke="#FFFFFF" stroke-opacity="0.055" stroke-width="1.4">
+    <path d="M-40 452H840"/>
+    <path d="M-52 504H852"/>
+    <path d="M-68 562H868"/>
+    <path d="M145 600L310 376"/>
+    <path d="M403 600V376"/>
+    <path d="M660 600L500 376"/>
+  </g>
+  <ellipse cx="410" cy="452" rx="290" ry="58" fill="#000000" opacity="0.24"/>
+
+  <g filter="url(#softShadow)">
+    <rect x="92" y="236" width="155" height="156" rx="22" fill="#0E1420" stroke="#FFFFFF" stroke-opacity="0.13"/>
+    <rect x="111" y="258" width="117" height="82" rx="16" fill="#151E2E" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <circle cx="169" cy="288" r="21" fill="#303C53"/>
+    <path d="M132 332C141 315 154 307 169 307C184 307 197 315 206 332" fill="#232E43"/>
+    <rect x="118" y="358" width="103" height="10" rx="5" fill="#FFFFFF" opacity="0.18"/>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="558" y="130" width="126" height="114" rx="22" fill="#0E1420" stroke="#FFFFFF" stroke-opacity="0.14"/>
+    <circle cx="594" cy="167" r="20" fill="#E92C28" opacity="0.22"/>
+    <path d="M584 167L592 175L608 158" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="586" y="210" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Verified</text>
+    <text x="586" y="229" fill="#AAB2C0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600">Dealer network</text>
+  </g>
+
+  <g opacity="0.78" stroke-linecap="round">
+    <path d="M235 184C292 138 386 132 454 172" stroke="#1646C1" stroke-opacity="0.5" stroke-width="2"/>
+    <path d="M454 172C492 198 528 205 575 184" stroke="#E92C28" stroke-opacity="0.55" stroke-width="2"/>
+    <circle cx="235" cy="184" r="5" fill="#1646C1"/>
+    <circle cx="454" cy="172" r="5" fill="#FFFFFF"/>
+    <circle cx="575" cy="184" r="5" fill="#E92C28"/>
+  </g>
+
+  <ellipse cx="618" cy="390" rx="130" ry="65" fill="url(#headlight)"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M184 412C190 378 210 358 248 350C280 314 324 296 378 294C436 292 488 304 520 326C565 334 608 354 637 382C651 396 650 405 642 412H184Z" fill="url(#carBody)" stroke="url(#accentLine)" stroke-width="2.5"/>
+    <path d="M304 330C326 307 360 300 397 300C438 300 473 307 500 328L478 352H324L304 330Z" fill="url(#carWindow)" opacity="0.9"/>
+    <path d="M222 386C298 372 444 370 610 386" stroke="#FF5A3C" stroke-opacity="0.52" stroke-width="2.2"/>
+    <path d="M618 374Q641 380 638 397L606 394Q604 382 618 374Z" fill="#FFE2B7" opacity="0.95"/>
+    <circle cx="292" cy="414" r="38" fill="#070B12" stroke="#36445D" stroke-width="4"/>
+    <circle cx="292" cy="414" r="16" fill="#172033" stroke="#FF5A3C" stroke-opacity="0.55" stroke-width="2"/>
+    <circle cx="532" cy="414" r="38" fill="#070B12" stroke="#36445D" stroke-width="4"/>
+    <circle cx="532" cy="414" r="16" fill="#172033" stroke="#1646C1" stroke-opacity="0.65" stroke-width="2"/>
+  </g>
+
+  <g opacity="0.72">
+    <rect x="248" y="476" width="316" height="10" rx="5" fill="#FFFFFF" opacity="0.08"/>
+    <rect x="290" y="496" width="228" height="6" rx="3" fill="#E92C28" opacity="0.22"/>
+  </g>
+
+  <rect width="800" height="92" fill="#070B12" opacity="0.32"/>
+  <rect y="510" width="800" height="90" fill="#070B12" opacity="0.42"/>
+</svg>

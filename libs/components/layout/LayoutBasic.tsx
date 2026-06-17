@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Top from '../Top';
 import Footer from '../Footer';
 import ProductsHero from '../product/ProductsHero';
+import AgentsHero from '../agent/AgentsHero';
 import { Stack } from '@mui/material';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
@@ -126,6 +127,8 @@ const withLayoutBasic = (Component: any) => {
 
 						{router.pathname === '/cars' ? (
 							<ProductsHero />
+						) : router.pathname === '/agent' ? (
+							<AgentsHero />
 						) : (
 							<Stack
 								className={`header-basic ${authHeader && 'auth'}`}
