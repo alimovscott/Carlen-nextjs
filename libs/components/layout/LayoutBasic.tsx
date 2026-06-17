@@ -128,8 +128,8 @@ const withLayoutBasic = (Component: any) => {
 						{router.pathname === '/cars' ? (
 							<ProductsHero />
 						) : router.pathname === '/agent' ? (
-							<AgentsHero />
-						) : (
+							<AgentsHero variant={'listing'} />
+						) : router.pathname === '/agent/detail' ? null : (
 							<Stack
 								className={`header-basic ${authHeader && 'auth'}`}
 								style={{

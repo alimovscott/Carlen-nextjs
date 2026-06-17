@@ -4,13 +4,9 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
+import AgentsHero from '../../libs/components/agent/AgentsHero';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
-import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
-import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -22,7 +18,7 @@ import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
-import { Messages, REACT_APP_API_URL } from '../../libs/config';
+import { Messages } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
@@ -138,15 +134,6 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	}, [commentInquiry]);
 
 	/** HANDLERS **/
-	const redirectToMemberPageHandler = async (memberId: string) => {
-		try {
-			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
-			else await router.push(`/member?memberId=${memberId}`);
-		} catch (error) {
-			await sweetErrorHandling(error);
-		}
-	};
-
 	const productPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
 		setSearchFilter({ ...searchFilter });
@@ -233,13 +220,6 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
 	};
 
-	const dealerName = agent?.memberFullName ?? agent?.memberNick;
-	const dealerStats = [
-		{ key: 'listings', label: 'Listings', value: productTotal, icon: <DirectionsCarFilledOutlinedIcon /> },
-		{ key: 'likes', label: 'Likes', value: agent?.memberLikes ?? 0, icon: <FavoriteBorderIcon /> },
-		{ key: 'views', label: 'Views', value: agent?.memberViews ?? 0, icon: <VisibilityOutlinedIcon /> },
-	];
-
 	if (device === 'mobile') {
 		return <div>AGENT DETAIL PAGE MOBILE</div>;
 	} else {
@@ -247,74 +227,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 			<Stack className={'carlen-agent-detail-page'}>
 				<Stack className={'container'}>
 					{/* 1 + 2. PREMIUM DEALER HERO */}
-					<motion.section
-						className={'carlen-agent-hero'}
-						variants={container}
-						initial={'hidden'}
-						animate={'visible'}
-					>
-						<motion.div className={'carlen-agent-profile'} variants={item}>
-							<div className={'avatar-ring'} onClick={() => redirectToMemberPageHandler(agent?._id as string)}>
-								<img
-									src={
-										agent?.memberImage
-											? `${REACT_APP_API_URL}/${agent?.memberImage}`
-											: '/img/profile/defaultUser.svg'
-									}
-									alt=""
-								/>
-							</div>
-							<Box component={'div'} className={'info'}>
-								<span className={'verified-chip'}>
-									<VerifiedOutlinedIcon />
-									Verified Dealer
-								</span>
-								<strong onClick={() => redirectToMemberPageHandler(agent?._id as string)}>{dealerName}</strong>
-								<div className={'phone-row'}>
-									<PhoneOutlinedIcon />
-									<span>{agent?.memberPhone}</span>
-								</div>
-								<p className={'dealer-desc'}>
-									{agent?.memberDesc ?? 'Premium verified Carlen dealer offering hand-picked vehicles and trusted service.'}
-								</p>
-								<div className={'cta-row'}>
-									<motion.a
-										href={`tel:${agent?.memberPhone ?? ''}`}
-										className={'cta-primary'}
-										whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-										whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
-									>
-										<PhoneOutlinedIcon />
-										Contact Dealer
-									</motion.a>
-									<motion.button
-										type={'button'}
-										className={'cta-secondary'}
-										whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-										whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
-										onClick={() => redirectToMemberPageHandler(agent?._id as string)}
-									>
-										View Profile
-									</motion.button>
-								</div>
-							</Box>
-						</motion.div>
-
-						<motion.div className={'carlen-agent-stats'} variants={container}>
-							{dealerStats.map((stat) => (
-								<motion.div
-									className={'stat-card'}
-									key={stat.key}
-									variants={item}
-									whileHover={shouldReduceMotion ? undefined : { y: -4 }}
-								>
-									<span className={'stat-icon'}>{stat.icon}</span>
-									<strong className={'stat-value'}>{stat.value}</strong>
-									<span className={'stat-label'}>{stat.label}</span>
-								</motion.div>
-							))}
-						</motion.div>
-					</motion.section>
+					<AgentsHero variant={'detail'} agent={agent} />
 
 					{/* 3. DEALER PRODUCTS */}
 					<Stack className={'carlen-agent-products'}>

@@ -1,12 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
+import { Member } from '../../types/member/member';
+import { REACT_APP_API_URL } from '../../config';
+import { sweetErrorHandling } from '../../sweetAlert';
 
 const STATS = ['120+ Dealers', '1,200+ Listings', 'Verified Network'];
 
-const AgentsHero = () => {
+interface AgentsHeroProps {
+	variant?: 'listing' | 'detail';
+	agent?: Member | null;
+}
+
+const AgentsHero = (props: AgentsHeroProps) => {
+	const { variant = 'listing', agent } = props;
 	const shouldReduceMotion = useReducedMotion();
+	const router = useRouter();
+	const user = useReactiveVar(userVar);
 
 	const container: Variants = {
 		hidden: {},
@@ -17,6 +35,94 @@ const AgentsHero = () => {
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
 	};
 
+	/** DETAIL VARIANT **/
+	if (variant === 'detail') {
+		const dealerName = agent?.memberFullName ?? agent?.memberNick;
+		const dealerStats = [
+			{ key: 'listings', label: 'Listings', value: agent?.memberProducts ?? 0, icon: <DirectionsCarFilledOutlinedIcon /> },
+			{ key: 'likes', label: 'Likes', value: agent?.memberLikes ?? 0, icon: <FavoriteBorderIcon /> },
+			{ key: 'views', label: 'Views', value: agent?.memberViews ?? 0, icon: <VisibilityOutlinedIcon /> },
+		];
+
+		const redirectToMemberPageHandler = async (memberId?: string) => {
+			try {
+				if (!memberId) return;
+				if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
+				else await router.push(`/member?memberId=${memberId}`);
+			} catch (error) {
+				await sweetErrorHandling(error);
+			}
+		};
+
+		return (
+			<motion.section
+				className={'carlen-agent-detail-hero'}
+				variants={container}
+				initial={'hidden'}
+				animate={'visible'}
+			>
+				<motion.div className={'carlen-agent-profile'} variants={item}>
+					<div className={'avatar-ring'} onClick={() => redirectToMemberPageHandler(agent?._id)}>
+						<img
+							src={agent?.memberImage ? `${REACT_APP_API_URL}/${agent?.memberImage}` : '/img/profile/defaultUser.svg'}
+							alt=""
+						/>
+					</div>
+					<div className={'info'}>
+						<span className={'verified-chip'}>
+							<VerifiedOutlinedIcon />
+							Verified Dealer
+						</span>
+						<strong onClick={() => redirectToMemberPageHandler(agent?._id)}>{dealerName}</strong>
+						<div className={'phone-row'}>
+							<PhoneOutlinedIcon />
+							<span>{agent?.memberPhone}</span>
+						</div>
+						<p className={'dealer-desc'}>
+							{agent?.memberDesc ?? 'Premium verified Carlen dealer offering hand-picked vehicles and trusted service.'}
+						</p>
+						<div className={'cta-row'}>
+							<motion.a
+								href={`tel:${agent?.memberPhone ?? ''}`}
+								className={'cta-primary'}
+								whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+								whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+							>
+								<PhoneOutlinedIcon />
+								Contact Dealer
+							</motion.a>
+							<motion.button
+								type={'button'}
+								className={'cta-secondary'}
+								whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+								whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+								onClick={() => redirectToMemberPageHandler(agent?._id)}
+							>
+								View Profile
+							</motion.button>
+						</div>
+					</div>
+				</motion.div>
+
+				<motion.div className={'carlen-agent-stats'} variants={container}>
+					{dealerStats.map((stat) => (
+						<motion.div
+							className={'stat-card'}
+							key={stat.key}
+							variants={item}
+							whileHover={shouldReduceMotion ? undefined : { y: -4 }}
+						>
+							<span className={'stat-icon'}>{stat.icon}</span>
+							<strong className={'stat-value'}>{stat.value}</strong>
+							<span className={'stat-label'}>{stat.label}</span>
+						</motion.div>
+					))}
+				</motion.div>
+			</motion.section>
+		);
+	}
+
+	/** LISTING VARIANT (default) **/
 	return (
 		<section className={'carlen-agent-hero'}>
 			<div className={'carlen-agent-hero-inner'}>
