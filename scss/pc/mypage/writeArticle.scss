@@ -2,7 +2,9 @@
 	#write-article-page {
 		width: 100%;
 		height: auto;
+		/* Hidden: replaced by the premium .carlen-community-editor hero */
 		.main-title-box {
+			display: none;
 			width: auto;
 			height: auto;
 			flex-direction: row;

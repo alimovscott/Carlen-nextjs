@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Button, Stack, Typography, Tab, Tabs, IconButton, Backdrop, Pagination } from '@mui/material';
+import { Stack, Typography, IconButton, Backdrop, Pagination } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import Moment from 'react-moment';
@@ -11,18 +11,24 @@ import { userVar } from '../../apollo/store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import ChatIcon from '@mui/icons-material/Chat';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
+import CommunityCard from '../../libs/components/common/CommunityCard';
 import dynamic from 'next/dynamic';
 import { CommentGroup, CommentStatus } from '../../libs/enums/comment.enum';
 import { T } from '../../libs/types/common';
 import EditIcon from '@mui/icons-material/Edit';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BoardArticle } from '../../libs/types/board-article/board-article';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
 import { CREATE_COMMENT, LIKE_TARGET_BOARD_ARTICLE, UPDATE_COMMENT } from '../../apollo/user/mutation';
-import { GET_BOARD_ARTICLE, GET_COMMENTS } from '../../apollo/user/query';
+import { GET_BOARD_ARTICLE, GET_BOARD_ARTICLES, GET_COMMENTS } from '../../apollo/user/query';
 import {  sweetConfirmAlert, sweetMixinErrorAlert, sweetMixinSuccessAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { Messages } from '../../libs/config';
 import { CommentUpdate } from '../../libs/types/comment/comment.update';
@@ -34,10 +40,25 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const CATEGORY_TABS: { value: string; label: string; icon: React.ReactNode }[] = [
+	{ value: 'FREE', label: 'Free Discussion', icon: <ForumOutlinedIcon /> },
+	{ value: 'RECOMMEND', label: 'Recommendations', icon: <StarOutlineRoundedIcon /> },
+	{ value: 'NEWS', label: 'Automotive News', icon: <ArticleOutlinedIcon /> },
+	{ value: 'HUMOR', label: 'Humor & Fun', icon: <SentimentSatisfiedAltOutlinedIcon /> },
+];
+
+const CATEGORY_META: Record<string, string> = {
+	FREE: 'Free Discussion',
+	RECOMMEND: 'Recommendations',
+	NEWS: 'Automotive News',
+	HUMOR: 'Humor & Fun',
+};
+
 const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { query } = router;
+	const shouldReduceMotion = useReducedMotion();
 
 	const articleId = query?.id as string;
 	const articleCategory = query?.articleCategory as string;
@@ -60,6 +81,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const [updatedCommentId, setUpdatedCommentId] = useState<string>('');
 	const [likeLoading, setLikeLoading] = useState<boolean>(false);
 	const [boardArticle, setBoardArticle] = useState<BoardArticle>();
+	const [relatedArticles, setRelatedArticles] = useState<BoardArticle[]>([]);
 
 	/** APOLLO REQUESTS **/
 	// MUTATIONS
@@ -102,10 +124,38 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		},
 	});
 
+	const { refetch: getRelatedArticlesRefetch } = useQuery(GET_BOARD_ARTICLES, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 4,
+				sort: 'createdAt',
+				direction: 'DESC',
+				search: { articleCategory },
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !articleCategory,
+		onCompleted: (data: T) => {
+			setRelatedArticles(data?.getBoardArticles?.list ?? []);
+		},
+	});
+
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (articleId) setSearchFilter({ ...searchFilter, search: { commentRefId: articleId } });
 	}, [articleId]);
+
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08, delayChildren: 0.05 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 18 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
+	};
 
 	/** HANDLERS **/
 	const tabChangeHandler = (event: React.SyntheticEvent, value: string) => {
@@ -219,10 +269,21 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 			if (likeLoading) return;
 			if (!id) return;
 			if (!user._id) throw new Error(Messages.error2);
+			setLikeLoading(true);
 
-			await likeTargetBoartArticle({ variables: { input: id } });
+			const { data } = await likeTargetBoartArticle({ variables: { input: id } });
 
-			await getBoardArticleRefetch({ input: articleId });
+			// Update like state locally (the mutation returns the new count) instead of
+			// refetching GET_BOARD_ARTICLE, which would flash the article body skeleton.
+			setBoardArticle((prev) => {
+				if (!prev) return prev;
+				const wasLiked = !!prev.meLiked?.[0]?.myFavorite;
+				return {
+					...prev,
+					articleLikes: data?.likeTargetBoardArticle?.articleLikes ?? prev.articleLikes,
+					meLiked: [{ memberId: user._id, likeRefId: id, myFavorite: !wasLiked }],
+				};
+			});
 
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
@@ -233,162 +294,256 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		}
 	};
 
+	const writeArticleHandler = () => {
+		router.push({ pathname: '/mypage', query: { category: 'writeArticle' } });
+	};
+
+	const relatedLikeHandler = async (e: any, user: T, id: string) => {
+		try {
+			e.stopPropagation();
+			if (!id) return;
+			if (!user._id) throw new Error(Messages.error2);
+
+			await likeTargetBoartArticle({ variables: { input: id } });
+			await getRelatedArticlesRefetch();
+
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, relatedLikeHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		}
+	};
+
+	const related = relatedArticles.filter((a) => a?._id !== articleId).slice(0, 3);
+
 	if (device === 'mobile') {
 		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
 	} else {
 		return (
-			<div id="community-detail-page">
+			<div id="carlen-community-detail-page">
 				<div className="container">
-					<Stack className="main-box">
-						<Stack className="left-config">
-							<Stack className={'image-info'}>
+					<Stack className="carlen-community-detail-layout">
+						<motion.aside
+							className="carlen-community-sidebar"
+							variants={container}
+							initial="hidden"
+							animate="visible"
+						>
+							<Stack className="brand-row">
 								<img src={'/img/logo/logoText.svg'} alt="Carlen" className={'carlen-logo-hover'} />
-								<Stack className={'community-name'}>
-									<Typography className={'name'}>Community Board Article</Typography>
-								</Stack>
+								<Typography className="brand-name">Carlen Community</Typography>
 							</Stack>
-							<Tabs
-								orientation="vertical"
-								aria-label="lab API tabs example"
-								TabIndicatorProps={{
-									style: { display: 'none' },
-								}}
-								onChange={tabChangeHandler}
-								value={articleCategory}
-							>
-								<Tab
-									value={'FREE'}
-									label={'Free Board'}
-									className={`tab-button ${articleCategory === 'FREE' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'RECOMMEND'}
-									label={'Recommendation'}
-									className={`tab-button ${articleCategory === 'RECOMMEND' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'NEWS'}
-									label={'News'}
-									className={`tab-button ${articleCategory === 'NEWS' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'HUMOR'}
-									label={'Humor'}
-									className={`tab-button ${articleCategory === 'HUMOR' ? 'active' : ''}`}
-								/>
-							</Tabs>
-						</Stack>
-						<div className="community-detail-config">
-							<Stack className="title-box">
-								<Stack className="left">
-									<Typography className="title">{articleCategory} BOARD</Typography>
-									<Typography className="sub-title">
-										Express your opinions freely here without content restrictions
-									</Typography>
-								</Stack>
-								<Button
-									onClick={() =>
-										router.push({
-											pathname: '/mypage',
-											query: {
-												category: 'writeArticle',
-											},
-										})
-									}
-									className="right"
-								>
-									Write
-								</Button>
-							</Stack>
-							<div className="config">
-								<Stack className="first-box-config">
-									<Stack className="content-and-info">
-										<Stack className="content">
-											<Typography className="content-data">{boardArticle?.articleTitle}</Typography>
-											<Stack className="member-info">
-												<img
-													src={memberImage}
-													alt=""
-													className="member-img"
-													onClick={() => goMemberPage(boardArticle?.memberData?._id)}
-												/>
-												<Typography className="member-nick" onClick={() => goMemberPage(boardArticle?.memberData?._id)}>
-													{boardArticle?.memberData?.memberNick}
-												</Typography>
-												<Stack className="divider"></Stack>
-												<Moment className={'time-added'} format={'DD.MM.YY HH:mm'}>
-													{boardArticle?.createdAt}
-												</Moment>
-											</Stack>
-										</Stack>
-										<Stack className="info">
-											<Stack className="icon-info">
-												{boardArticle?.meLiked ? (
-													<ThumbUpAltIcon onClick={() => likeBoardArticleHandler(user, boardArticle?._id)} />
-												) : (
-													<ThumbUpOffAltIcon onClick={() => likeBoardArticleHandler(user, boardArticle?._id)} />
-												)}	<Typography className="text">{boardArticle?.articleLikes}</Typography>
-											</Stack>
-											<Stack className="divider"></Stack>
-											<Stack className="icon-info">
-												<VisibilityIcon />
-												<Typography className="text">{boardArticle?.articleViews}</Typography>
-											</Stack>
-											<Stack className="divider"></Stack>
-											<Stack className="icon-info">
-												{boardArticle?.articleComments && boardArticle?.articleComments > 0 ? (
-													<ChatIcon />
-												) : (
-													<ChatBubbleOutlineRoundedIcon />
-												)}
+							<nav className="sidebar-nav">
+								{CATEGORY_TABS.map((tab) => (
+									<motion.button
+										type="button"
+										key={tab.value}
+										variants={item}
+										whileHover={shouldReduceMotion ? undefined : { x: 2 }}
+										whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+										className={`nav-item ${articleCategory === tab.value ? 'active' : ''}`}
+										onClick={(e: React.SyntheticEvent) => tabChangeHandler(e, tab.value)}
+									>
+										<span className="nav-icon">{tab.icon}</span>
+										<span className="nav-label">{tab.label}</span>
+									</motion.button>
+								))}
+							</nav>
+						</motion.aside>
 
-												<Typography className="text">{boardArticle?.articleComments}</Typography>
-											</Stack>
-										</Stack>
+						<Stack className="carlen-community-content">
+							{/** ARTICLE HERO **/}
+							<motion.section
+								className="carlen-article-panel"
+								variants={container}
+								initial="hidden"
+								animate="visible"
+							>
+								<motion.div className="panel-top" variants={item}>
+									<span className="category-chip">{CATEGORY_META[articleCategory] ?? 'Discussion'}</span>
+									<motion.button
+										type="button"
+										className="write-cta"
+										onClick={writeArticleHandler}
+										whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+										whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+									>
+										<EditOutlinedIcon />
+										Write
+									</motion.button>
+								</motion.div>
+
+								<motion.h1 className="article-title" variants={item}>
+									{boardArticle?.articleTitle}
+								</motion.h1>
+
+								<motion.div className="author-row" variants={item}>
+									{/* <img
+										src={memberImage}
+										alt=""
+										className="author-avatar"
+										onClick={() => goMemberPage(boardArticle?.memberData?._id)}
+									/> */}
+									<Stack className="author-meta">
+										<Typography className="author-nick" onClick={() => goMemberPage(boardArticle?.memberData?._id)}>
+											{boardArticle?.memberData?.memberNick}
+										</Typography>
+										<Moment className={'author-date'} format={'DD.MM.YY HH:mm'}>
+											{boardArticle?.createdAt}
+										</Moment>
 									</Stack>
-									<Stack>
-										<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
-									</Stack>
-									<Stack className="like-and-dislike">
-										<Stack className="top">
-											<Button>
-												{boardArticle?.meLiked ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
-												<Typography className="text">{boardArticle?.articleLikes}</Typography>
-											</Button>
-										</Stack>
-									</Stack>
-								</Stack>
-								<Stack
-									className="second-box-config"
-									sx={{ borderBottom: total > 0 ? 'none' : '1px solid #eee', border: '1px solid #eee' }}
-								>
-									<Typography className="title-text">Comments ({total})</Typography>
-									<Stack className="leave-comment">
-										<input
-											type="text"
-											placeholder="Leave a comment"
-											value={comment}
-											onChange={(e) => {
-												if (e.target.value.length > 100) return;
-												setWordsCnt(e.target.value.length);
-												setComment(e.target.value);
-											}}
-										/>
-										<Stack className="button-box">
-											<Typography>{wordsCnt}/100</Typography>
-											<Button onClick={creteCommentHandler}>comment</Button>
-										</Stack>
-									</Stack>
-								</Stack>
-								{total > 0 && (
-									<Stack className="comments">
-										<Typography className="comments-title">Comments</Typography>
-									</Stack>
+
+									{/* <Stack className="stat-chips">
+										<span className="stat-chip">
+											<ThumbUpOffAltIcon />
+											{boardArticle?.articleLikes ?? 0}
+										</span>
+										<span className="stat-chip">
+											<VisibilityIcon />
+											{boardArticle?.articleViews ?? 0}
+										</span>
+										<span className="stat-chip">
+											<ChatBubbleOutlineRoundedIcon />
+											{boardArticle?.articleComments ?? 0}
+										</span>
+									</Stack> */}
+								</motion.div>
+							</motion.section>
+
+							{/** ARTICLE BODY **/}
+							<motion.div
+								className="carlen-article-body"
+								initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+								animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+							>
+								{getBoardArticleLoading && !boardArticle ? (
+									<div className="article-skeleton">
+										<span className="sk-line w-90" />
+										<span className="sk-line w-95" />
+										<span className="sk-line w-80" />
+										<span className="sk-line w-60" />
+									</div>
+								) : (
+									<ToastViewerComponent markdown={boardArticle?.articleContent} />
 								)}
-								{comments?.map((commentData, index) => {
-									return (
-										<Stack className="comments-box" key={commentData?._id}>
-											<Stack className="main-comment">
+							</motion.div>
+
+							{/** REACTION BAR **/}
+							<Stack className="carlen-article-actions">
+								<motion.button
+									type="button"
+									className={`reaction-btn ${boardArticle?.meLiked?.[0]?.myFavorite ? 'liked' : ''}`}
+									onClick={() => likeBoardArticleHandler(user, boardArticle?._id)}
+									whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+									whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+								>
+									{boardArticle?.meLiked?.[0]?.myFavorite ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
+									<span className="reaction-label">Like</span>
+									<span className="reaction-count">{boardArticle?.articleLikes ?? 0}</span>
+								</motion.button>
+								<div className="reaction-btn static">
+									<VisibilityIcon />
+									<span className="reaction-label">Views</span>
+									<span className="reaction-count">{boardArticle?.articleViews ?? 0}</span>
+								</div>
+								<div className="reaction-btn static">
+									<ChatBubbleOutlineRoundedIcon />
+									<span className="reaction-label">Comments</span>
+									<span className="reaction-count">{boardArticle?.articleComments ?? 0}</span>
+								</div>
+							</Stack>
+
+							{/** RELATED ARTICLES **/}
+							{related.length > 0 && (
+								<motion.section
+									className="carlen-related-articles"
+									variants={container}
+									initial="hidden"
+									whileInView="visible"
+									viewport={{ once: true, amount: 0.2 }}
+								>
+									<Stack className="related-header">
+										<Typography className="related-title">Related Articles</Typography>
+									</Stack>
+									<motion.div className="related-grid" variants={container}>
+										{related.map((relatedArticle: BoardArticle) => (
+											<motion.div variants={item} key={relatedArticle?._id}>
+												<CommunityCard
+													boardArticle={relatedArticle}
+													size={'small'}
+													likeArticleHandler={relatedLikeHandler}
+												/>
+											</motion.div>
+										))}
+									</motion.div>
+								</motion.section>
+							)}
+
+							{/** COMMENTS **/}
+							<Stack className="carlen-comment-form">
+								<Stack className="discussion-header">
+									<Typography className="discussion-title">Discussion</Typography>
+									<Typography className="discussion-subtitle">Join the conversation.</Typography>
+								</Stack>
+								<Stack className="leave-comment">
+									<textarea
+										className="comment-textarea"
+										placeholder="Share your thoughts with the community…"
+										value={comment}
+										maxLength={100}
+										onChange={(e) => {
+											if (e.target.value.length > 100) return;
+											setWordsCnt(e.target.value.length);
+											setComment(e.target.value);
+										}}
+									/>
+									<Stack className="comment-actions">
+										<Typography className="char-count">{wordsCnt}/100</Typography>
+										<motion.button
+											type="button"
+											className="cta-primary"
+											onClick={creteCommentHandler}
+											whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+											whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+										>
+											Post Comment
+										</motion.button>
+									</Stack>
+								</Stack>
+							</Stack>
+
+							{getCommentsLoading ? (
+								<Stack className="comments-list">
+									{Array.from({ length: 3 }).map((_, idx) => (
+										<div className="comment-skeleton" key={idx}>
+											<span className="sk-avatar" />
+											<div className="sk-body">
+												<span className="sk-line w-40" />
+												<span className="sk-line w-90" />
+											</div>
+										</div>
+									))}
+								</Stack>
+							) : total === 0 ? (
+								<Stack className="comments-empty">
+									<span className="empty-icon">
+										<ForumOutlinedIcon />
+									</span>
+									<Typography className="empty-title">No discussions yet</Typography>
+									<Typography className="empty-subtitle">Be the first to join the conversation.</Typography>
+								</Stack>
+							) : (
+								<motion.div
+									className="comments-list"
+									variants={container}
+									initial="hidden"
+									animate="visible"
+									key={searchFilter.page}
+								>
+									{comments?.map((commentData, index) => {
+										return (
+											<motion.div className="carlen-comment-card" key={commentData?._id} variants={item}>
 												<Stack className="member-info">
 													<Stack
 														className="name-date"
@@ -407,14 +562,16 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 													{commentData?.memberId === user?._id && (
 														<Stack className="buttons">
 															<IconButton
+																className="ghost-icon"
 																onClick={() => {
 																	setUpdatedCommentId(commentData?._id);
 																	updateButtonHandler(commentData?._id, CommentStatus.DELETE);
 																}}
 															>
-																<DeleteForeverIcon sx={{ color: '#757575', cursor: 'pointer' }} />
+																<DeleteForeverIcon />
 															</IconButton>
 															<IconButton
+																className="ghost-icon"
 																onClick={(e: any) => {
 																	setUpdatedComment(commentData?.commentContent);
 																	setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
@@ -422,97 +579,61 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 																	setOpenBackdrop(true);
 																}}
 															>
-																<EditIcon sx={{ color: '#757575' }} />
+																<EditIcon />
 															</IconButton>
-															<Backdrop
-																sx={{
-																	top: '40%',
-																	right: '25%',
-																	left: '25%',
-																	width: '1000px',
-																	height: 'fit-content',
-																	borderRadius: '10px',
-																	color: '#ffffff',
-																	zIndex: 999,
-																}}
-																open={openBackdrop}
-															>
-																<Stack
-																	sx={{
-																		width: '100%',
-																		height: '100%',
-																		background: 'white',
-																		border: '1px solid #b9b9b9',
-																		padding: '15px',
-																		gap: '10px',
-																		borderRadius: '10px',
-																		boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-																	}}
-																>
-																	<Typography variant="h4" color={'#b9b9b9'}>
-																		Update comment
-																	</Typography>
-																	<Stack gap={'20px'}>
-																		<input
-																			autoFocus
-																			value={updatedComment}
-																			onChange={(e) => updateCommentInputHandler(e.target.value)}
-																			type="text"
-																			style={{
-																				border: '1px solid #b9b9b9',
-																				outline: 'none',
-																				height: '40px',
-																				padding: '0px 10px',
-																				borderRadius: '5px',
-																			}}
-																		/>
-																		<Stack width={'100%'} flexDirection={'row'} justifyContent={'space-between'}>
-																			<Typography variant="subtitle1" color={'#b9b9b9'}>
-																				{updatedCommentWordsCnt}/100
-																			</Typography>
-																			<Stack sx={{ flexDirection: 'row', alignSelf: 'flex-end', gap: '10px' }}>
-																				<Button
-																					variant="outlined"
-																					color="inherit"
-																					onClick={() => cancelButtonHandler()}
-																				>
-																					Cancel
-																				</Button>
-																				<Button
-																					variant="contained"
-																					color="inherit"
-																					onClick={() => updateButtonHandler(updatedCommentId, undefined)}
-																				>
-																					Update
-																				</Button>
-																			</Stack>
-																		</Stack>
-																	</Stack>
-																</Stack>
-															</Backdrop>
 														</Stack>
 													)}
 												</Stack>
-												<Stack className="content">
+												<Stack className="comment-content">
 													<Typography>{commentData?.commentContent}</Typography>
 												</Stack>
-											</Stack>
+											</motion.div>
+										);
+									})}
+								</motion.div>
+							)}
+
+							{/** EDIT MODAL **/}
+							<Backdrop className="carlen-edit-backdrop" open={openBackdrop}>
+								<Stack className="carlen-edit-modal">
+									<Typography className="modal-title">Update comment</Typography>
+									<textarea
+										autoFocus
+										className="modal-textarea"
+										value={updatedComment}
+										maxLength={100}
+										onChange={(e) => updateCommentInputHandler(e.target.value)}
+									/>
+									<Stack className="modal-footer">
+										<Typography className="char-count">{updatedCommentWordsCnt}/100</Typography>
+										<Stack className="modal-buttons">
+											<button type="button" className="cta-secondary" onClick={() => cancelButtonHandler()}>
+												Cancel
+											</button>
+											<button
+												type="button"
+												className="cta-primary"
+												onClick={() => updateButtonHandler(updatedCommentId, undefined)}
+											>
+												Update
+											</button>
 										</Stack>
-									);
-								})}
-								{total > 0 && (
-									<Stack className="pagination-box">
-										<Pagination
-											count={Math.ceil(total / searchFilter.limit) || 1}
-											page={searchFilter.page}
-											shape="circular"
-											color="primary"
-											onChange={paginationHandler}
-										/>
 									</Stack>
-								)}
-							</div>
-						</div>
+								</Stack>
+							</Backdrop>
+
+							{total > 0 && (
+								<Stack className="carlen-community-pagination">
+									<Pagination
+										count={Math.ceil(total / searchFilter.limit) || 1}
+										page={searchFilter.page}
+										shape="circular"
+										color="primary"
+										onChange={paginationHandler}
+									/>
+								</Stack>
+							)}
+						</Stack>
 					</Stack>
 				</div>
 			</div>

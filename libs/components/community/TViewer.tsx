@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
-import { Box, Stack, CircularProgress } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const TViewer = (props: any) => {
 	const [editorLoaded, setEditorLoaded] = useState(false);
+	const shouldReduceMotion = useReducedMotion();
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -16,8 +17,13 @@ const TViewer = (props: any) => {
 	}, [props.markdown]);
 
 	return (
-		<Stack sx={{ background: 'white', mt: '30px', borderRadius: '10px' }}>
-			<Box component={'div'} sx={{ m: '40px' }}>
+		<motion.div
+			className="carlen-community-viewer"
+			initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+			animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+			transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+		>
+			<div className="viewer-body">
 				{editorLoaded ? (
 					<Viewer
 						initialValue={props.markdown}
@@ -53,10 +59,16 @@ const TViewer = (props: any) => {
 						}}
 					/>
 				) : (
-					<CircularProgress />
+					<div className="viewer-loading" aria-label="Loading article">
+						<span className="viewer-skeleton-line w-40" />
+						<span className="viewer-skeleton-line w-90" />
+						<span className="viewer-skeleton-line w-80" />
+						<span className="viewer-skeleton-line w-95" />
+						<span className="viewer-skeleton-line w-60" />
+					</div>
 				)}
-			</Box>
-		</Stack>
+			</div>
+		</motion.div>
 	);
 };
 

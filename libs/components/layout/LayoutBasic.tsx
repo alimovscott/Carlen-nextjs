@@ -129,7 +129,8 @@ const withLayoutBasic = (Component: any) => {
 							<ProductsHero />
 						) : router.pathname === '/agent' ? (
 							<AgentsHero variant={'listing'} />
-						) : router.pathname === '/agent/detail' ? null : (
+						) : router.pathname === '/agent/detail' ? null : router.pathname === '/community' ? null : router.pathname ===
+						  '/community/detail' ? null : (
 							<Stack
 								className={`header-basic ${authHeader && 'auth'}`}
 								style={{
