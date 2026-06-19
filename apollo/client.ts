@@ -131,8 +131,15 @@ function createApolloClient() {
 						getVisited: replaceIncoming,
 						getBoardArticles: replaceIncoming,
 						getComments: replaceIncoming,
+						getMember: replaceIncoming,
 						getMemberFollowers: replaceIncoming,
 						getMemberFollowings: replaceIncoming,
+					},
+				},
+				Member: {
+					fields: {
+						meFollowed: replaceIncoming,
+						meLiked: replaceIncoming,
 					},
 				},
 				Product: {

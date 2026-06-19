@@ -9,16 +9,19 @@ import axios from 'axios';
 import { T } from '../../types/common';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { useMutation } from '@apollo/client';
+import { useMutation, useReactiveVar } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
+import { GET_MEMBER } from '../../../apollo/user/query';
 import { sweetErrorHandling, sweetTopSuccessAlert } from '../../sweetAlert';
 import { Message } from '../../enums/common.enum';
+import { userVar } from '../../../apollo/store';
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
 		token = getJwtToken(),
 		router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const user = useReactiveVar(userVar);
 	const [articleCategory, setArticleCategory] = useState<BoardArticleCategory>(BoardArticleCategory.FREE);
 	const [articleTitle, setArticleTitle] = useState<string>('');
 	const [articleImage, setArticleImage] = useState<string>('');
@@ -101,6 +104,8 @@ const TuiEditor = () => {
 				variables: {
 					input: { articleTitle, articleContent, articleImage, articleCategory },
 				},
+				refetchQueries: user?._id ? [{ query: GET_MEMBER, variables: { input: user._id } }] : [],
+				awaitRefetchQueries: true,
 			});
 
 			await sweetTopSuccessAlert('Article is created successfully', 700);

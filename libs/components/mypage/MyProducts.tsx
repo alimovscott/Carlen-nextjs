@@ -13,7 +13,7 @@ import { T } from '../../types/common';
 import { ProductStatus } from '../../enums/product.enum';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
-import { GET_AGENT_PRODUCTS } from '../../../apollo/user/query';
+import { GET_AGENT_PRODUCTS, GET_MEMBER } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 
@@ -84,6 +84,8 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							productStatus: 'DELETE',
 						},
 					},
+					refetchQueries: user?._id ? [{ query: GET_MEMBER, variables: { input: user._id } }] : [],
+					awaitRefetchQueries: true,
 				});
 
 				await getAgentProductsRefetch({ input: searchFilter });
@@ -103,6 +105,8 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							productStatus: status,
 						},
 					},
+					refetchQueries: user?._id ? [{ query: GET_MEMBER, variables: { input: user._id } }] : [],
+					awaitRefetchQueries: true,
 				});
 				await getAgentProductsRefetch({ input: searchFilter });
 			}

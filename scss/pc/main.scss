@@ -52,125 +52,304 @@ body::-webkit-scrollbar {
 		.navbar {
 			.navbar-main {
 				position: fixed;
-				padding: 22px 0px;
+				padding: 16px 0px;
 				width: 100%;
-				height: 87px;
+				height: 76px;
 				display: flex;
 				flex-direction: row;
 				box-sizing: border-box;
-				z-index: 99;
+				z-index: 1000;
 				align-items: center;
-				border-top: 1px solid rgba(255, 255, 255, 0.07);
+				background-color: transparent;
+				border-bottom: 1px solid transparent;
+				transition:
+					background-color 240ms $ease-out,
+					backdrop-filter 240ms $ease-out,
+					box-shadow 240ms $ease-out,
+					border-color 240ms $ease-out;
+
+				// Scrolled / route-forced state: darker floating glass surface.
 				&.transparent {
-					background-color: #181a209e;
+					background-color: rgba(11, 15, 23, 0.72);
+					backdrop-filter: blur(18px);
+					-webkit-backdrop-filter: blur(18px);
+					border-bottom: 1px solid $c-border;
+					box-shadow: 0 18px 46px -28px rgba(0, 0, 0, 0.7);
+				}
+				// Solid fallback where backdrop-filter / transparency is unavailable.
+				@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+					&.transparent {
+						background-color: $c-raised;
+					}
 				}
 				.container {
 					flex-direction: row;
 					align-items: center;
 					justify-content: space-between;
 					.logo-box {
+						a {
+							display: inline-flex;
+						}
 						img {
-							width: 150px;
+							width: 142px;
 							cursor: pointer;
+							transform: translateZ(0);
+							transition:
+								transform 220ms $ease-out,
+								filter 220ms $ease-out;
+						}
+						@media (hover: hover) and (pointer: fine) {
+							img:hover {
+								transform: scale(1.02);
+								filter: drop-shadow(0 6px 18px rgba(233, 44, 40, 0.4));
+							}
+						}
+						img:active {
+							transform: scale(0.99);
 						}
 					}
 					.router-box {
 						position: relative;
-						width: 617px;
 						display: flex;
 						flex-direction: row;
-						justify-content: space-between;
+						align-items: center;
+						gap: 6px;
+						a {
+							display: inline-flex;
+						}
 						div {
 							position: relative;
-							color: #eeeeeeed;
+							color: $c-muted;
 							font-family: $font;
 							font-size: 15px;
-							font-style: normal;
-							font-weight: 600;
+							font-weight: 500;
 							line-height: normal;
 							cursor: pointer;
-							.community_menu {
+							padding: 9px 16px;
+							border-radius: $c-radius-pill;
+							transition:
+								color 180ms $ease-out,
+								background-color 180ms $ease-out;
+							// Animated underline indicator.
+							&::after {
+								content: '';
 								position: absolute;
-								left: -177%;
-								top: 30px;
-								width: 434px;
-								height: 33px;
-								background: white;
-								transition: all ease 2s;
-								&:before {
-									content: '';
-									display: block;
-									position: absolute;
-									top: 0;
-									right: 50%;
-									width: 10px;
-									height: 10px;
-									background: white;
-									transform: translateY(-50%) rotate(45deg);
-									z-index: 0;
+								left: 16px;
+								right: 16px;
+								bottom: 4px;
+								height: 2px;
+								border-radius: 2px;
+								background: $c-accent-grad;
+								transform: scaleX(0);
+								transform-origin: center;
+								transition: transform 220ms $ease-out;
+							}
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									color: $c-text;
+									background-color: $c-glass-hover;
 								}
+							}
+							&:active {
+								transform: scale(0.97);
+							}
+							&.active {
+								color: $c-text;
+								&::after {
+									transform: scaleX(1);
+								}
+							}
+							&:focus-visible {
+								outline: 2px solid $c-blue-glow;
+								outline-offset: 2px;
 							}
 						}
 					}
 					.user-box {
-						width: 270px;
 						display: flex;
 						flex-direction: row;
+						align-items: center;
 						justify-content: flex-end;
+						gap: 14px;
+
+						.notification-btn,
+						.login-user {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							padding: 0;
+							border: 1px solid $c-border;
+							background-color: $c-glass;
+							cursor: pointer;
+							transition:
+								background-color 200ms $ease-out,
+								border-color 200ms $ease-out,
+								box-shadow 200ms $ease-out,
+								transform 160ms $ease-out;
+							&:active {
+								transform: scale(0.97);
+							}
+							&:focus-visible {
+								outline: 2px solid $c-blue-glow;
+								outline-offset: 2px;
+							}
+						}
+
+						.notification-btn {
+							position: relative;
+							width: 44px;
+							height: 44px;
+							border-radius: 50%;
+							.notification-icon {
+								color: $c-text;
+								font-size: 22px;
+							}
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									background-color: $c-glass-hover;
+									border-color: $c-border-strong;
+									box-shadow: $c-glow-red;
+								}
+							}
+							// Future-ready unread badge (hidden until count > 0).
+							&::after {
+								content: attr(data-count);
+								position: absolute;
+								top: 4px;
+								right: 4px;
+								min-width: 16px;
+								height: 16px;
+								padding: 0 4px;
+								display: none;
+								align-items: center;
+								justify-content: center;
+								font-family: $font;
+								font-size: 10px;
+								font-weight: 700;
+								line-height: 1;
+								color: $c-text;
+								background: $c-accent-grad;
+								border-radius: $c-radius-pill;
+								box-shadow: 0 2px 8px rgba(233, 44, 40, 0.5);
+							}
+							&:not([data-count='0'])::after {
+								display: inline-flex;
+							}
+						}
+
+						.login-user {
+							width: 44px;
+							height: 44px;
+							border-radius: 50%;
+							overflow: hidden;
+							img {
+								width: 100%;
+								height: 100%;
+								border-radius: 50%;
+								object-fit: cover;
+							}
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									border-color: $c-border-strong;
+									box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+								}
+							}
+						}
+
 						.join-box {
-							width: 184px;
-							height: 47px;
+							height: 44px;
+							padding: 0 22px;
 							display: flex;
 							align-items: center;
 							justify-content: center;
-							border-radius: 60px;
-							border: 1px solid #ffffff;
+							border-radius: $c-radius-pill;
+							border: 1px solid $c-border-strong;
+							background-color: $c-glass;
 							cursor: pointer;
+							transition:
+								background-color 200ms $ease-out,
+								border-color 200ms $ease-out,
+								box-shadow 200ms $ease-out,
+								transform 160ms $ease-out;
 							svg {
-								color: #ffffff;
+								color: $c-text;
 								margin-right: 10px;
+								font-size: 20px;
 							}
 							span {
 								font-family: $font;
 								font-size: 14px;
-								font-style: normal;
 								font-weight: 600;
 								line-height: normal;
-								color: #ffffff;
+								color: $c-text;
+								white-space: nowrap;
 							}
-						}
-						.login-user {
-							img {
-								width: 42px;
-								height: 42px;
-								border-radius: 50%;
-								object-fit: cover;
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									background-color: $c-glass-hover;
+									border-color: $c-border-strong;
+									box-shadow: $c-glow-red;
+								}
+							}
+							&:active {
+								transform: scale(0.97);
 							}
 						}
 					}
 					.lan-box {
-						margin-left: 28px;
 						display: flex;
 						align-items: center;
-						.notification-icon {
-							color: white;
-						}
 						.btn-lang {
-							border-radius: 4px;
+							height: 44px;
+							min-width: auto;
+							padding: 0 12px;
+							border-radius: $c-radius-pill;
+							border: 1px solid $c-border;
+							background-color: $c-glass;
+							transition:
+								background-color 200ms $ease-out,
+								border-color 200ms $ease-out,
+								transform 160ms $ease-out;
 							img {
 								width: 24px;
 								height: 17px;
-								border-radius: 2px;
+								border-radius: 3px;
+							}
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									background-color: $c-glass-hover;
+									border-color: $c-border-strong;
+								}
+							}
+							&:active {
+								transform: scale(0.97);
 							}
 						}
 						.img-flag {
 							width: 24px;
 							height: 17px;
-							border-radius: 2px;
+							border-radius: 3px;
 							margin-right: 8px;
 						}
 					}
 				}
+			}
+		}
+	}
+
+	// Respect reduced-motion: keep color/opacity feedback, drop movement.
+	@media (prefers-reduced-motion: reduce) {
+		#top .navbar .navbar-main {
+			.logo-box img:hover,
+			.router-box div:active,
+			.user-box .notification-btn:active,
+			.user-box .login-user:active,
+			.user-box .join-box:active,
+			.lan-box .btn-lang:active {
+				transform: none;
+			}
+			.router-box div::after {
+				transition: none;
 			}
 		}
 	}

@@ -82,6 +82,13 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const [likeLoading, setLikeLoading] = useState<boolean>(false);
 	const [boardArticle, setBoardArticle] = useState<BoardArticle>();
 	const [relatedArticles, setRelatedArticles] = useState<BoardArticle[]>([]);
+	const commentsInquiryInput: CommentsInquiry = {
+		...searchFilter,
+		search: {
+			...searchFilter.search,
+			commentRefId: articleId || searchFilter.search.commentRefId,
+		},
+	};
 
 	/** APOLLO REQUESTS **/
 	// MUTATIONS
@@ -97,6 +104,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	} = useQuery(GET_BOARD_ARTICLE, {
 		fetchPolicy: 'network-only',
 		variables: { input: articleId },
+		skip: !articleId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
 			{
@@ -116,10 +124,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		refetch: getCommentsRefetch,
 	} = useQuery(GET_COMMENTS, {
 		fetchPolicy: 'cache-and-network',
-		variables: { input: searchFilter },
+		variables: { input: commentsInquiryInput },
+		skip: !articleId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setComments(data?.getComments?.list);
+			setComments(data?.getComments?.list ?? []);
 			setTotal(data?.getComments?.metaCounter[0]?.total || 0);
 		},
 	});
@@ -144,7 +153,9 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (articleId) setSearchFilter({ ...searchFilter, search: { commentRefId: articleId } });
+		if (articleId) {
+			setSearchFilter((prev) => ({ ...prev, search: { ...prev.search, commentRefId: articleId } }));
+		}
 	}, [articleId]);
 
 	/** ANIMATION **/
@@ -183,7 +194,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 					input: commentInput,
 				},
 			});
-			await getCommentsRefetch({ input: searchFilter });
+			await getCommentsRefetch({ input: commentsInquiryInput });
 			await getBoardArticleRefetch({ input: articleId });
 			setComment('');
 			setWordsCnt(0);
@@ -225,7 +236,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 				});
 				await sweetMixinSuccessAlert('Successfully updated!');
 			}
-			await getCommentsRefetch({ input: searchFilter });
+			await getCommentsRefetch({ input: commentsInquiryInput });
 		} catch (error: any) {
 			await sweetMixinErrorAlert(error.message);
 		} finally {
@@ -315,6 +326,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	};
 
 	const related = relatedArticles.filter((a) => a?._id !== articleId).slice(0, 3);
+	const displayedCommentsCount = getCommentsData ? total : boardArticle?.articleComments ?? 0;
 
 	if (device === 'mobile') {
 		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
@@ -450,7 +462,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 								<div className="reaction-btn static">
 									<ChatBubbleOutlineRoundedIcon />
 									<span className="reaction-label">Comments</span>
-									<span className="reaction-count">{boardArticle?.articleComments ?? 0}</span>
+									<span className="reaction-count">{displayedCommentsCount}</span>
 								</div>
 							</Stack>
 

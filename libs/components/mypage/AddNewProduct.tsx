@@ -12,7 +12,7 @@ import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { CREATE_PRODUCT, UPDATE_PRODUCT } from '../../../apollo/user/mutation';
-import { GET_PRODUCT } from '../../../apollo/user/query';
+import { GET_MEMBER, GET_PRODUCT } from '../../../apollo/user/query';
 
 const AddProduct = ({ initialValues, ...props }: any) => {
 	const device = useDeviceDetect();
@@ -143,6 +143,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				variables: {
 					input: insertPropertyData,
 				},
+				refetchQueries: user?._id ? [{ query: GET_MEMBER, variables: { input: user._id } }] : [],
+				awaitRefetchQueries: true,
 			});
 
 			await sweetMixinSuccessAlert('This product has been created successfully');
@@ -165,6 +167,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				variables: {
 					input: insertPropertyData,
 				},
+				refetchQueries: user?._id ? [{ query: GET_MEMBER, variables: { input: user._id } }] : [],
+				awaitRefetchQueries: true,
 			});
 
 			await sweetMixinSuccessAlert('This product has been updated successfully.');

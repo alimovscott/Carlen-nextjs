@@ -16,11 +16,12 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Link from 'next/link';
-import { useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert } from '../../sweetAlert';
+import { GET_MEMBER } from '../../../apollo/user/query';
 
 const MyMenu = () => {
 	const device = useDeviceDetect();
@@ -34,6 +35,13 @@ const MyMenu = () => {
 			? 'myCars'
 			: category;
 	const user = useReactiveVar(userVar);
+	const { data: getMemberData } = useQuery(GET_MEMBER, {
+		fetchPolicy: 'network-only',
+		variables: { input: user?._id },
+		skip: !user?._id,
+		notifyOnNetworkStatusChange: true,
+	});
+	const statsMember = getMemberData?.getMember ?? user;
 
 	/** HANDLERS **/
 	const logoutHandler = async () => {
@@ -120,15 +128,15 @@ const MyMenu = () => {
 					)}
 					<div className="profile-stats">
 						<div className="stat">
-							<span className="stat-value">{user?.memberProducts ?? 0}</span>
+							<span className="stat-value">{statsMember?.memberProducts ?? 0}</span>
 							<span className="stat-label">Cars</span>
 						</div>
 						<div className="stat">
-							<span className="stat-value">{user?.memberLikes ?? 0}</span>
+							<span className="stat-value">{statsMember?.memberLikes ?? 0}</span>
 							<span className="stat-label">Likes</span>
 						</div>
 						<div className="stat">
-							<span className="stat-value">{user?.memberArticles ?? 0}</span>
+							<span className="stat-value">{statsMember?.memberArticles ?? 0}</span>
 							<span className="stat-label">Articles</span>
 						</div>
 					</div>

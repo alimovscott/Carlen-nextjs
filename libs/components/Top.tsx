@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import { alpha, styled } from '@mui/material/styles';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
@@ -17,6 +19,111 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
+
+// Hoisted to module scope so it is not recreated on every render.
+const StyledMenu = styled((props: MenuProps) => (
+	<Menu
+		elevation={0}
+		anchorOrigin={{
+			vertical: 'bottom',
+			horizontal: 'right',
+		}}
+		transformOrigin={{
+			vertical: 'top',
+			horizontal: 'right',
+		}}
+		{...props}
+	/>
+))(({ theme }) => ({
+	'& .MuiPaper-root': {
+		top: '84px',
+		borderRadius: 12,
+		marginTop: theme.spacing(1),
+		minWidth: 168,
+		color: '#f4f6fb',
+		backgroundColor: 'rgba(14, 19, 29, 0.92)',
+		backgroundImage: 'none',
+		border: '1px solid rgba(255, 255, 255, 0.1)',
+		backdropFilter: 'blur(18px)',
+		WebkitBackdropFilter: 'blur(18px)',
+		boxShadow: '0 24px 60px -28px rgba(0, 0, 0, 0.8)',
+		transformOrigin: 'top right',
+		'& .MuiMenu-list': {
+			padding: '6px',
+		},
+		// Account dropdown profile header.
+		'& .account-menu-head': {
+			flexDirection: 'row',
+			alignItems: 'center',
+			gap: '12px',
+			padding: '8px 10px 12px',
+			marginBottom: '6px',
+			borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+		},
+		'& .account-avatar': {
+			width: 40,
+			height: 40,
+			borderRadius: '50%',
+			objectFit: 'cover',
+			border: '1px solid rgba(255, 255, 255, 0.1)',
+		},
+		'& .account-meta': {
+			minWidth: 0,
+			'& strong': {
+				display: 'block',
+				fontSize: 14,
+				fontWeight: 600,
+				color: '#f4f6fb',
+				whiteSpace: 'nowrap',
+				overflow: 'hidden',
+				textOverflow: 'ellipsis',
+			},
+			'& span': {
+				fontSize: 11,
+				fontWeight: 500,
+				letterSpacing: '0.04em',
+				textTransform: 'capitalize',
+				color: '#7c8696',
+			},
+		},
+		'& a': {
+			textDecoration: 'none',
+			color: 'inherit',
+		},
+		'& .MuiMenuItem-root': {
+			borderRadius: 8,
+			gap: '10px',
+			fontSize: 14,
+			fontWeight: 500,
+			color: '#aab2c0',
+			transition: 'background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms cubic-bezier(0.23, 1, 0.32, 1)',
+			'& .MuiSvgIcon-root': {
+				fontSize: 18,
+				color: '#aab2c0',
+			},
+			'&:hover': {
+				backgroundColor: 'rgba(255, 255, 255, 0.08)',
+				color: '#f4f6fb',
+			},
+			'&:active': {
+				backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+			},
+		},
+		// Logout visually separated (destructive action).
+		'& .account-logout': {
+			marginTop: 6,
+			borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+			color: '#e92c28',
+			'& .MuiSvgIcon-root': {
+				color: '#e92c28',
+			},
+			'&:hover': {
+				backgroundColor: 'rgba(233, 44, 40, 0.12)',
+				color: '#ff6a3d',
+			},
+		},
+	},
+}));
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -58,6 +165,12 @@ const Top = () => {
 		if (jwt) updateUserInfo(jwt);
 	}, []);
 
+	useEffect(() => {
+		changeNavbarColor();
+		window.addEventListener('scroll', changeNavbarColor, { passive: true });
+		return () => window.removeEventListener('scroll', changeNavbarColor);
+	}, []);
+
 	/** HANDLERS **/
 	const langClick = (e: any) => {
 		setAnchorEl2(e.currentTarget);
@@ -97,47 +210,10 @@ const Top = () => {
 		}
 	};
 
-	const StyledMenu = styled((props: MenuProps) => (
-		<Menu
-			elevation={0}
-			anchorOrigin={{
-				vertical: 'bottom',
-				horizontal: 'right',
-			}}
-			transformOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-			{...props}
-		/>
-	))(({ theme }) => ({
-		'& .MuiPaper-root': {
-			top: '109px',
-			borderRadius: 6,
-			marginTop: theme.spacing(1),
-			minWidth: 160,
-			color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-			boxShadow:
-				'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-			'& .MuiMenu-list': {
-				padding: '4px 0',
-			},
-			'& .MuiMenuItem-root': {
-				'& .MuiSvgIcon-root': {
-					fontSize: 18,
-					color: theme.palette.text.secondary,
-					marginRight: theme.spacing(1.5),
-				},
-				'&:active': {
-					backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-				},
-			},
-		},
-	}));
-
-	if (typeof window !== 'undefined') {
-		window.addEventListener('scroll', changeNavbarColor);
-	}
+	const isActiveRoute = (href: string): boolean => {
+		if (href === '/') return router.pathname === '/';
+		return router.pathname.startsWith(href);
+	};
 
 	if (device == 'mobile') {
 		return (
@@ -161,7 +237,7 @@ const Top = () => {
 		);
 	} else {
 		return (
-			<Stack className={'navbar'}>
+			<Stack className={'navbar'} component={'nav'} aria-label={'Primary'}>
 				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
@@ -171,52 +247,95 @@ const Top = () => {
 						</Box>
 						<Box component={'div'} className={'router-box'}>
 							<Link href={'/'}>
-								<div>{t('Home')}</div>
+								<div className={isActiveRoute('/') ? 'active' : ''}>{t('Home')}</div>
 							</Link>
 							<Link href={'/cars'}>
-								<div>{t('Products')}</div>
+								<div className={isActiveRoute('/cars') ? 'active' : ''}>{t('Products')}</div>
 							</Link>
 							<Link href={'/agent'}>
-								<div> {t('Agents')} </div>
+								<div className={isActiveRoute('/agent') ? 'active' : ''}>{t('Agents')}</div>
 							</Link>
 							<Link href={'/community?articleCategory=FREE'}>
-								<div> {t('Community')} </div>
+								<div className={isActiveRoute('/community') ? 'active' : ''}>{t('Community')}</div>
 							</Link>
 							{user?._id && (
 								<Link href={'/mypage'}>
-									<div> {t('My Page')} </div>
+									<div className={isActiveRoute('/mypage') ? 'active' : ''}>{t('Dashboard')}</div>
 								</Link>
 							)}
 							<Link href={'/cs'}>
-								<div> {t('CS')} </div>
+								<div className={isActiveRoute('/cs') ? 'active' : ''}>{t('CS')}</div>
 							</Link>
 						</Box>
 						<Box component={'div'} className={'user-box'}>
 							{user?._id ? (
 								<>
-									<div className={'login-user'} onClick={(event: any) => setLogoutAnchor(event.currentTarget)}>
+									<button
+										type={'button'}
+										className={'notification-btn'}
+										aria-label={t('Notifications')}
+										data-count={0}
+									>
+										<NotificationsOutlinedIcon className={'notification-icon'} />
+									</button>
+
+									<button
+										type={'button'}
+										className={'login-user'}
+										aria-label={t('Account menu')}
+										aria-haspopup={'true'}
+										aria-expanded={logoutOpen}
+										onClick={(event: any) => setLogoutAnchor(event.currentTarget)}
+									>
 										<img
 											src={
 												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
 											}
-											alt=""
+											alt={''}
 										/>
-									</div>
+									</button>
 
-									<Menu
-										id="basic-menu"
+									<StyledMenu
+										id={'account-menu'}
 										anchorEl={logoutAnchor}
 										open={logoutOpen}
 										onClose={() => {
 											setLogoutAnchor(null);
 										}}
-										sx={{ mt: '5px' }}
 									>
-										<MenuItem onClick={() => logOut()}>
-											<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
-											Logout
+										<Stack className={'account-menu-head'}>
+											<img
+												className={'account-avatar'}
+												src={
+													user?.memberImage
+														? `${REACT_APP_API_URL}/${user?.memberImage}`
+														: '/img/profile/defaultUser.svg'
+												}
+												alt={''}
+											/>
+											<Stack className={'account-meta'}>
+												<strong>{user?.memberNick || user?.memberFullName || t('Member')}</strong>
+												<span>{user?.memberType}</span>
+											</Stack>
+										</Stack>
+
+										<Link href={'/mypage'} onClick={() => setLogoutAnchor(null)}>
+											<MenuItem>
+												<SpaceDashboardOutlinedIcon fontSize={'small'} />
+												{t('Dashboard')}
+											</MenuItem>
+										</Link>
+										<Link href={{ pathname: '/mypage', query: { category: 'myProfile' } }} onClick={() => setLogoutAnchor(null)}>
+											<MenuItem>
+												<PersonOutlineOutlinedIcon fontSize={'small'} />
+												{t('My Profile')}
+											</MenuItem>
+										</Link>
+										<MenuItem className={'account-logout'} onClick={() => logOut()}>
+											<Logout fontSize={'small'} />
+											{t('Logout')}
 										</MenuItem>
-									</Menu>
+									</StyledMenu>
 								</>
 							) : (
 								<Link href={'/account/join'}>
@@ -230,12 +349,11 @@ const Top = () => {
 							)}
 
 							<div className={'lan-box'}>
-								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} />}
 								<Button
 									disableRipple
 									className="btn-lang"
 									onClick={langClick}
-									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
+									endIcon={<CaretDown size={14} color="#aab2c0" weight="fill" />}
 								>
 									<Box component={'div'} className={'flag'}>
 										{lang !== null ? (
