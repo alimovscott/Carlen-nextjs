@@ -10,6 +10,12 @@ import { sweetErrorAlert } from '../libs/sweetAlert';
 import { socketVar } from './store';
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
+const replaceIncoming = {
+	merge(_existing: unknown, incoming: unknown) {
+		return incoming;
+	},
+};
+
 function getHeaders() {
 	const headers = {} as HeadersInit;
 	const token = getJwtToken();
@@ -62,7 +68,7 @@ function createIsomorphicLink() {
 					...getHeaders(),
 				},
 			}));
-			console.warn('requesting.. ', operation);
+			console.debug(`requesting.. ${operation.operationName}`);
 			return forward(operation);
 		});
 
@@ -114,7 +120,40 @@ function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === 'undefined',
 		link: createIsomorphicLink(),
-		cache: new InMemoryCache(),
+		cache: new InMemoryCache({
+			typePolicies: {
+				Query: {
+					fields: {
+						getAgents: replaceIncoming,
+						getProducts: replaceIncoming,
+						getAgentProducts: replaceIncoming,
+						getFavorites: replaceIncoming,
+						getVisited: replaceIncoming,
+						getBoardArticles: replaceIncoming,
+						getComments: replaceIncoming,
+						getMemberFollowers: replaceIncoming,
+						getMemberFollowings: replaceIncoming,
+					},
+				},
+				Product: {
+					fields: {
+						memberData: replaceIncoming,
+						meLiked: replaceIncoming,
+					},
+				},
+				BoardArticle: {
+					fields: {
+						memberData: replaceIncoming,
+						meLiked: replaceIncoming,
+					},
+				},
+				Comment: {
+					fields: {
+						memberData: replaceIncoming,
+					},
+				},
+			},
+		}),
 		resolvers: {},
 	});
 }

@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Button, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
+import NorthEastRoundedIcon from '@mui/icons-material/NorthEastRounded';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import axios from 'axios';
 import { Messages, REACT_APP_API_URL } from '../../config';
 import { getJwtToken, updateStorage, updateUserInfo } from '../../auth';
@@ -14,9 +17,11 @@ import { useMutation } from '@apollo/client';
 
 const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	const device = useDeviceDetect();
+	const shouldReduceMotion = useReducedMotion();
 	const token = getJwtToken();
 	const user = useReactiveVar(userVar);
 	const [updateData, setUpdateData] = useState<MemberUpdate>(initialValues);
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
 	const [updateMember] = useMutation(UPDATE_MEMBER);
@@ -35,15 +40,15 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	/** HANDLERS **/
 	const uploadImage = async (e: any) => {
 		try {
+			setImageLoading(true);
 			const image = e.target.files[0];
-			console.log('+image:', image);
 
 			const formData = new FormData();
 			formData.append(
 				'operations',
 				JSON.stringify({
 					query: `mutation ImageUploader($file: Upload!, $target: String!) {
-						imageUploader(file: $file, target: $target) 
+						imageUploader(file: $file, target: $target)
 				  }`,
 					variables: {
 						file: null,
@@ -68,23 +73,23 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			});
 
 			const responseImage = response.data.data.imageUploader;
-			console.log('+responseImage: ', responseImage);
-			updateData.memberImage = responseImage;
-			setUpdateData({ ...updateData });
+			setUpdateData((prev) => ({ ...prev, memberImage: responseImage }));
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
 		} catch (err) {
 			console.log('Error, uploadImage:', err);
+		} finally {
+			setImageLoading(false);
 		}
 	};
 
-	const updatePropertyHandler = useCallback(async () => {
+	const updateProfileHandler = useCallback(async () => {
 		try {
 			if (!user._id) throw new Error(Messages.error2);
-			updateData._id = user._id;
+			const input = { ...updateData, _id: user._id };
 			const result = await updateMember({
 				variables: {
-					input: updateData,
+					input,
 				},
 			});
 
@@ -109,96 +114,108 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 		}
 	};
 
-	console.log('+updateData', updateData);
+	const isProfileReady = !doDisabledCheck();
+
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.07, delayChildren: 0.04 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
+	};
 
 	if (device === 'mobile') {
 		return <>MY PROFILE PAGE MOBILE</>;
 	} else
 		return (
-			<div id="my-profile-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">My Profile</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="top-box">
-					<Stack className="photo-box">
-						<Typography className="title">Photo</Typography>
-						<Stack className="image-big-box">
-							<Stack className="image-box">
-								<img
-									src={
-										updateData?.memberImage
-											? `${REACT_APP_API_URL}/${updateData?.memberImage}`
-											: `/img/profile/defaultUser.svg`
-									}
-									alt=""
-								/>
-							</Stack>
-							<Stack className="upload-big-box">
-								<input
-									type="file"
-									hidden
-									id="hidden-input"
-									onChange={uploadImage}
-									accept="image/jpg, image/jpeg, image/png"
-								/>
-								<label htmlFor="hidden-input" className="labeler">
-									<Typography>Upload Profile Image</Typography>
-								</label>
-								<Typography className="upload-text">A photo must be in JPG, JPEG or PNG format!</Typography>
-							</Stack>
-						</Stack>
-					</Stack>
-					<Stack className="small-input-box">
-						<Stack className="input-box">
-							<Typography className="title">Username</Typography>
+			<div id="carlen-my-profile-page">
+				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
+					<motion.div className="head-text" variants={item}>
+						<span className="eyebrow">ACCOUNT SETTINGS</span>
+						<Typography className="title">My Profile</Typography>
+						<Typography className="subtitle">Update your personal information and profile image.</Typography>
+					</motion.div>
+					<motion.span className={isProfileReady ? 'completeness-chip ready' : 'completeness-chip missing'} variants={item}>
+						<i className="dot" />
+						{isProfileReady ? 'Profile Ready' : 'Missing Information'}
+					</motion.span>
+				</motion.div>
+
+				<motion.div className="carlen-profile-panel" variants={container} initial="hidden" animate="visible">
+					<motion.div className="carlen-profile-photo-card" variants={item}>
+						<div className="avatar-ring">
+							<img
+								className="avatar-img"
+								src={
+									updateData?.memberImage
+										? `${REACT_APP_API_URL}/${updateData?.memberImage}`
+										: '/img/profile/defaultUser.svg'
+								}
+								alt="profile"
+							/>
+						</div>
+						<div className="photo-actions">
+							<input
+								type="file"
+								hidden
+								id="hidden-input"
+								onChange={uploadImage}
+								accept="image/jpg, image/jpeg, image/png"
+							/>
+							<label htmlFor="hidden-input" className={imageLoading ? 'upload-btn loading' : 'upload-btn'}>
+								<CloudUploadOutlinedIcon />
+								<Typography>{imageLoading ? 'Uploading…' : 'Upload Profile Image'}</Typography>
+							</label>
+							<Typography className="upload-text">JPG, JPEG or PNG format only</Typography>
+						</div>
+					</motion.div>
+
+					<motion.div className="carlen-profile-fields" variants={item}>
+						<div className="field">
+							<Typography className="field-label">Username</Typography>
 							<input
 								type="text"
 								placeholder="Your username"
 								value={updateData.memberNick}
 								onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberNick: value })}
 							/>
-						</Stack>
-						<Stack className="input-box">
-							<Typography className="title">Phone</Typography>
+						</div>
+						<div className="field">
+							<Typography className="field-label">Phone</Typography>
 							<input
 								type="text"
-								placeholder="Your Phone"
+								placeholder="Your phone"
 								value={updateData.memberPhone}
 								onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberPhone: value })}
 							/>
-						</Stack>
-					</Stack>
-					<Stack className="address-box">
-						<Typography className="title">Address</Typography>
+						</div>
+					</motion.div>
+
+					<motion.div className="carlen-profile-address" variants={item}>
+						<Typography className="field-label">Address</Typography>
 						<input
 							type="text"
 							placeholder="Your address"
 							value={updateData.memberAddress}
 							onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberAddress: value })}
 						/>
-					</Stack>
-					<Stack className="about-me-box">
-						<Button className="update-button" onClick={updatePropertyHandler} disabled={doDisabledCheck()}>
-							<Typography>Update Profile</Typography>
-							<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
-								<g clipPath="url(#clip0_7065_6985)">
-									<path
-										d="M12.6389 0H4.69446C4.49486 0 4.33334 0.161518 4.33334 0.361122C4.33334 0.560727 4.49486 0.722245 4.69446 0.722245H11.7672L0.105803 12.3836C-0.0352676 12.5247 -0.0352676 12.7532 0.105803 12.8942C0.176321 12.9647 0.268743 13 0.361131 13C0.453519 13 0.545907 12.9647 0.616459 12.8942L12.2778 1.23287V8.30558C12.2778 8.50518 12.4393 8.6667 12.6389 8.6667C12.8385 8.6667 13 8.50518 13 8.30558V0.361122C13 0.161518 12.8385 0 12.6389 0Z"
-										fill="white"
-									/>
-								</g>
-								<defs>
-									<clipPath id="clip0_7065_6985">
-										<rect width="13" height="13" fill="white" />
-									</clipPath>
-								</defs>
-							</svg>
-						</Button>
-					</Stack>
-				</Stack>
+					</motion.div>
+
+					<motion.div className="carlen-profile-actions" variants={item}>
+						<motion.button
+							className="cta-primary"
+							onClick={updateProfileHandler}
+							disabled={doDisabledCheck()}
+							whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+						>
+							Update Profile
+							<NorthEastRoundedIcon />
+						</motion.button>
+					</motion.div>
+				</motion.div>
 			</div>
 		);
 };
@@ -214,5 +231,3 @@ MyProfile.defaultProps = {
 };
 
 export default MyProfile;
-
-

@@ -1,168 +1,296 @@
 #pc-wrap {
-	#member-follows-page {
+	#carlen-member-network-page {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		.main-title-box {
-			width: 100%;
-			height: auto;
-			flex-direction: row;
-			justify-content: space-between;
-			.right-box {
-				width: 315px;
-				.main-title {
-					color: #181a20;
-					font-family: $font;
-					font-size: 30px;
-					font-style: normal;
-					font-weight: 600;
-					line-height: normal;
-					letter-spacing: 0.6px;
-					text-transform: capitalize;
+		gap: 28px;
+
+		/** SECTION HEADER **/
+		.carlen-section-header {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 10px;
+			.eyebrow {
+				display: inline-flex;
+				align-items: center;
+				padding: 6px 14px;
+				border-radius: $c-radius-pill;
+				border: 1px solid rgba(233, 44, 40, 0.28);
+				background: rgba(233, 44, 40, 0.1);
+				color: $c-orange;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 700;
+				line-height: 1;
+				letter-spacing: 0.16em;
+				text-transform: uppercase;
+			}
+			.title {
+				margin: 0;
+				color: $c-text;
+				font-family: $font;
+				font-size: 28px;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				text-transform: capitalize;
+			}
+			.subtitle {
+				margin: 0;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 14px;
+				line-height: 1.6;
+			}
+			.stat-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				margin-top: 2px;
+				padding: 8px 14px;
+				border-radius: $c-radius-pill;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				color: $c-text;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 500;
+				.dot {
+					width: 7px;
+					height: 7px;
+					border-radius: 50%;
+					background: $c-accent-grad;
+					box-shadow: 0 0 8px rgba(233, 44, 40, 0.6);
 				}
 			}
 		}
-		.follows-list-box {
+
+		/** LIST **/
+		.carlen-network-list {
 			width: 100%;
-			margin-top: 85px;
-			gap: 15px;
-			.listing-title-box {
-				width: 100%;
-				height: auto;
-				flex-direction: row;
-				gap: 110px;
-				padding: 18px 34px 18px 33px;
-				border-radius: 12px;
-				background: #f6f6f6;
-				justify-content: space-between;
-				.title-text {
-					color: #181a20;
-					font-family: $font;
-					font-size: 15px;
-					font-style: normal;
-					font-weight: 600;
-					line-height: normal;
-				}
-			}
-			.follows-card-box {
-				padding-right: 30px;
-				padding-bottom: 5px;
-				width: 100%;
-				height: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		/** CARD **/
+		.carlen-network-card {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 20px;
+			padding: 18px 22px;
+			border-radius: 22px;
+			border: 1px solid $c-border;
+			background: $c-glass;
+			box-shadow: $c-shadow;
+			transition: transform 220ms $ease-out, box-shadow 220ms $ease-out, border-color 220ms $ease-out;
+
+			.info {
+				flex: 1;
+				min-width: 0;
 				flex-direction: row;
 				align-items: center;
-				gap: 10px;
-				border-bottom: 1px solid #ddd;
-				.info {
-					width: 300px;
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					cursor: pointer;
-					.image-box {
-						width: 110px;
-						height: 110px;
+				gap: 16px;
+				cursor: pointer;
+				.image-box {
+					width: 64px;
+					height: 64px;
+					flex-shrink: 0;
+					overflow: hidden;
+					border-radius: 50%;
+					border: 1px solid $c-border;
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+				.information-box {
+					min-width: 0;
+					.name {
+						color: $c-text;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 600;
+						white-space: nowrap;
 						overflow: hidden;
-						margin-right: 25px;
-						img {
-							width: 100%;
-							height: 100%;
-							object-fit: cover;
-							border-radius: 50%;
-						}
-					}
-					.information-box {
-						width: auto;
-						height: auto;
-						padding: 5px 0px;
-						.name {
-							color: #181a20;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-					}
-				}
-				.details-box {
-					width: 300px;
-					display: flex;
-					flex-direction: row;
-					justify-content: space-between;
-					.info-box {
-						display: flex;
-						align-items: center;
-						img {
-							width: 24px;
-							height: 24px;
-						}
-						svg {
-							width: 24px;
-							height: 24px;
-							cursor: pointer;
-						}
-						p {
-							color: #181a20;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						span {
-							margin-left: 4px;
-							color: #181a20;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-					}
-				}
-				.action-box {
-					width: 300px;
-					height: 100%;
-					flex-direction: row;
-					align-items: center;
-					justify-content: flex-end;
-					gap: 20px;
-					button {
-						border: 1px solid #b9b9b9;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: normal;
-					}
-					p {
-						color: #b9b9b9;
-						font-family: $font;
-						font-size: 14px;
-						font-style: italic;
-						font-weight: 400;
-						line-height: normal;
+						text-overflow: ellipsis;
+						transition: color 160ms $ease-out;
 					}
 				}
 			}
+			&:hover .info .name {
+				color: $c-orange;
+			}
+
+			.carlen-network-stats {
+				flex-direction: row;
+				align-items: center;
+				gap: 24px;
+				.info-box {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+					svg {
+						width: 22px;
+						height: 22px;
+						cursor: pointer;
+						color: $c-faint;
+					}
+					.MuiSvgIcon-colorPrimary {
+						color: $c-red;
+					}
+					p {
+						color: $c-faint;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 500;
+					}
+					span {
+						margin-left: 2px;
+						color: $c-text;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+					}
+				}
+			}
+
+			.carlen-network-actions {
+				flex-direction: row;
+				align-items: center;
+				justify-content: flex-end;
+				gap: 12px;
+				min-width: 170px;
+				.following-label {
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+				}
+				.btn-follow {
+					height: 40px;
+					padding: 0 22px;
+					border: none;
+					border-radius: 12px;
+					cursor: pointer;
+					background: $c-accent-grad;
+					color: #fff;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 600;
+					box-shadow: 0 12px 28px -14px rgba(233, 44, 40, 0.6);
+					transition: box-shadow 200ms $ease-out;
+					&:hover {
+						box-shadow: 0 18px 36px -14px rgba(233, 44, 40, 0.75);
+					}
+				}
+				.btn-unfollow {
+					height: 40px;
+					padding: 0 20px;
+					border-radius: 12px;
+					cursor: pointer;
+					background: transparent;
+					border: 1px solid rgba(233, 44, 40, 0.4);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 600;
+					transition: background 180ms $ease-out, border-color 180ms $ease-out;
+					&:hover {
+						background: rgba(233, 44, 40, 0.12);
+						border-color: rgba(233, 44, 40, 0.55);
+					}
+				}
+			}
+
+			&:hover {
+				transform: translateY(-4px);
+				box-shadow: $c-shadow, $c-glow-red;
+				border-color: rgba(233, 44, 40, 0.4);
+			}
 		}
-		.pagination-config {
+
+		/** EMPTY **/
+		.carlen-network-empty {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			padding: 72px 24px;
+			border-radius: 20px;
+			border: 1px dashed $c-border-strong;
+			background: $c-glass;
+			.empty-icon {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 68px;
+				height: 68px;
+				border-radius: 50%;
+				background: rgba(233, 44, 40, 0.1);
+				border: 1px solid rgba(233, 44, 40, 0.28);
+				svg {
+					font-size: 32px;
+					color: $c-orange;
+				}
+			}
+			.empty-title {
+				color: $c-text;
+				font-family: $font;
+				font-size: 20px;
+				font-weight: 600;
+			}
+			.empty-helper {
+				color: $c-muted;
+				font-family: $font;
+				font-size: 14px;
+				text-align: center;
+			}
+		}
+
+		/** PAGINATION **/
+		.carlen-network-pagination {
 			width: 100%;
-			height: auto;
+			display: flex;
+			flex-direction: column;
 			justify-content: center;
 			align-items: center;
-			margin-top: 30px;
+			gap: 14px;
+			margin-top: 12px;
+			.pagination-box {
+				align-items: center;
+				justify-content: center;
+			}
+			.MuiPaginationItem-root {
+				color: $c-muted;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				font-family: $font;
+				transition: background 160ms $ease-out, color 160ms $ease-out;
+				&:hover {
+					background: $c-glass-hover;
+					color: $c-text;
+				}
+				&.Mui-selected {
+					color: #fff;
+					border-color: transparent;
+					background: $c-accent-grad;
+					box-shadow: 0 10px 24px -12px rgba(233, 44, 40, 0.6);
+					&:hover {
+						background: $c-accent-grad;
+					}
+				}
+			}
 			.total-result {
 				p {
-					color: #181a20;
+					color: $c-muted;
 					text-align: center;
 					font-family: $font;
 					font-size: 14px;
-					font-style: normal;
 					font-weight: 400;
 					line-height: 26px;
 				}

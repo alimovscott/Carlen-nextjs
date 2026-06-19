@@ -1,13 +1,15 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
 import { FollowInquiry } from '../../types/follow/follow.input';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Follower } from '../../types/follow/follow';
 import { REACT_APP_API_URL } from '../../config';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import { userVar } from '../../../apollo/store';
 import { T } from '../../types/common';
 import { GET_MEMBER_FOLLOWERS } from '../../../apollo/user/query';
@@ -24,6 +26,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 	const { initialInput, subscribeHandler, unsubscribeHandler, likeMemberHandler, redirectToMemberPageHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 	const [total, setTotal] = useState<number>(0);
 	const category: any = router.query?.category ?? 'products';
 	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>(initialInput);
@@ -65,93 +68,140 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 		setFollowInquiry({ ...followInquiry });
 	};
 
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.07, delayChildren: 0.04 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
+	};
+
 	if (device === 'mobile') {
-		return <div>NESTAR FOLLOWS MOBILE</div>;
+		return <div>MEMBER FOLLOWERS MOBILE</div>;
 	} else {
 		return (
-			<div id="member-follows-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">{category === 'followers' ? 'Followers' : 'Followings'}</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="follows-list-box">
-					<Stack className="listing-title-box">
-						<Typography className="title-text">Name</Typography>
-						<Typography className="title-text">Details</Typography>
-						<Typography className="title-text">Subscription</Typography>
-					</Stack>
-					{memberFollowers?.length === 0 && (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Followers yet!</p>
-						</div>
+			<div id="carlen-member-network-page">
+				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
+					<motion.span className="eyebrow" variants={item}>
+						Carlen Network
+					</motion.span>
+					<motion.h1 className="title" variants={item}>
+						{category === 'followers' ? 'Followers' : 'Followings'}
+					</motion.h1>
+					<motion.p className="subtitle" variants={item}>
+						Manage your Carlen network and connect with automotive members.
+					</motion.p>
+					{total > 0 && (
+						<motion.span className="stat-chip" variants={item}>
+							<i className="dot" />
+							Total {total} member{total > 1 ? 's' : ''}
+						</motion.span>
 					)}
-					{memberFollowers.map((follower: Follower) => {
-						const imagePath: string = follower?.followerData?.memberImage
-							? `${REACT_APP_API_URL}/${follower?.followerData?.memberImage}`
-							: '/img/profile/defaultUser.svg';
-						return (
-							<Stack className="follows-card-box" key={follower._id}>
-								<Stack className={'info'} onClick={() => redirectToMemberPageHandler(follower?.followerData?._id)}>
-									<Stack className="image-box">
-										<img src={imagePath} alt="" />
+				</motion.div>
+
+				{memberFollowers?.length === 0 ? (
+					<motion.div
+						className="carlen-network-empty"
+						initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+						animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+					>
+						<span className="empty-icon">
+							<GroupOutlinedIcon />
+						</span>
+						<Typography className="empty-title">No members found</Typography>
+						<Typography className="empty-helper">
+							Your network will appear here as you connect with other members.
+						</Typography>
+					</motion.div>
+				) : (
+					<motion.div
+						className="carlen-network-list"
+						variants={container}
+						initial="hidden"
+						animate="visible"
+						key={followInquiry.page}
+					>
+						{memberFollowers.map((follower: Follower) => {
+							const imagePath: string = follower?.followerData?.memberImage
+								? `${REACT_APP_API_URL}/${follower?.followerData?.memberImage}`
+								: '/img/profile/defaultUser.svg';
+							return (
+								<motion.div className="carlen-network-card" key={follower._id} variants={item}>
+									<Stack className={'info'} onClick={() => redirectToMemberPageHandler(follower?.followerData?._id)}>
+										<Stack className="image-box">
+											<img src={imagePath} alt="" />
+										</Stack>
+										<Stack className="information-box">
+											<Typography className="name">{follower?.followerData?.memberNick}</Typography>
+										</Stack>
 									</Stack>
-									<Stack className="information-box">
-										<Typography className="name">{follower?.followerData?.memberNick}</Typography>
+									<Stack className={'carlen-network-stats'}>
+										<Box className={'info-box'} component={'div'}>
+											<p>Followers</p>
+											<span>({follower?.followerData?.memberFollowers})</span>
+										</Box>
+										<Box className={'info-box'} component={'div'}>
+											<p>Followings</p>
+											<span>({follower?.followerData?.memberFollowings})</span>
+										</Box>
+										<Box className={'info-box'} component={'div'}>
+											{follower?.meLiked && follower?.meLiked[0]?.myFavorite ? (
+												<FavoriteIcon
+													color="primary"
+													onClick={() => likeMemberHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
+												/>
+											) : (
+												<FavoriteBorderIcon
+													onClick={() => likeMemberHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
+												/>
+											)}
+											<span>({follower?.followerData?.memberLikes})</span>
+										</Box>
 									</Stack>
-								</Stack>
-								<Stack className={'details-box'}>
-									<Box className={'info-box'} component={'div'}>
-										<p>Followers</p>
-										<span>({follower?.followerData?.memberFollowers})</span>
-									</Box>
-									<Box className={'info-box'} component={'div'}>
-										<p>Followings</p>
-										<span>({follower?.followerData?.memberFollowings})</span>
-									</Box>
-									<Box className={'info-box'} component={'div'}>
-										{follower?.meLiked && follower?.meLiked[0]?.myFavorite ? (
-											<FavoriteIcon color="primary" 
-											 onClick={() => likeMemberHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
-											 />
-										) : (
-											<FavoriteBorderIcon 
-											onClick={() => likeMemberHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}/>
-										)}
-										<span>({follower?.followerData?.memberLikes})</span>
-									</Box>
-								</Stack>
-								{user?._id !== follower?.followerId && (
-									<Stack className="action-box">
-										{follower.meFollowed && follower.meFollowed[0]?.myFollowing ? (
-											<>
-												<Typography>Following</Typography>
-												<Button
-													variant="outlined"
-													sx={{ background: '#ed5858', ':hover': { background: '#ee7171' } }}
-													onClick={() => unsubscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
+									{user?._id !== follower?.followerId && (
+										<Stack className="carlen-network-actions">
+											{follower.meFollowed && follower.meFollowed[0]?.myFollowing ? (
+												<>
+													<Typography className="following-label">Following</Typography>
+													<motion.button
+														type="button"
+														className="btn-unfollow"
+														onClick={() => unsubscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
+														whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+														whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+													>
+														Unfollow
+													</motion.button>
+												</>
+											) : (
+												<motion.button
+													type="button"
+													className="btn-follow"
+													onClick={() => subscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
+													whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+													whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 												>
-													Unfollow
-												</Button>
-											</>
-										) : (
-											<Button
-												variant="contained"
-												sx={{ background: '#60eb60d4', ':hover': { background: '#60eb60d4' } }}
-												onClick={() => subscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
-											>
-												Follow
-											</Button>
-										)}
-									</Stack>
-								)}
-							</Stack>
-						);
-					})}
-				</Stack>
+													Follow
+												</motion.button>
+											)}
+										</Stack>
+									)}
+								</motion.div>
+							);
+						})}
+					</motion.div>
+				)}
+
 				{memberFollowers.length !== 0 && (
-					<Stack className="pagination-config">
+					<motion.div
+						className="carlen-network-pagination"
+						initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+						animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+						transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+					>
 						<Stack className="pagination-box">
 							<Pagination
 								page={followInquiry.page}
@@ -162,9 +212,11 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>{total} followers</Typography>
+							<Typography>
+								Total {total} member{total > 1 ? 's' : ''}
+							</Typography>
 						</Stack>
-					</Stack>
+					</motion.div>
 				)}
 			</div>
 		);

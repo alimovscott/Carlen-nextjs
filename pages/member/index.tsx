@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
 import MemberMenu from '../../libs/components/member/MemberMenu';
 import MemberProducts from '../../libs/components/member/MemberProducts';
 import { useRouter } from 'next/router';
@@ -14,7 +15,6 @@ import MemberFollowings from '../../libs/components/member/MemberFollowings';
 import { userVar } from '../../apollo/store';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
-import { Message } from '../../libs/enums/common.enum';
 import { Messages } from '../../libs/config';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -26,6 +26,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 const MemberPage: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 	const category: any = router.query?.category;
 	const user = useReactiveVar(userVar);
 
@@ -53,29 +54,27 @@ const MemberPage: NextPage = () => {
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
 			try {
-				console.log('subscribeHandler, id:', id);
-				if (!id) throw new Error(Message.error1);
-				if (!user._id) throw new Error(Message.error2);
-	
+				if (!id) throw new Error(Messages.error1);
+				if (!user._id) throw new Error(Messages.error2);
+
 				await subscribe({ variables: { input: id } });
 				await sweetTopSmallSuccessAlert('Subscribed', 800);
 				await refetch({ input: query });
-	
+
 			} catch (err: any) {
 				sweetErrorHandling(err).then();
 			}
 		};
-	
+
 		const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 			try {
-				console.log('subscribeHandler, id:', id);
-				if (!id) throw new Error(Message.error1);
-				if (!user._id) throw new Error(Message.error2);
-	
+				if (!id) throw new Error(Messages.error1);
+				if (!user._id) throw new Error(Messages.error2);
+
 				await unsubscribe({ variables: { input: id } });
 				await sweetTopSmallSuccessAlert('unSubscribed', 800);
 				await refetch({ input: query });
-				
+
 			} catch (err: any) {
 				sweetErrorHandling(err).then();
 			}
@@ -113,15 +112,31 @@ const MemberPage: NextPage = () => {
 		return <>MEMBER PAGE MOBILE</>;
 	} else {
 		return (
-			<div id="member-page" style={{ position: 'relative' }}>
+			<div id="carlen-member-page" style={{ position: 'relative' }}>
 				<div className="container">
-					<Stack className={'member-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
+					<Stack className={'carlen-member-page'}>
+						<Stack className={'carlen-member-shell'}>
+							<motion.div
+								className={'carlen-member-sidebar'}
+								initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+								animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+							>
 								<MemberMenu subscribeHandler={subscribeHandler} unsubscribeHandler={unsubscribeHandler} />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
+							</motion.div>
+							<motion.div
+								className="carlen-member-main"
+								initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+								animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+							>
+								<motion.div
+									className={'carlen-member-content'}
+									key={category}
+									initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+									animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+									transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+								>
 									{category === 'products' && <MemberProducts />}
 									{category === 'followers' && (
 										<MemberFollowers
@@ -140,8 +155,8 @@ const MemberPage: NextPage = () => {
 										/>
 									)}
 									{category === 'articles' && <MemberArticles />}
-								</Stack>
-							</Stack>
+								</motion.div>
+							</motion.div>
 						</Stack>
 					</Stack>
 				</div>

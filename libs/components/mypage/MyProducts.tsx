@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -16,20 +19,23 @@ import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
+	const shouldReduceMotion = useReducedMotion();
 	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
 	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
+	const [activeCount, setActiveCount] = useState<number>(0);
+	const [soldCount, setSoldCount] = useState<number>(0);
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 
 	/** APOLLO REQUESTS **/
 	const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
-		const {
-		loading: getAgentPropertiesLoading,
-		data: getAgentPropertiesData,
-		error: getAgentPropertiesError,
-		refetch: getAgentPropertiesRefetch,
+	const {
+		loading: getAgentProductsLoading,
+		data: getAgentProductsData,
+		error: getAgentProductsError,
+		refetch: getAgentProductsRefetch,
 	} = useQuery(GET_AGENT_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
@@ -37,6 +43,25 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		onCompleted: (data: T) => {
 			setAgentProducts(data?.getAgentProducts?.list);
 			setTotal(data?.getAgentProducts?.metaCounter[0]?.total);
+		},
+	});
+
+	// Lightweight read-only counts for the stats cards (reuses GET_AGENT_PRODUCTS).
+	useQuery(GET_AGENT_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: { page: 1, limit: 1, sort: 'createdAt', search: { productStatus: ProductStatus.ACTIVE } } },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setActiveCount(data?.getAgentProducts?.metaCounter[0]?.total || 0);
+		},
+	});
+
+	useQuery(GET_AGENT_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: { page: 1, limit: 1, sort: 'createdAt', search: { productStatus: ProductStatus.SOLD } } },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setSoldCount(data?.getAgentProducts?.metaCounter[0]?.total || 0);
 		},
 	});
 
@@ -49,7 +74,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		setSearchFilter({ ...searchFilter, search: { productStatus: value } });
 	};
 
-	const deletePropertyHandler = async (id: string) => {
+	const deleteProductHandler = async (id: string) => {
 		try {
 			if (await sweetConfirmAlert(`Are you sure delete to this product?`)) {
 				await updateProduct({
@@ -61,14 +86,14 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					},
 				});
 
-				await getAgentPropertiesRefetch({ input: searchFilter });
+				await getAgentProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
 		}
 	};
 
-	const updatePropertyHandler = async (status: string, id: string) => {
+	const updateProductStatusHandler = async (status: string, id: string) => {
 		try {
 			if (await sweetConfirmAlert(`Are you sure to change to ${status} status?`)) {
 				await updateProduct({
@@ -79,74 +104,141 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 						},
 					},
 				});
-				await getAgentPropertiesRefetch({ input: searchFilter });
+				await getAgentProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await sweetErrorHandling(err);
 		}
 	};
 
+	const addNewCarHandler = () => {
+		router.push({ pathname: '/mypage', query: { category: 'addCar' } });
+	};
+
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.07, delayChildren: 0.04 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
+	};
+
+	const isActiveTab = searchFilter.search.productStatus === 'ACTIVE';
 
 	if (user?.memberType !== 'AGENT') {
 		router.back();
 	}
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return <div>MY PRODUCTS MOBILE</div>;
 	} else {
 		return (
-			<div id="my-product-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">My Products</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="product-list-box">
-					<Stack className="tab-name-box">
+			<div id="carlen-my-products-page">
+				<motion.div className="inventory-header-block" variants={container} initial="hidden" animate="visible">
+					<motion.div className="head-text" variants={item}>
+						<span className="eyebrow">Dealer Inventory</span>
+						<Typography className="title">Manage Your Vehicle Listings</Typography>
+						<Typography className="subtitle">
+							Track active and sold vehicles, update status, and manage your Carlen inventory.
+						</Typography>
+					</motion.div>
+
+					<motion.div className="carlen-inventory-stats" variants={item}>
+						<Stack className="stat-card">
+							<Typography className="stat-value">{activeCount}</Typography>
+							<Typography className="stat-label">Active Listings</Typography>
+						</Stack>
+						<Stack className="stat-card">
+							<Typography className="stat-value">{soldCount}</Typography>
+							<Typography className="stat-label">Sold Vehicles</Typography>
+						</Stack>
+						<Stack className="stat-card">
+							<Typography className="stat-value">{activeCount + soldCount}</Typography>
+							<Typography className="stat-label">Total Inventory</Typography>
+						</Stack>
+					</motion.div>
+				</motion.div>
+
+				<Stack className="carlen-inventory-panel">
+					<Stack className="carlen-inventory-tabs">
 						<Typography
 							onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
-							className={searchFilter.search.productStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
+							className={isActiveTab ? 'segment active' : 'segment'}
 						>
 							On Sale
 						</Typography>
 						<Typography
 							onClick={() => changeStatusHandler(ProductStatus.SOLD)}
-							className={searchFilter.search.productStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
+							className={searchFilter.search.productStatus === 'SOLD' ? 'segment active' : 'segment'}
 						>
-							On Sold
+							Sold
 						</Typography>
 					</Stack>
-					<Stack className="list-box">
-						<Stack className="listing-title-box">
-							<Typography className="title-text">Listing title</Typography>
-							<Typography className="title-text">Date Published</Typography>
+
+					<Stack className="carlen-inventory-list">
+						<Stack className="carlen-inventory-header">
+							<Typography className="col-vehicle title-text">Vehicle</Typography>
+							<Typography className="title-text">Published</Typography>
 							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">View</Typography>
-							{searchFilter.search.productStatus === 'ACTIVE' && 
-								<Typography className="title-text">Action</Typography>
-							}
+							<Typography className="title-text">Views</Typography>
+							{isActiveTab && <Typography className="title-text">Actions</Typography>}
 						</Stack>
 
-						{agentProducts?.length === 0 ? (
-							<div className={'no-data'}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Product found!</p>
-							</div>
+						{getAgentProductsLoading && agentProducts.length === 0 ? (
+							<Stack className="inventory-skeleton-list">
+								{Array.from({ length: 5 }).map((_, idx) => (
+									<div className="inventory-skeleton" key={idx}>
+										<span className="sk-thumb" />
+										<div className="sk-lines">
+											<span className="sk-line w-70" />
+											<span className="sk-line w-40" />
+										</div>
+										<span className="sk-pill" />
+									</div>
+								))}
+							</Stack>
+						) : agentProducts?.length === 0 ? (
+							<Stack className="carlen-inventory-empty">
+								<span className="empty-icon">
+									<DirectionsCarFilledOutlinedIcon />
+								</span>
+								<Typography className="empty-title">No vehicles found</Typography>
+								<Typography className="empty-helper">Create your first listing or switch inventory status.</Typography>
+								<motion.button
+									type="button"
+									className="cta-primary"
+									onClick={addNewCarHandler}
+									whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+									whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+								>
+									<AddRoundedIcon />
+									Add New Car
+								</motion.button>
+							</Stack>
 						) : (
-							agentProducts.map((product: Product) => {
-								return (
-									<PropertyCard
-										product={product}
-										deletePropertyHandler={deletePropertyHandler}
-										updatePropertyHandler={updatePropertyHandler}
-									/>
-								);
-							})
+							<motion.div
+								className="inventory-rows"
+								variants={container}
+								initial="hidden"
+								animate="visible"
+								key={`${searchFilter.search.productStatus ?? ''}-${searchFilter.page}`}
+							>
+								{agentProducts.map((product: Product) => (
+									<motion.div variants={item} key={product?._id}>
+										<PropertyCard
+											product={product}
+											deletePropertyHandler={deleteProductHandler}
+											updatePropertyHandler={updateProductStatusHandler}
+										/>
+									</motion.div>
+								))}
+							</motion.div>
 						)}
 
 						{agentProducts.length !== 0 && (
-							<Stack className="pagination-config">
+							<Stack className="carlen-inventory-pagination">
 								<Stack className="pagination-box">
 									<Pagination
 										count={Math.ceil(total / searchFilter.limit)}
@@ -157,7 +249,9 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} product available</Typography>
+									<Typography>
+										Total {total} vehicle{total > 1 ? 's' : ''} available
+									</Typography>
 								</Stack>
 							</Stack>
 						)}
@@ -180,7 +274,3 @@ MyProducts.defaultProps = {
 };
 
 export default MyProducts;
-function updateProduct(arg0: { variables: { input: { _id: string; productStatus: string; }; }; }) {
-	throw new Error('Function not implemented.');
-}
-

@@ -1,147 +1,103 @@
 #pc-wrap {
 	#my-page {
-		background: #f6f6f6;
+		position: relative;
+		background: $c-base;
+		overflow: hidden;
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			pointer-events: none;
+			background: radial-gradient(38% 44% at 2% 4%, rgba(233, 44, 40, 0.08), transparent 56%),
+				radial-gradient(40% 48% at 100% 0%, rgba(47, 107, 255, 0.09), transparent 60%);
+		}
 		.container {
+			position: relative;
+			z-index: 1;
 			.my-page {
 				position: relative;
 				width: 100%;
-				flex-direction: row;
-				gap: 25px;
-				padding-top: 96px;
+				flex-direction: column;
+				gap: 24px;
+				padding: 120px 0 96px;
+
+				/** ACCOUNT TOPBAR **/
+				.mypage-topbar {
+					width: 1260px;
+					max-width: calc(100% - 48px);
+					margin: 0 auto;
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 10px;
+					.eyebrow {
+						display: inline-flex;
+						align-items: center;
+						padding: 6px 14px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.28);
+						background: rgba(233, 44, 40, 0.1);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+						line-height: 1;
+						letter-spacing: 0.16em;
+						text-transform: uppercase;
+					}
+					.title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 30px;
+						font-weight: 700;
+						letter-spacing: -0.02em;
+					}
+					.subtitle {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						line-height: 1.6;
+					}
+				}
+
 				.back-frame {
 					width: 1260px;
+					max-width: calc(100% - 48px);
 					height: auto;
+					margin: 0 auto;
 					display: flex;
 					flex-direction: row;
-					margin: 100px 0 200px 0;
-					border-radius: 12px;
-					border: 1px solid #c4c4c4;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+					align-items: flex-start;
+					gap: 24px;
+					background: transparent;
+					border: none;
+					box-shadow: none;
+
+					/** SIDEBAR (MyMenu shell) — panel chrome; inner content in myMenu.scss **/
 					.left-config {
-						position: relative;
-						padding: 0 0 0 0;
-						width: 266px;
-						height: 700px;
-						border-radius: 12px;
-						background: #fff;
-						border: 1px solid rgba(196, 196, 196, 0.79);
-						box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-						margin: 180px 20px 40px 20px;
-						.profile {
-							margin-top: 5px;
-							position: relative;
-							display: flex;
-							flex-direction: row;
-							.profile-img {
-								img {
-									width: 79px;
-									height: 79px;
-									border-radius: 50%;
-									right: 30px;
-									bottom: 12px;
-									object-fit: cover;
-								}
-							}
-							.user-info {
-								margin-left: 20px;
-								display: flex;
-								flex-direction: column;
-								.user-name {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-								.user-phone {
-									display: flex;
-									flex-direction: row;
-									img {
-										margin-top: 7px;
-										margin-right: 4px;
-										width: 16px;
-										height: 16px;
-									}
-								}
-								.view-list {
-									font-weight: bold;
-									color: red;
-								}
-							}
-						}
-						.sections {
-							height: auto;
-							gap: 45px;
-							margin-top: 30px;
-							.section {
-								height: auto;
-								.title {
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 28px;
-								}
-								.sub-section {
-									width: 230px;
-									height: 26px;
-									display: flex;
-									flex-direction: column;
-									align-items: center;
-									cursor: pointer;
-									padding: 0 5px 0 5px;
-									li {
-										height: 33px;
-										margin-bottom: 6px;
-										border-radius: 4px;
-									}
-									.focus {
-										height: 50px;
-										background: #000000;
-										border-radius: 10px;
-										p {
-											font-size: 14px;
-											color: #ffffff;
-										}
-									}
-									.flex-box {
-										display: flex;
-										align-items: center;
-										.com-icon {
-											display: flex;
-											flex-direction: row;
-											justify-content: flex-end;
-											margin-left: 11px;
-										}
-										p {
-											font-size: 14px;
-										}
-									}
-								}
-								img {
-									width: 16px;
-									height: 16px;
-								}
-								.sub-title {
-									margin-left: 12px;
-									color: #181a20;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: 55px;
-								}
-							}
-						}
+						position: sticky;
+						top: 24px;
+						width: 280px;
+						height: auto;
+						flex-shrink: 0;
+						margin: 0;
+						padding: 0;
+						border-radius: 24px;
+						border: 1px solid $c-border;
+						background: $c-raised;
+						box-shadow: $c-shadow;
 					}
+
+					/** CONTENT **/
 					.main-config {
 						position: relative;
-						width: 936px;
-						margin-top: 52px;
-						align-items: center;
-						gap: 109px;
+						flex: 1;
+						min-width: 0;
+						width: auto;
+						margin: 0;
+						align-items: stretch;
+						gap: 24px;
 						.list-config {
 							display: flex;
 							width: 100%;
@@ -183,9 +139,7 @@
 										text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 										font-family: $font;
 										font-size: 12px;
-										font-style: normal;
 										font-weight: 600;
-										line-height: normal;
 										img {
 											height: 16px;
 										}
@@ -203,9 +157,7 @@
 											color: #181a20;
 											font-family: $font;
 											font-size: 15px;
-											font-style: normal;
 											font-weight: 600;
-											line-height: normal;
 										}
 									}
 								}
@@ -226,9 +178,7 @@
 												color: #181a20;
 												font-family: $font;
 												font-size: 15px;
-												font-style: normal;
 												font-weight: 600;
-												line-height: normal;
 												text-transform: capitalize;
 											}
 										}
@@ -239,9 +189,7 @@
 												color: #717171;
 												font-family: $font;
 												font-size: 13px;
-												font-style: normal;
 												font-weight: 400;
-												line-height: normal;
 											}
 										}
 									}
@@ -259,9 +207,7 @@
 												color: #181a20;
 												font-family: $font;
 												font-size: 13px;
-												font-style: normal;
 												font-weight: 400;
-												line-height: normal;
 											}
 										}
 									}
@@ -283,14 +229,10 @@
 											p {
 												color: #181a20;
 												font-family: $font;
-												font-style: normal;
 												line-height: normal;
 											}
 											.disabled-type {
 												color: rgba(143, 143, 143, 0.54);
-												font-family: $font;
-												font-style: normal;
-												line-height: normal;
 											}
 										}
 										.buttons {
@@ -316,11 +258,10 @@
 							}
 							.total-result {
 								p {
-									color: #181a20;
+									color: $c-muted;
 									text-align: center;
 									font-family: $font;
 									font-size: 24px;
-									font-style: normal;
 									font-weight: 275;
 									line-height: 26px;
 								}

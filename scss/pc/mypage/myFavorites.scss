@@ -1,219 +1,301 @@
 #pc-wrap {
 	#my-page {
-		#my-favorites-page {
+		#carlen-my-favorites-page {
 			width: 100%;
 			height: auto;
 			display: flex;
 			flex-direction: column;
-			gap: 57px;
-			.main-title-box {
-				width: auto;
-				height: auto;
-				flex-direction: row;
-				justify-content: space-between;
-				.right-box {
-					width: 315px;
-					.main-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 30px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
-					}
-					.sub-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+			gap: 28px;
+
+			/** SECTION HEADER **/
+			.carlen-section-header {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 10px;
+				.eyebrow {
+					display: inline-flex;
+					align-items: center;
+					padding: 6px 14px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.28);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 700;
+					line-height: 1;
+					letter-spacing: 0.16em;
+					text-transform: uppercase;
+				}
+				.title {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 28px;
+					font-weight: 700;
+					letter-spacing: -0.02em;
+				}
+				.subtitle {
+					margin: 0;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					line-height: 1.6;
+				}
+				.stat-chip {
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
+					margin-top: 2px;
+					padding: 8px 14px;
+					border-radius: $c-radius-pill;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					color: $c-text;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+					.dot {
+						width: 7px;
+						height: 7px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+						box-shadow: 0 0 8px rgba(233, 44, 40, 0.6);
 					}
 				}
 			}
-			.favorites-list-box {
+
+			/** GRID **/
+			.carlen-favorites-grid {
 				width: 100%;
-				height: auto;
-				flex-wrap: wrap;
-				flex-direction: row;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
 				gap: 22px;
-				.card-config {
-					width: 296px;
-					height: 413px;
-					margin-bottom: 7px;
-					border-radius: 12px;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
+				/** Dark card restyle — scoped to favorites page only **/
+				.card-config.carlen-product-card {
+					width: 100%;
+					height: auto;
+					margin-bottom: 0;
+					border-radius: $c-radius;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					box-shadow: $c-shadow;
+					overflow: hidden;
+					transition: transform 220ms $ease-out, box-shadow 220ms $ease-out, border-color 220ms $ease-out;
+
 					.top {
-						position: relative;
-						width: 100%;
-						height: 240px;
-						a {
-							height: 100%;
-						}
+						height: 220px;
 						img {
 							width: 100%;
 							height: 100%;
 							object-fit: cover;
-							border-radius: 12px 12px 0 0;
-						}
-						.top-badge {
-							position: absolute;
-							top: 20px;
-							left: 16px;
-							display: flex;
-							width: 80px;
-							height: 30px;
-							justify-content: center;
-							align-items: center;
-							border-radius: 6px;
-							padding: 6px 20px;
-							background: #eb6753;
-							color: #fff;
-							text-align: center;
-							text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							img {
-								height: 16px;
-							}
+							border-radius: 0;
 						}
 						.price-box {
-							position: absolute;
-							bottom: 20px;
-							left: 20px;
-							padding: 8px 15px;
-							align-items: center;
-							border-radius: 6px;
-							border: 1px solid rgba(255, 255, 255, 0.5);
-							background: #fff;
+							background: rgba(14, 19, 29, 0.78);
+							border: 1px solid $c-border;
+							backdrop-filter: blur(10px);
 							p {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
+								color: $c-text;
 							}
 						}
 					}
+
 					.bottom {
-						width: 100%;
-						height: 173px;
-						padding: 20px 16px 10px 16px;
+						height: auto;
+						padding: 18px 16px;
 						.name-address {
-							width: 100%;
-							height: 48px;
-							gap: 5px;
-							margin-bottom: 20px;
-							.name {
-								width: 100%;
-								height: 23px;
-								overflow: hidden;
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-									text-transform: capitalize;
-								}
+							.name p {
+								color: $c-text;
 							}
-							.address {
-								width: 100%;
-								overflow: hidden;
-								p {
-									color: #717171;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: normal;
-								}
+							.address p {
+								color: $c-faint;
 							}
 						}
 						.options {
-							flex-direction: row;
-							width: 100%;
-							height: 20px;
-							gap: 20px;
-							margin-bottom: 10px;
 							.option {
-								flex-direction: row;
-								gap: 5px;
-								align-items: center;
 								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: normal;
+									color: $c-muted;
+								}
+								img {
+									filter: brightness(0) invert(0.7);
 								}
 							}
 						}
 						.divider {
-							width: 100%;
-							height: 1px;
-							background: #ddd;
-							margin-bottom: 17px;
+							background: $c-border;
 						}
 						.type-buttons {
-							flex-direction: row;
-							width: 100%;
-							justify-content: space-between;
-							align-items: center;
-							.type {
-								flex-direction: row;
-								align-items: center;
-								gap: 7px;
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-style: normal;
-									line-height: normal;
-								}
-								.disabled-type {
-									color: rgba(143, 143, 143, 0.54);
-									font-family: $font;
-									font-style: normal;
-									line-height: normal;
-								}
+							.type p {
+								color: $c-muted;
+							}
+							.type .disabled-type {
+								color: $c-faint;
 							}
 							.buttons {
-								flex-direction: row;
-								width: auto;
-								gap: 12px;
-								justify-content: center;
-								align-items: center;
-								padding-right: 10px;
-								svg {
-									cursor: pointer;
+								.view-cnt {
+									color: $c-muted;
+								}
+								.MuiIconButton-root svg {
+									color: $c-faint;
+								}
+								.MuiSvgIcon-colorPrimary {
+									color: $c-red;
 								}
 							}
 						}
 					}
+
+					&:hover {
+						transform: translateY(-6px);
+						box-shadow: $c-shadow, $c-glow-red;
+						border-color: rgba(233, 44, 40, 0.4);
+					}
 				}
 			}
-			.pagination-config {
+
+			/** SKELETON **/
+			.favorite-skeleton {
 				width: 100%;
-				height: auto;
+				border-radius: $c-radius;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				overflow: hidden;
+				.sk-img {
+					width: 100%;
+					height: 220px;
+				}
+				.sk-body {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					padding: 18px 16px;
+				}
+				.sk-line {
+					height: 12px;
+					border-radius: 6px;
+					&.w-50 {
+						width: 50%;
+					}
+					&.w-70 {
+						width: 70%;
+					}
+					&.w-90 {
+						width: 90%;
+					}
+				}
+				.sk-img,
+				.sk-line {
+					background: linear-gradient(100deg, rgba(255, 255, 255, 0.04) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.04) 70%);
+					background-size: 200% 100%;
+					animation: carlen-community-shimmer 1.4s ease-in-out infinite;
+				}
+			}
+
+			/** EMPTY **/
+			.carlen-favorites-empty {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 12px;
+				padding: 72px 24px;
+				border-radius: 20px;
+				border: 1px dashed $c-border-strong;
+				background: $c-glass;
+				.empty-icon {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 68px;
+					height: 68px;
+					border-radius: 50%;
+					background: rgba(233, 44, 40, 0.1);
+					border: 1px solid rgba(233, 44, 40, 0.28);
+					svg {
+						font-size: 32px;
+						color: $c-orange;
+					}
+				}
+				.empty-title {
+					color: $c-text;
+					font-family: $font;
+					font-size: 20px;
+					font-weight: 600;
+				}
+				.empty-helper {
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					margin-bottom: 8px;
+				}
+				.cta-primary {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					height: 48px;
+					padding: 0 26px;
+					border: none;
+					border-radius: 18px;
+					cursor: pointer;
+					background: $c-accent-grad;
+					color: #fff;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 600;
+					box-shadow: 0 12px 28px -12px rgba(233, 44, 40, 0.6);
+					transition: box-shadow 200ms $ease-out;
+					svg {
+						font-size: 19px;
+					}
+					&:hover {
+						box-shadow: 0 18px 38px -12px rgba(233, 44, 40, 0.75);
+					}
+				}
+			}
+
+			/** PAGINATION **/
+			.carlen-favorites-pagination {
+				width: 100%;
+				display: flex;
+				flex-direction: column;
 				justify-content: center;
 				align-items: center;
-				margin-top: 30px;
+				gap: 14px;
+				margin-top: 12px;
+				.pagination-box {
+					align-items: center;
+					justify-content: center;
+				}
+				.MuiPaginationItem-root {
+					color: $c-muted;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					font-family: $font;
+					transition: background 160ms $ease-out, color 160ms $ease-out;
+					&:hover {
+						background: $c-glass-hover;
+						color: $c-text;
+					}
+					&.Mui-selected {
+						color: #fff;
+						border-color: transparent;
+						background: $c-accent-grad;
+						box-shadow: 0 10px 24px -12px rgba(233, 44, 40, 0.6);
+						&:hover {
+							background: $c-accent-grad;
+						}
+					}
+				}
 				.total-result {
 					p {
-						color: #181a20;
+						color: $c-muted;
 						text-align: center;
 						font-family: $font;
 						font-size: 14px;
-						font-style: normal;
 						font-weight: 400;
 						line-height: 26px;
 					}

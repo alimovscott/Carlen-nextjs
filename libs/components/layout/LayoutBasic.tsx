@@ -83,6 +83,8 @@ const withLayoutBasic = (Component: any) => {
 			return { title, desc, bgImage };
 		}, [router.pathname]);
 
+		const hideHeaderBasic = ['/mypage', '/member'].includes(router.pathname);
+
 		/** LIFECYCLES **/
 		useEffect(() => {
 			const jwt = getJwtToken();
@@ -130,7 +132,7 @@ const withLayoutBasic = (Component: any) => {
 						) : router.pathname === '/agent' ? (
 							<AgentsHero variant={'listing'} />
 						) : router.pathname === '/agent/detail' ? null : router.pathname === '/community' ? null : router.pathname ===
-						  '/community/detail' ? null : (
+						  '/community/detail' ? null : hideHeaderBasic ? null : (
 							<Stack
 								className={`header-basic ${authHeader && 'auth'}`}
 								style={{

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProducts from '../../libs/components/mypage/MyProducts';
@@ -31,6 +32,7 @@ const MyPage: NextPage = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 	const category: any = router.query?.category ?? 'myProfile';
 	const normalizedCategory =
 		category === 'addProduct' || category === 'addProperty'
@@ -120,12 +122,23 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 			<div id="my-page" style={{ position: 'relative' }}>
 				<div className="container">
 					<Stack className={'my-page'}>
+						<Stack className={'mypage-topbar'}>
+							<span className={'eyebrow'}>Carlen Account</span>
+							<Typography className={'title'}>Account Center</Typography>
+							<Typography className={'subtitle'}>Manage your vehicles, activity, and profile.</Typography>
+						</Stack>
 						<Stack className={'back-frame'}>
 							<Stack className={'left-config'}>
 								<MyMenu />
 							</Stack>
 							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
+								<motion.div
+									className={'list-config'}
+									key={normalizedCategory}
+									initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+									animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+									transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+								>
 									{normalizedCategory === 'addCar' && <AddProduct />}
 									{normalizedCategory === 'myCars' && <MyProducts />}
 									{normalizedCategory === 'myFavorites' && <MyFavorites />}
@@ -149,7 +162,7 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
 										/>
 									)}
-								</Stack>
+								</motion.div>
 							</Stack>
 						</Stack>
 					</Stack>

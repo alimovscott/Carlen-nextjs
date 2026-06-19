@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { REACT_APP_API_URL, productMileageRange } from '../../config';
@@ -17,6 +18,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const inputRef = useRef<any>(null);
+	const shouldReduceMotion = useReducedMotion();
 	const [insertPropertyData, setInsertPropertyData] = useState<ProductInput>(initialValues);
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
 	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
@@ -73,7 +75,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			formData.append(
 				'operations',
 				JSON.stringify({
-					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) { 
+					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
 						imagesUploader(files: $files, target: $target)
 				  }`,
 					variables: {
@@ -177,8 +179,17 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 		}
 	}, [insertPropertyData]);
 
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08, delayChildren: 0.04 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 18 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
+	};
 
-
+	const isEdit = !!router.query.productId;
 
 	if (user?.memberType !== 'AGENT') {
 		router.back();
@@ -191,260 +202,287 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 	} else {
 		return (
 			<div id="add-product-page">
-				<Stack className="main-title-box">
-					<Typography className="main-title">Add New Car</Typography>
-					<Typography className="sub-title">We are glad to see you again!</Typography>
-				</Stack>
+				<motion.div className="studio-shell" variants={container} initial="hidden" animate="visible">
+					<motion.div className="studio-header" variants={item}>
+						<span className="studio-eyebrow">Dealer Studio</span>
+						<Typography className="studio-title">{isEdit ? 'Edit Vehicle' : 'Add New Vehicle'}</Typography>
+						<Typography className="studio-subtitle">
+							Curate the listing — specs, gallery, and details — then publish to the Carlen showroom.
+						</Typography>
+					</motion.div>
 
-				<div>
-					<Stack className="config">
-						<Stack className="description-box">
-							<Stack className="config-column">
-								<Typography className="title">Title</Typography>
+					{/** VEHICLE IDENTITY **/}
+					<motion.section className="studio-card" variants={item}>
+						<Stack className="card-head">
+							<Typography className="card-title">Vehicle Identity</Typography>
+							<Typography className="card-hint">Core listing details buyers see first.</Typography>
+						</Stack>
+
+						<Stack className="field-column">
+							<Typography className="field-label">Title</Typography>
+							<input
+								type="text"
+								className="studio-input"
+								placeholder={'e.g. 2023 Porsche Taycan Turbo S'}
+								value={insertPropertyData.productTitle}
+								onChange={({ target: { value } }) =>
+									setInsertPropertyData({ ...insertPropertyData, productTitle: value })
+								}
+							/>
+						</Stack>
+
+						<Stack className="field-grid">
+							<Stack className="field-cell">
+								<Typography className="field-label">Model</Typography>
 								<input
 									type="text"
-									className="description-input"
-									placeholder={'Title'}
-									value={insertPropertyData.productTitle}
+									className="studio-input"
+									placeholder={'Model'}
+									value={insertPropertyData.productModel}
 									onChange={({ target: { value } }) =>
-										setInsertPropertyData({ ...insertPropertyData, productTitle: value })
+										setInsertPropertyData({ ...insertPropertyData, productModel: value })
 									}
 								/>
 							</Stack>
-
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Model</Typography>
-									<input
-										type="text"
-										className="description-input"
-										placeholder={'Model'}
-										value={insertPropertyData.productModel}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productModel: value })
-										}
-									/>
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Year</Typography>
-									<input
-										type="number"
-										className="description-input"
-										placeholder={'Year'}
-										value={insertPropertyData.productYear}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productYear: parseInt(value) || 0 })
-										}
-									/>
-								</Stack>
-							</Stack>
-
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Price</Typography>
-									<input
-										type="text"
-										className="description-input"
-										placeholder={'Price'}
-										value={insertPropertyData.productPrice}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productPrice: parseInt(value) })
-										}
-									/>
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Select Type</Typography>
-									<select
-										className={'select-description'}
-										defaultValue={insertPropertyData.productType || 'select'}
-										value={insertPropertyData.productType || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertPropertyData({ ...insertPropertyData, productType: value })
-										}
-									>
-										<>
-											<option selected={true} disabled={true} value={'select'}>
-												Select
-											</option>
-											{productType.map((type: any) => (
-												<option value={`${type}`} key={type}>
-													{type}
-												</option>
-											))}
-										</>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-							</Stack>
-
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Select Location</Typography>
-									<select
-										className={'select-description'}
-										defaultValue={insertPropertyData.productLocation || 'select'}
-										value={insertPropertyData.productLocation || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertPropertyData({ ...insertPropertyData, productLocation: value })
-										}
-									>
-										<>
-											<option selected={true} disabled={true} value={'select'}>
-												Select
-											</option>
-											{productLocation.map((location: any) => (
-												<option value={`${location}`} key={location}>
-													{location}
-												</option>
-											))}
-										</>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Address</Typography>
-									<input
-										type="text"
-										className="description-input"
-										placeholder={'Address'}
-										value={insertPropertyData.productAddress}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productAddress: value })
-										}
-									/>
-								</Stack>
-							</Stack>
-
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Fuel</Typography>
-									<select
-										className={'select-description'}
-										value={insertPropertyData.productFuelType || 'select'}
-										defaultValue={insertPropertyData.productFuelType || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertPropertyData({ ...insertPropertyData, productFuelType: value })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{productFuelType.map((fuel: string) => (
-											<option value={fuel} key={fuel}>{fuel}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Automatic</Typography>
-									<select
-										className={'select-description'}
-										value={insertPropertyData.productTransmission || 'select'}
-										defaultValue={insertPropertyData.productTransmission || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertPropertyData({ ...insertPropertyData, productTransmission: value })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{productTransmission.map((transmission: string) => (
-											<option value={transmission} key={transmission}>{transmission}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-							</Stack>
-
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Doors</Typography>
-									<select
-										className={'select-description'}
-										value={insertPropertyData.productDoors || 'select'}
-										defaultValue={insertPropertyData.productDoors || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productDoors: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((room: number) => (
-											<option value={`${room}`}>{room}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Seats</Typography>
-									<select
-										className={'select-description'}
-										value={insertPropertyData.productSeats || 'select'}
-										defaultValue={insertPropertyData.productSeats || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productSeats: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((bed: number) => (
-											<option value={`${bed}`}>{bed}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Mileage</Typography>
-									<select
-										className={'select-description'}
-										value={insertPropertyData.productMileage || 'select'}
-										defaultValue={insertPropertyData.productMileage || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertPropertyData({ ...insertPropertyData, productMileage: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{productMileageRange.map((square: number) => {
-											if (square !== 0) {
-												return <option value={`${square}`}>{square}</option>;
-											}
-										})}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-							</Stack>
-
-							<Typography className="product-title">Product Description</Typography>
-							<Stack className="config-column">
-								<Typography className="title">Description</Typography>
-								<textarea
-									name=""
-									id=""
-									className="description-text"
-									value={insertPropertyData.productDesc}
+							<Stack className="field-cell">
+								<Typography className="field-label">Year</Typography>
+								<input
+									type="number"
+									className="studio-input"
+									placeholder={'Year'}
+									value={insertPropertyData.productYear}
 									onChange={({ target: { value } }) =>
-										setInsertPropertyData({ ...insertPropertyData, productDesc: value })
+										setInsertPropertyData({ ...insertPropertyData, productYear: parseInt(value) || 0 })
 									}
-								></textarea>
+								/>
+							</Stack>
+							<Stack className="field-cell">
+								<Typography className="field-label">Price</Typography>
+								<input
+									type="text"
+									className="studio-input"
+									placeholder={'Price'}
+									value={insertPropertyData.productPrice}
+									onChange={({ target: { value } }) =>
+										setInsertPropertyData({ ...insertPropertyData, productPrice: parseInt(value) })
+									}
+								/>
+							</Stack>
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Type</Typography>
+								<select
+									className={'studio-select'}
+									defaultValue={insertPropertyData.productType || 'select'}
+									value={insertPropertyData.productType || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertPropertyData({ ...insertPropertyData, productType: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{productType.map((type: any) => (
+										<option value={`${type}`} key={type}>
+											{type}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 						</Stack>
+					</motion.section>
 
-						<Typography className="upload-title">Upload photos of your product</Typography>
+					{/** LOCATION **/}
+					<motion.section className="studio-card" variants={item}>
+						<Stack className="card-head">
+							<Typography className="card-title">Location</Typography>
+							<Typography className="card-hint">Where the vehicle is available.</Typography>
+						</Stack>
+
+						<Stack className="field-grid two">
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Location</Typography>
+								<select
+									className={'studio-select'}
+									defaultValue={insertPropertyData.productLocation || 'select'}
+									value={insertPropertyData.productLocation || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertPropertyData({ ...insertPropertyData, productLocation: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{productLocation.map((location: any) => (
+										<option value={`${location}`} key={location}>
+											{location}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+							<Stack className="field-cell">
+								<Typography className="field-label">Address</Typography>
+								<input
+									type="text"
+									className="studio-input"
+									placeholder={'Address'}
+									value={insertPropertyData.productAddress}
+									onChange={({ target: { value } }) =>
+										setInsertPropertyData({ ...insertPropertyData, productAddress: value })
+									}
+								/>
+							</Stack>
+						</Stack>
+					</motion.section>
+
+					{/** SPECIFICATIONS **/}
+					<motion.section className="studio-card" variants={item}>
+						<Stack className="card-head">
+							<Typography className="card-title">Specifications</Typography>
+							<Typography className="card-hint">Powertrain and configuration.</Typography>
+						</Stack>
+
+						<Stack className="spec-grid">
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Fuel</Typography>
+								<select
+									className={'studio-select'}
+									value={insertPropertyData.productFuelType || 'select'}
+									defaultValue={insertPropertyData.productFuelType || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertPropertyData({ ...insertPropertyData, productFuelType: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{productFuelType.map((fuel: string) => (
+										<option value={fuel} key={fuel}>
+											{fuel}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Transmission</Typography>
+								<select
+									className={'studio-select'}
+									value={insertPropertyData.productTransmission || 'select'}
+									defaultValue={insertPropertyData.productTransmission || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertPropertyData({ ...insertPropertyData, productTransmission: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{productTransmission.map((transmission: string) => (
+										<option value={transmission} key={transmission}>
+											{transmission}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Doors</Typography>
+								<select
+									className={'studio-select'}
+									value={insertPropertyData.productDoors || 'select'}
+									defaultValue={insertPropertyData.productDoors || 'select'}
+									onChange={({ target: { value } }) =>
+										setInsertPropertyData({ ...insertPropertyData, productDoors: parseInt(value) })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{[1, 2, 3, 4, 5].map((room: number) => (
+										<option value={`${room}`} key={room}>
+											{room}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Seats</Typography>
+								<select
+									className={'studio-select'}
+									value={insertPropertyData.productSeats || 'select'}
+									defaultValue={insertPropertyData.productSeats || 'select'}
+									onChange={({ target: { value } }) =>
+										setInsertPropertyData({ ...insertPropertyData, productSeats: parseInt(value) })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{[1, 2, 3, 4, 5].map((bed: number) => (
+										<option value={`${bed}`} key={bed}>
+											{bed}
+										</option>
+									))}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+							<Stack className="field-cell select-cell">
+								<Typography className="field-label">Mileage</Typography>
+								<select
+									className={'studio-select'}
+									value={insertPropertyData.productMileage || 'select'}
+									defaultValue={insertPropertyData.productMileage || 'select'}
+									onChange={({ target: { value } }) =>
+										setInsertPropertyData({ ...insertPropertyData, productMileage: parseInt(value) })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										Select
+									</option>
+									{productMileageRange.map((square: number) => {
+										if (square !== 0) {
+											return (
+												<option value={`${square}`} key={square}>
+													{square}
+												</option>
+											);
+										}
+									})}
+								</select>
+								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+							</Stack>
+						</Stack>
+					</motion.section>
+
+					{/** DESCRIPTION **/}
+					<motion.section className="studio-card" variants={item}>
+						<Stack className="card-head">
+							<Typography className="card-title">Description</Typography>
+							<Typography className="card-hint">Tell the story of this vehicle.</Typography>
+						</Stack>
+						<textarea
+							className="studio-textarea"
+							placeholder={'Condition, history, standout features…'}
+							value={insertPropertyData.productDesc}
+							onChange={({ target: { value } }) =>
+								setInsertPropertyData({ ...insertPropertyData, productDesc: value })
+							}
+						></textarea>
+					</motion.section>
+
+					{/** GALLERY **/}
+					<motion.section className="studio-card" variants={item}>
+						<Stack className="card-head">
+							<Typography className="card-title">Gallery</Typography>
+							<Typography className="card-hint">Up to 5 photos · JPEG or PNG · min 2048×768.</Typography>
+						</Stack>
+
 						<Stack className="images-box">
 							<Stack className="upload-box">
 								<svg xmlns="http://www.w3.org/2000/svg" width="121" height="120" viewBox="0 0 121 120" fill="none">
@@ -511,7 +549,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 										<g clipPath="url(#clip0_7309_3249)">
 											<path
 												d="M15.5556 0H5.7778C5.53214 0 5.33334 0.198792 5.33334 0.444458C5.33334 0.690125 5.53214 0.888917 5.7778 0.888917H14.4827L0.130219 15.2413C-0.0434062 15.415 -0.0434062 15.6962 0.130219 15.8698C0.21701 15.9566 0.33076 16 0.444469 16C0.558177 16 0.671885 15.9566 0.758719 15.8698L15.1111 1.51737V10.2222C15.1111 10.4679 15.3099 10.6667 15.5556 10.6667C15.8013 10.6667 16.0001 10.4679 16.0001 10.2222V0.444458C16 0.198792 15.8012 0 15.5556 0Z"
-												fill="#181A20"
+												fill="#FF6A3D"
 											/>
 										</g>
 										<defs>
@@ -526,27 +564,45 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								{insertPropertyData?.productImages.map((image: string) => {
 									const imagePath: string = `${REACT_APP_API_URL}/${image}`;
 									return (
-										<Stack className="image-box">
+										<Stack className="image-box" key={image}>
 											<img src={imagePath} alt="" />
 										</Stack>
 									);
 								})}
 							</Stack>
 						</Stack>
+					</motion.section>
 
-						<Stack className="buttons-row">
-							{router.query.productId ? (
-								<Button className="next-button" disabled={doDisabledCheck()} onClick={updatePropertyHandler}>
-									<Typography className="next-button-text">Save</Typography>
-								</Button>
-							) : (
-								<Button className="next-button" disabled={doDisabledCheck()} onClick={insertPropertyHandler}>
-									<Typography className="next-button-text">Save</Typography>
-								</Button>
-							)}
-						</Stack>
+					{/** STICKY PUBLISH BAR **/}
+					<Stack className="studio-actionbar">
+						<Typography className="actionbar-hint">
+							{doDisabledCheck() ? 'Complete all fields to publish.' : 'Ready to publish.'}
+						</Typography>
+						{isEdit ? (
+							<motion.button
+								type="button"
+								className="publish-button"
+								disabled={doDisabledCheck()}
+								onClick={updatePropertyHandler}
+								whileHover={shouldReduceMotion || doDisabledCheck() ? undefined : { y: -2 }}
+								whileTap={shouldReduceMotion || doDisabledCheck() ? undefined : { scale: 0.97 }}
+							>
+								Save Changes
+							</motion.button>
+						) : (
+							<motion.button
+								type="button"
+								className="publish-button"
+								disabled={doDisabledCheck()}
+								onClick={insertPropertyHandler}
+								whileHover={shouldReduceMotion || doDisabledCheck() ? undefined : { y: -2 }}
+								whileTap={shouldReduceMotion || doDisabledCheck() ? undefined : { scale: 0.97 }}
+							>
+								Publish Vehicle
+							</motion.button>
+						)}
 					</Stack>
-				</div>
+				</motion.div>
 			</div>
 		);
 	}

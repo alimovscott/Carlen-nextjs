@@ -425,7 +425,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										<span className="sk-line w-60" />
 									</div>
 								) : (
-									<ToastViewerComponent markdown={boardArticle?.articleContent} />
+									<ToastViewerComponent key={boardArticle?._id} markdown={boardArticle?.articleContent} />
 								)}
 							</motion.div>
 
@@ -455,13 +455,12 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							</Stack>
 
 							{/** RELATED ARTICLES **/}
-							{related.length > 0 && (
+							{/* {related.length > 0 && (
 								<motion.section
 									className="carlen-related-articles"
 									variants={container}
 									initial="hidden"
-									whileInView="visible"
-									viewport={{ once: true, amount: 0.2 }}
+									animate="visible"
 								>
 									<Stack className="related-header">
 										<Typography className="related-title">Related Articles</Typography>
@@ -478,7 +477,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										))}
 									</motion.div>
 								</motion.section>
-							)}
+							)} */}
 
 							{/** COMMENTS **/}
 							<Stack className="carlen-comment-form">

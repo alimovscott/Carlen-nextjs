@@ -1,318 +1,263 @@
 #pc-wrap {
 	#my-page {
-		#my-profile-page {
+		#carlen-my-profile-page {
 			width: 100%;
-			height: auto;
 			display: flex;
 			flex-direction: column;
-			gap: 20px;
-			.main-title-box {
-				width: auto;
-				height: auto;
+			gap: 24px;
+
+			/** SECTION HEADER **/
+			.carlen-section-header {
+				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
-				.right-box {
-					width: 315px;
-					.main-title {
-						color: #181a20;
+				align-items: flex-end;
+				gap: 24px;
+				.head-text {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 10px;
+					.eyebrow {
+						display: inline-flex;
+						align-items: center;
+						padding: 6px 14px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.28);
+						background: rgba(233, 44, 40, 0.1);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+						line-height: 1;
+						letter-spacing: 0.16em;
+						text-transform: uppercase;
+					}
+					.title {
+						margin: 0;
+						color: $c-text;
 						font-family: $font;
 						font-size: 30px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
+						font-weight: 700;
+						letter-spacing: -0.02em;
 					}
-					.sub-title {
-						color: #181a20;
+					.subtitle {
+						margin: 0;
+						color: $c-muted;
 						font-family: $font;
 						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						line-height: 1.6;
+					}
+				}
+				.completeness-chip {
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
+					padding: 8px 14px;
+					border-radius: $c-radius-pill;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 600;
+					.dot {
+						width: 7px;
+						height: 7px;
+						border-radius: 50%;
+					}
+					&.ready {
+						color: $c-text;
+						.dot {
+							background: $c-accent-grad;
+							box-shadow: 0 0 8px rgba(233, 44, 40, 0.6);
+						}
+					}
+					&.missing {
+						color: $c-faint;
+						.dot {
+							background: $c-faint;
+						}
 					}
 				}
 			}
-			.top-box {
+
+			/** PANEL **/
+			.carlen-profile-panel {
 				width: 100%;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
 				padding: 30px;
-				margin-top: 35px;
-				gap: 25px;
-				border-radius: 12px;
-				border: 1px solid #c4c4c4;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.photo-box {
-					gap: 23px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 17px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
+				border-radius: 24px;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				box-shadow: $c-shadow;
+
+				/** PHOTO CARD **/
+				.carlen-profile-photo-card {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 28px;
+
+					.avatar-ring {
+						position: relative;
+						width: 110px;
+						height: 110px;
+						border-radius: 50%;
+						flex-shrink: 0;
+						&::before {
+							content: '';
+							position: absolute;
+							inset: -3px;
+							border-radius: 50%;
+							background: conic-gradient(from 180deg, #e92c28, #ff6a3d, #2f6bff, #e92c28);
+							opacity: 0.5;
+							filter: blur(7px);
+							z-index: 0;
+						}
+						.avatar-img {
+							position: absolute;
+							inset: 3px;
+							z-index: 1;
+							width: 104px;
+							height: 104px;
+							border-radius: 50%;
+							object-fit: cover;
+							background-color: #05070b;
+							border: 2px solid rgba(255, 255, 255, 0.1);
+						}
 					}
-					.image-big-box {
-						flex-direction: row;
-						gap: 50px;
-						.image-box {
-							position: relative;
-							width: 194px;
-							height: 157px;
-							img {
-								width: 100%;
-								height: 100%;
-								object-fit: cover;
-								border-radius: 15px;
-								object-fit: cover;
+
+					.photo-actions {
+						display: flex;
+						flex-direction: column;
+						align-items: flex-start;
+						gap: 10px;
+						.upload-btn {
+							display: inline-flex;
+							align-items: center;
+							gap: 8px;
+							height: 44px;
+							padding: 0 18px;
+							border-radius: 12px;
+							border: 1px solid $c-border;
+							background: $c-glass;
+							color: $c-text;
+							cursor: pointer;
+							transition: background 160ms $ease-out, border-color 160ms $ease-out;
+							svg {
+								font-size: 19px;
+								color: $c-orange;
 							}
-							.delete-box {
-								position: absolute;
-								top: 10px;
-								left: 10px;
-								width: 36px;
-								height: 32px;
-								background-color: #ffffff;
-								align-items: center;
-								justify-content: center;
-								border-radius: 12px;
+							p {
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 600;
+							}
+							&:hover {
+								background: $c-glass-hover;
+								border-color: $c-border-strong;
+							}
+							&.loading {
+								opacity: 0.7;
+								pointer-events: none;
 							}
 						}
-						.upload-big-box {
-							align-self: flex-end;
-							gap: 22px;
-							.labeler {
-								display: flex;
-								width: 210.023px;
-								height: 40.135px;
-								justify-content: center;
-								align-items: center;
-								cursor: pointer;
-								border-radius: 12px;
-								border: 1px solid #181a20;
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-							}
-							.upload-text {
-								color: #181a20;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
+						.upload-text {
+							color: $c-faint;
+							font-family: $font;
+							font-size: 12px;
+							line-height: 1.5;
 						}
 					}
 				}
-				.small-input-box {
-					width: 100%;
-					height: auto;
+
+				/** FIELDS **/
+				.carlen-profile-fields {
+					display: flex;
 					flex-direction: row;
 					flex-wrap: wrap;
-					gap: 30px;
-					.input-box {
-						width: 48%;
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.address-box {
-					gap: 10px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					input {
-						height: 55px;
-						outline: none;
-						padding: 0px 15px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						::placeholder {
-							color: #717171;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
-						}
-					}
-				}
-				.about-me-box {
-					gap: 10px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.about-textarea {
-						height: 170px;
-						padding: 20px 15px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						color: #717171;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-					}
-					.update-button {
-						display: flex;
-						width: 170px;
-						height: 38px;
-						justify-content: center;
-						align-items: center;
-						gap: 10px;
-						align-self: flex-end;
-						margin-top: 30px;
-						border-radius: 12px;
-						background-color: #000000;
-						p {
-							color: #fff;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-					}
-					button:disabled {
-						background: #181a2045;
-					}
-				}
-			}
-			.bottom-box {
-				width: 100%;
-				padding: 30px;
-				gap: 25px;
-				border-radius: 12px;
-				border: 1px solid #c4c4c4;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.top-inner-box {
 					gap: 20px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 15px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.old-password-box {
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							width: 50%;
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
+					.field {
+						flex: 1;
+						min-width: 240px;
 					}
 				}
-				.bottom-inner-box {
-					width: 100%;
-					flex-direction: row;
-					gap: 45px;
-					.new-password-box {
-						width: 100%;
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.change-password {
+
+				.carlen-profile-address {
 					display: flex;
-					width: 170px;
-					height: 38px;
-					justify-content: center;
-					align-items: center;
-					gap: 10px;
-					align-self: flex-end;
-					margin-top: 18px;
+					flex-direction: column;
+				}
+
+				.field-label {
+					margin-bottom: 8px;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 600;
+				}
+
+				input {
+					width: 100%;
+					height: 52px;
+					padding: 0 16px;
 					border-radius: 12px;
-					background-color: #000000;
-					p {
-						color: #fff;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					color: $c-text;
+					outline: none;
+					font-family: $font;
+					font-size: 14px;
+					transition: border-color 160ms $ease-out, box-shadow 160ms $ease-out, background 160ms $ease-out;
+					&::placeholder {
+						color: $c-faint;
 						font-family: $font;
 						font-size: 13px;
-						font-style: normal;
+					}
+					&:focus {
+						border-color: rgba(233, 44, 40, 0.55);
+						box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.15);
+						background: $c-glass-hover;
+					}
+				}
+
+				/** ACTIONS **/
+				.carlen-profile-actions {
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					align-items: flex-end;
+					.cta-primary {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						gap: 8px;
+						height: 48px;
+						padding: 0 26px;
+						border: none;
+						border-radius: 18px;
+						cursor: pointer;
+						background: $c-accent-grad;
+						color: #fff;
+						font-family: $font;
+						font-size: 14px;
 						font-weight: 600;
-						line-height: normal;
+						box-shadow: 0 12px 28px -12px rgba(233, 44, 40, 0.6);
+						transition: box-shadow 200ms $ease-out;
+						svg {
+							font-size: 16px;
+						}
+						&:hover {
+							box-shadow: 0 18px 38px -12px rgba(233, 44, 40, 0.75);
+						}
+						&:disabled {
+							background: $c-glass;
+							color: $c-faint;
+							border: 1px solid $c-border;
+							box-shadow: none;
+							cursor: not-allowed;
+						}
 					}
 				}
 			}

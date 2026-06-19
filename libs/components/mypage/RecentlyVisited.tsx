@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
-import PropertyCard from '../product/PropductCard';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import ProductCard from '../product/PropductCard';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
 import { useQuery } from '@apollo/client';
@@ -10,6 +14,8 @@ import { GET_VISITED } from '../../../apollo/user/query';
 
 const RecentlyVisited: NextPage = () => {
 	const device = useDeviceDetect();
+	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -35,31 +41,98 @@ const RecentlyVisited: NextPage = () => {
 		setSearchVisited({ ...searchVisited, page: value });
 	};
 
+	/** ANIMATION **/
+	const container: Variants = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.07, delayChildren: 0.04 } },
+	};
+	const item: Variants = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 18 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
+	};
+
 	if (device === 'mobile') {
-		return <div>NESTAR MY FAVORITES MOBILE</div>;
+		return <div>RECENTLY VISITED MOBILE</div>;
 	} else {
 		return (
-			<div id="my-favorites-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Recently Visited</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="favorites-list-box">
-					{recentlyVisited?.length ? (
-						recentlyVisited?.map((product: Product) => {
-							return <PropertyCard product={product} recentlyVisited={true} />;
-						})
-					) : (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Products found!</p>
-						</div>
+			<div id="carlen-recently-visited-page">
+				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
+					<motion.span className="eyebrow" variants={item}>
+						Recently Viewed
+					</motion.span>
+					<motion.h1 className="title" variants={item}>
+						Recently Viewed Cars
+					</motion.h1>
+					<motion.p className="subtitle" variants={item}>
+						Quickly return to vehicles you recently explored.
+					</motion.p>
+					{total > 0 && (
+						<motion.span className="stat-chip" variants={item}>
+							<i className="dot" />
+							Total {total} viewed car{total > 1 ? 's' : ''}
+						</motion.span>
 					)}
-				</Stack>
+				</motion.div>
+
+				{getVisitedLoading && !recentlyVisited.length ? (
+					<Stack className="carlen-recent-grid">
+						{Array.from({ length: 6 }).map((_, idx) => (
+							<div className="recent-skeleton" key={idx}>
+								<div className="sk-img" />
+								<div className="sk-body">
+									<span className="sk-line w-70" />
+									<span className="sk-line w-50" />
+									<span className="sk-line w-90" />
+								</div>
+							</div>
+						))}
+					</Stack>
+				) : recentlyVisited?.length ? (
+					<motion.div
+						className="carlen-recent-grid"
+						variants={container}
+						initial="hidden"
+						animate="visible"
+						key={searchVisited.page}
+					>
+						{recentlyVisited?.map((product: Product) => (
+							<motion.div variants={item} key={product?._id}>
+								<ProductCard product={product} recentlyVisited={true} />
+							</motion.div>
+						))}
+					</motion.div>
+				) : (
+					<motion.div
+						className="carlen-recent-empty"
+						initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+						animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+					>
+						<span className="empty-icon">
+							<HistoryRoundedIcon />
+						</span>
+						<Typography className="empty-title">No recently viewed cars yet</Typography>
+						<Typography className="empty-helper">Browse vehicles and your viewed cars will appear here.</Typography>
+						<motion.button
+							type="button"
+							className="cta-primary"
+							onClick={() => router.push('/cars')}
+							whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+						>
+							<DirectionsCarFilledOutlinedIcon />
+							Browse Cars
+						</motion.button>
+					</motion.div>
+				)}
+
 				{recentlyVisited?.length ? (
-					<Stack className="pagination-config">
+					<motion.div
+						className="carlen-recent-pagination"
+						initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+						animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+						transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+					>
 						<Stack className="pagination-box">
 							<Pagination
 								count={Math.ceil(total / searchVisited.limit)}
@@ -71,10 +144,10 @@ const RecentlyVisited: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently visited propert{total > 1 ? 'ies' : 'y'}
+								Total {total} recently viewed vehicle{total > 1 ? 's' : ''}
 							</Typography>
 						</Stack>
-					</Stack>
+					</motion.div>
 				) : null}
 			</div>
 		);
