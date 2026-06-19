@@ -1,7 +1,9 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Box, Stack } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Notice from '../../libs/components/cs/Notice';
@@ -14,9 +16,17 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const QUICK_CHIPS = [
+	{ label: 'Account', href: '/mypage' },
+	{ label: 'Listings', href: '/cars' },
+	{ label: 'Payments', href: '/cs?tab=faq' },
+	{ label: 'Community', href: '/community?articleCategory=FREE' },
+];
+
 const CS: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const shouldReduceMotion = useReducedMotion();
 
 	/** HANDLERS **/
 	const changeTabHandler = (tab: string) => {
@@ -31,42 +41,57 @@ const CS: NextPage = () => {
 	};
 	const tab = router.query.tab ?? 'notice';
 
+	const fadeUp = (delay: number) => ({
+		initial: shouldReduceMotion ? false : { opacity: 0, y: 16 },
+		animate: { opacity: 1, y: 0 },
+		transition: { duration: 0.45, delay, ease: [0.23, 1, 0.32, 1] as const },
+	});
+
 	if (device === 'mobile') {
 		return <h1>CS PAGE MOBILE</h1>;
 	} else {
 		return (
-			<Stack className={'cs-page'}>
+			<Stack className={'carlen-cs-page'} component={'section'} aria-label={'Carlen Support Center'}>
 				<Stack className={'container'}>
-					<Box component={'div'} className={'cs-main-info'}>
-						<Box component={'div'} className={'info'}>
-							<span>Cs center</span>
-							<p>I will answer your questions</p>
+					<motion.div className={'carlen-cs-header'} {...fadeUp(0)}>
+						<Box component={'div'} className={'carlen-cs-info'}>
+							<span className={'eyebrow'}>SUPPORT CENTER</span>
+							<h1>How can we help?</h1>
+							<p>Find notices, frequently asked questions, and support resources for Carlen users.</p>
+							<Box component={'div'} className={'quick-chips'}>
+								{QUICK_CHIPS.map((chip) => (
+									<Link href={chip.href} key={chip.label} className={'chip'}>
+										{chip.label}
+									</Link>
+								))}
+							</Box>
 						</Box>
-						<Box component={'div'} className={'btns'}>
-							<div
-								className={tab == 'notice' ? 'active' : ''}
-								onClick={() => {
-									changeTabHandler('notice');
-								}}
-							>
-								Notice
-							</div>
-							<div
-								className={tab == 'faq' ? 'active' : ''}
-								onClick={() => {
-									changeTabHandler('faq');
-								}}
-							>
-								FAQ
-							</div>
-						</Box>
-					</Box>
+					</motion.div>
 
-					<Box component={'div'} className={'cs-content'}>
+					<motion.div className={'carlen-cs-tabs'} {...fadeUp(0.08)}>
+						<div
+							className={tab == 'notice' ? 'active' : ''}
+							onClick={() => {
+								changeTabHandler('notice');
+							}}
+						>
+							Notice
+						</div>
+						<div
+							className={tab == 'faq' ? 'active' : ''}
+							onClick={() => {
+								changeTabHandler('faq');
+							}}
+						>
+							FAQ
+						</div>
+					</motion.div>
+
+					<motion.div className={'carlen-cs-content'} {...fadeUp(0.16)}>
 						{tab === 'notice' && <Notice />}
 
 						{tab === 'faq' && <Faq />}
-					</Box>
+					</motion.div>
 				</Stack>
 			</Stack>
 		);
