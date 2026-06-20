@@ -1,0 +1,616 @@
+/**
+ * Carlen mobile — Product Detail.
+ * Scoped under #mobile-wrap (desktop #pc-wrap is never affected).
+ * Reuses shared $c-* tokens (in scope from scss/mobile/main.scss).
+ */
+#mobile-wrap {
+	#carlen-product-detail-mobile {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+		padding: 12px 16px calc(96px + env(safe-area-inset-bottom, 0)); /* room for sticky bar */
+		background-color: $c-base;
+		color: $c-text;
+		overflow-x: hidden;
+
+		/* 1. GALLERY */
+		.m-gallery {
+			position: relative;
+			width: 100%;
+			border-radius: 20px;
+			overflow: hidden;
+			border: 1px solid $c-border;
+			box-shadow: $c-shadow;
+
+			.m-gallery-swiper {
+				width: 100%;
+				.m-slide {
+					width: 100%;
+					aspect-ratio: 4 / 3;
+					background-size: cover;
+					background-position: center;
+					background-color: #05070b;
+				}
+				.swiper-pagination-bullet {
+					background: rgba(255, 255, 255, 0.6);
+					opacity: 1;
+				}
+				.swiper-pagination-bullet-active {
+					background: #fff;
+					width: 18px;
+					border-radius: 4px;
+				}
+			}
+
+			.m-gallery-overlay {
+				position: absolute;
+				inset: 0;
+				z-index: 2;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				padding: 14px;
+				pointer-events: none;
+				background: linear-gradient(180deg, rgba(5, 7, 11, 0.4) 0%, transparent 30%, transparent 62%, rgba(5, 7, 11, 0.78) 100%);
+
+				.m-gallery-top {
+					display: flex;
+					gap: 8px;
+				}
+				.m-badge {
+					display: inline-flex;
+					align-items: center;
+					gap: 5px;
+					padding: 6px 10px;
+					border-radius: 999px;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 700;
+					color: #fff;
+					background: rgba(11, 15, 23, 0.6);
+					border: 1px solid $c-border;
+					.MuiSvgIcon-root {
+						font-size: 14px;
+					}
+					&.verified {
+						background: rgba(52, 211, 153, 0.22);
+						border-color: rgba(52, 211, 153, 0.4);
+					}
+				}
+				.m-gallery-price {
+					align-self: flex-start;
+					padding: 8px 14px;
+					border-radius: 12px;
+					background: rgba(11, 15, 23, 0.7);
+					border: 1px solid $c-border;
+					font-family: $font;
+					font-size: 20px;
+					font-weight: 800;
+					color: #fff;
+				}
+			}
+		}
+
+		/* 2. SUMMARY */
+		.m-summary {
+			padding: 18px 2px 6px;
+			.m-title {
+				margin: 0;
+				font-family: $font;
+				font-size: 22px;
+				font-weight: 800;
+				line-height: 1.2;
+				letter-spacing: -0.01em;
+				color: $c-text;
+			}
+			.m-loc {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-top: 8px;
+				font-family: $font;
+				font-size: 13px;
+				color: $c-muted;
+				.MuiSvgIcon-root {
+					font-size: 16px;
+					color: $c-orange;
+				}
+			}
+			.m-stats {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 16px;
+				margin-top: 12px;
+				.m-stat {
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					font-family: $font;
+					font-size: 13px;
+					color: $c-muted;
+					.MuiSvgIcon-root {
+						font-size: 18px;
+					}
+					&.like {
+						cursor: pointer;
+						min-height: 32px;
+						&.active {
+							color: $c-red;
+							.MuiSvgIcon-root {
+								color: $c-red;
+							}
+						}
+					}
+				}
+			}
+			.m-pills {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin-top: 16px;
+				.m-pill {
+					padding: 7px 12px;
+					border-radius: 999px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 600;
+					color: $c-text;
+					text-transform: capitalize;
+				}
+			}
+		}
+
+		/* SECTION shell */
+		.m-section {
+			margin-top: 28px;
+			.m-section-title {
+				margin: 0 0 14px;
+				font-family: $font;
+				font-size: 17px;
+				font-weight: 700;
+				color: $c-text;
+			}
+		}
+
+		/* 3. SPECS — 2 columns */
+		.m-spec-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			.m-spec-card {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				padding: 14px;
+				border-radius: 14px;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				.m-spec-icon {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 38px;
+					height: 38px;
+					flex-shrink: 0;
+					border-radius: 10px;
+					background: rgba(255, 255, 255, 0.06);
+					.MuiSvgIcon-root {
+						font-size: 20px;
+						color: $c-muted;
+					}
+				}
+				.m-spec-text {
+					display: flex;
+					flex-direction: column;
+					min-width: 0;
+					.m-spec-label {
+						font-family: $font;
+						font-size: 11px;
+						color: $c-faint;
+					}
+					.m-spec-value {
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 600;
+						color: $c-text;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						text-transform: capitalize;
+					}
+				}
+			}
+		}
+
+		/* 4. DESCRIPTION */
+		.m-desc {
+			margin: 0;
+			font-family: $font;
+			font-size: 14px;
+			line-height: 1.65;
+			color: $c-muted;
+		}
+
+		/* 5. FEATURES — 2 columns */
+		.m-feature-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			.m-feature-card {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				padding: 14px;
+				border-radius: 14px;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				.m-feature-label {
+					font-family: $font;
+					font-size: 11px;
+					color: $c-faint;
+				}
+				.m-feature-value {
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 600;
+					color: $c-text;
+					text-transform: capitalize;
+				}
+			}
+		}
+
+		/* 6. MAP */
+		.m-map {
+			width: 100%;
+			height: 220px;
+			border-radius: 16px;
+			overflow: hidden;
+			border: 1px solid $c-border;
+			iframe {
+				display: block;
+				width: 100%;
+				height: 100%;
+				filter: grayscale(0.2) brightness(0.9);
+			}
+			.m-map-placeholder {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				height: 100%;
+				color: $c-faint;
+				background: $c-glass;
+				font-family: $font;
+				font-size: 13px;
+			}
+		}
+
+		/* 7. DEALER */
+		.m-dealer {
+			.m-dealer-info {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				padding-bottom: 16px;
+				margin-bottom: 16px;
+				border-bottom: 1px solid $c-border;
+				.m-dealer-avatar {
+					width: 56px;
+					height: 56px;
+					border-radius: 50%;
+					object-fit: cover;
+					border: 1px solid $c-border-strong;
+				}
+				.m-dealer-meta {
+					display: flex;
+					flex-direction: column;
+					gap: 3px;
+					min-width: 0;
+					.m-dealer-badge {
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 700;
+						color: #34d399;
+						.MuiSvgIcon-root {
+							font-size: 14px;
+						}
+					}
+					.m-dealer-name {
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 700;
+						color: $c-text;
+					}
+					.m-dealer-phone {
+						font-family: $font;
+						font-size: 13px;
+						color: $c-muted;
+					}
+				}
+			}
+			.m-dealer-form {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				input,
+				textarea {
+					width: 100%;
+					box-sizing: border-box;
+					padding: 13px 14px;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					outline: none;
+					color: $c-text;
+					font-family: $font;
+					font-size: 15px; /* >=16px avoids iOS zoom-on-focus; 15 acceptable with viewport */
+				}
+				textarea {
+					min-height: 96px;
+					resize: vertical;
+					line-height: 1.5;
+				}
+				.m-send-inquiry {
+					margin-top: 4px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					min-height: 50px;
+					border-radius: 14px;
+					background: $c-accent-grad;
+					color: #fff;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 700;
+					text-transform: none;
+					box-shadow: 0 10px 24px -10px rgba(233, 44, 40, 0.5);
+				}
+			}
+		}
+
+		/* 8. REVIEWS */
+		.m-review-list {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			.review-config.mobile {
+				padding: 14px;
+				border-radius: 14px;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				.review-mb-info {
+					flex-direction: row;
+					align-items: center;
+					gap: 12px;
+					margin-bottom: 10px;
+					.img-box {
+						width: 40px;
+						height: 40px;
+						border-radius: 50%;
+						object-fit: cover;
+						border: 1px solid $c-border;
+					}
+					.who .name {
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 600;
+						color: $c-text;
+					}
+					.who .date {
+						font-family: $font;
+						font-size: 12px;
+						color: $c-faint;
+					}
+				}
+				.description {
+					font-family: $font;
+					font-size: 14px;
+					line-height: 1.6;
+					color: $c-muted;
+				}
+			}
+			.m-pagination {
+				display: flex;
+				justify-content: center;
+				margin-top: 6px;
+				.MuiPaginationItem-root {
+					color: $c-muted;
+				}
+			}
+		}
+
+		.m-review-input {
+			width: 100%;
+			box-sizing: border-box;
+			min-height: 110px;
+			padding: 14px;
+			border-radius: 14px;
+			border: 1px solid $c-border;
+			background: $c-glass;
+			color: $c-text;
+			outline: none;
+			resize: vertical;
+			font-family: $font;
+			font-size: 15px;
+			line-height: 1.5;
+		}
+		.m-submit-review {
+			margin-top: 12px;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			min-height: 48px;
+			padding: 0 22px;
+			border-radius: 14px;
+			background: $c-accent-grad;
+			color: #fff;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 700;
+			text-transform: none;
+			&.Mui-disabled {
+				opacity: 0.5;
+				color: #fff;
+			}
+		}
+
+		/* 9. SIMILAR CARS */
+		.m-similar-swiper {
+			overflow: visible;
+			.m-similar-slide {
+				width: 78%;
+				max-width: 280px;
+				height: auto;
+			}
+		}
+		.m-similar-card {
+			display: flex;
+			flex-direction: column;
+			border-radius: 16px;
+			overflow: hidden;
+			border: 1px solid $c-border;
+			background: $c-raised;
+			cursor: pointer;
+			.m-similar-img {
+				position: relative;
+				width: 100%;
+				aspect-ratio: 16 / 10;
+				background-size: cover;
+				background-position: center;
+				.m-similar-fav {
+					position: absolute;
+					top: 10px;
+					right: 10px;
+					width: 40px;
+					height: 40px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					border-radius: 50%;
+					border: 1px solid $c-border;
+					background: rgba(11, 15, 23, 0.55);
+					color: $c-text;
+					.MuiSvgIcon-root {
+						font-size: 18px;
+					}
+					.liked {
+						color: $c-red;
+					}
+				}
+				.m-similar-price {
+					position: absolute;
+					left: 12px;
+					bottom: 12px;
+					padding: 6px 11px;
+					border-radius: 8px;
+					background: rgba(11, 15, 23, 0.7);
+					border: 1px solid $c-border;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 700;
+					color: #fff;
+				}
+			}
+			.m-similar-info {
+				padding: 14px;
+				.m-similar-title {
+					display: block;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 700;
+					color: $c-text;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.m-similar-addr {
+					margin: 4px 0 10px;
+					font-family: $font;
+					font-size: 12px;
+					color: $c-faint;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.m-similar-stats {
+					display: flex;
+					gap: 16px;
+					.stat {
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						color: $c-muted;
+						.MuiSvgIcon-root {
+							font-size: 16px;
+						}
+						.cnt {
+							font-family: $font;
+							font-size: 12px;
+						}
+					}
+				}
+			}
+		}
+
+		/* STICKY ACTION BAR */
+		.m-action-bar {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1050;
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0));
+			background-color: rgba(11, 15, 23, 0.9);
+			backdrop-filter: blur(18px);
+			-webkit-backdrop-filter: blur(18px);
+			border-top: 1px solid $c-border;
+
+			.m-action-price {
+				display: flex;
+				flex-direction: column;
+				flex-shrink: 0;
+				.lbl {
+					font-family: $font;
+					font-size: 11px;
+					color: $c-faint;
+				}
+				strong {
+					font-family: $font;
+					font-size: 18px;
+					font-weight: 800;
+					color: $c-text;
+				}
+			}
+			.m-action-btn {
+				flex: 1;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				min-height: 50px;
+				border: 0;
+				border-radius: 14px;
+				background: $c-accent-grad;
+				box-shadow: $c-glow-red;
+				color: #fff;
+				font-family: $font;
+				font-size: 15px;
+				font-weight: 700;
+				cursor: pointer;
+				.MuiSvgIcon-root {
+					font-size: 19px;
+				}
+			}
+		}
+	}
+}

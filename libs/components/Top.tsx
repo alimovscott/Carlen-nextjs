@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack, Box } from '@mui/material';
+import { Stack, Box, Drawer, IconButton, Divider } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { alpha, styled } from '@mui/material/styles';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -143,6 +146,7 @@ const Top = () => {
 	const logoutOpen = Boolean(logoutAnchor);
 	const [notifAnchor, setNotifAnchor] = useState<null | HTMLElement>(null);
 	const notifOpen = Boolean(notifAnchor);
+	const [drawerOpen, setDrawerOpen] = useState(false); // mobile nav drawer (UI-only)
 
 	/** APOLLO REQUESTS **/
 	const { data: unreadData } = useQuery(GET_UNREAD_NOTIFICATIONS_COUNT, {
@@ -227,23 +231,133 @@ const Top = () => {
 	};
 
 	if (device == 'mobile') {
+		const navLinks = [
+			{ href: '/', match: '/', label: t('Home') },
+			{ href: '/cars', match: '/cars', label: t('Products') },
+			{ href: '/agent', match: '/agent', label: t('Agents') },
+			{ href: '/community?articleCategory=FREE', match: '/community', label: t('Community') },
+			...(user?._id ? [{ href: '/mypage', match: '/mypage', label: t('Dashboard') }] : []),
+			{ href: '/cs', match: '/cs', label: t('CS') },
+		];
+		const langs = [
+			{ id: 'en', label: t('English') },
+			{ id: 'kr', label: t('Korean') },
+			{ id: 'ru', label: t('Russian') },
+		];
+		const closeDrawer = () => setDrawerOpen(false);
+
 		return (
 			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('Home')}</div>
-				</Link>
-				<Link href={'/cars'}>
-					<div>{t('Products')}</div>
-				</Link>
-				<Link href={'/agent'}>
-					<div> {t('Agents')} </div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div> {t('Community')} </div>
-				</Link>
-				<Link href={'/cs'}>
-					<div> {t('CS')} </div>
-				</Link>
+				<div className={'mobile-top-bar'}>
+					<Link href={'/'} className={'m-logo'} onClick={closeDrawer}>
+						<img src="/img/logo/logoWhite.svg" alt="Carlen" />
+					</Link>
+					<div className={'m-actions'}>
+						{user?._id && (
+							<Link href={'/mypage'} className={'m-avatar'} aria-label={t('Dashboard')}>
+								<img
+									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
+									alt={''}
+								/>
+							</Link>
+						)}
+						<IconButton
+							className={'m-burger'}
+							aria-label={'Open menu'}
+							aria-haspopup={'true'}
+							aria-expanded={drawerOpen}
+							aria-controls={'carlen-mobile-nav'}
+							onClick={() => setDrawerOpen(true)}
+						>
+							<MenuRoundedIcon />
+						</IconButton>
+					</div>
+				</div>
+
+				<Drawer
+					anchor={'right'}
+					open={drawerOpen}
+					onClose={closeDrawer}
+					className={'carlen-mobile-nav-drawer'}
+					PaperProps={{ id: 'carlen-mobile-nav' }}
+				>
+					<div className={'m-drawer'}>
+						<div className={'m-drawer-head'}>
+							<span className={'m-brand'}>MENU</span>
+							<IconButton className={'m-close'} aria-label={'Close menu'} onClick={closeDrawer}>
+								<CloseRoundedIcon />
+							</IconButton>
+						</div>
+
+						<div className={'m-profile'}>
+							{user?._id ? (
+								<Link href={'/mypage'} className={'m-profile-card'} onClick={closeDrawer}>
+									<img
+										className={'m-profile-avatar'}
+										src={
+											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
+										}
+										alt={''}
+									/>
+									<div className={'m-profile-meta'}>
+										<strong>{user?.memberNick || user?.memberFullName || t('Member')}</strong>
+										<span>{user?.memberType}</span>
+									</div>
+								</Link>
+							) : (
+								<Link href={'/account/join'} className={'m-login-btn'} onClick={closeDrawer}>
+									<AccountCircleOutlinedIcon />
+									<span>
+										{t('Login')} / {t('Register')}
+									</span>
+								</Link>
+							)}
+						</div>
+
+						<nav className={'m-nav'} aria-label={'Primary'}>
+							{navLinks.map((item) => (
+								<Link
+									href={item.href}
+									key={item.match}
+									className={isActiveRoute(item.match) ? 'm-nav-link active' : 'm-nav-link'}
+									onClick={closeDrawer}
+								>
+									{item.label}
+								</Link>
+							))}
+						</nav>
+
+						<Divider className={'m-divider'} />
+
+						<div className={'m-lang'}>
+							<span className={'m-lang-label'}>{t('Language')}</span>
+							<div className={'m-lang-options'}>
+								{langs.map((l) => (
+									<button
+										type={'button'}
+										key={l.id}
+										id={l.id}
+										className={lang === l.id ? 'm-lang-chip active' : 'm-lang-chip'}
+										onClick={(e: any) => {
+											langChoice(e);
+											closeDrawer();
+										}}
+									>
+										<img src={`/img/flag/lang${l.id}.png`} id={l.id} alt={l.label} />
+										<span id={l.id}>{l.label}</span>
+									</button>
+								))}
+							</div>
+						</div>
+
+						{user?._id && (
+							<button type={'button'} className={'m-logout'} onClick={() => logOut()}>
+								<LogoutRoundedIcon />
+								{t('Logout')}
+							</button>
+						)}
+					</div>
+				</Drawer>
 			</Stack>
 		);
 	} else {

@@ -1,0 +1,66 @@
+/**
+ * Carlen mobile — product card touch/overflow refinements.
+ * Additive only: the mobile card layouts already live in scss/mobile/main.scss.
+ * Loaded AFTER main.scss so these refinements win. Scoped to #mobile-wrap.
+ */
+#mobile-wrap {
+	.popular-card-box,
+	.top-card-box,
+	.trend-card-box {
+		box-sizing: border-box;
+		max-width: 100%;
+
+		.card-img {
+			box-sizing: border-box;
+		}
+
+		/* keep long titles to one clean line */
+		.info .title {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		/* spec row never overflows narrow screens */
+		.info .options {
+			flex-wrap: wrap;
+			row-gap: 8px;
+		}
+
+		/* thumb-friendly like / view controls (>=44px hit area) */
+		.view-like-box {
+			.MuiIconButton-root {
+				min-width: 44px;
+				min-height: 44px;
+				transition: transform 140ms $ease-out;
+				&:active {
+					transform: scale(0.94);
+				}
+			}
+		}
+	}
+
+	/* gentle press feedback on whole-card tap targets */
+	.popular-card-box .card-img,
+	.top-card-box .card-img,
+	.trend-card-box .card-img {
+		transition: filter 160ms $ease-out;
+		&:active {
+			filter: brightness(0.92);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#mobile-wrap {
+		.popular-card-box,
+		.top-card-box,
+		.trend-card-box {
+			.view-like-box .MuiIconButton-root,
+			.card-img {
+				transition: none;
+			}
+		}
+	}
+}

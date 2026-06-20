@@ -1112,9 +1112,11 @@
     flex-direction: row;
     background: #181a20;
     .footer-container {
-      padding: 0 10px;
+      padding: 0 16px;
       margin: 0 auto;
-      width: 1300px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       height: auto;
       .main {
         display: flex;
@@ -1214,3 +1216,8 @@
     }
   }
 }
+
+/* Phase-1 mobile responsive partials (variables already imported above) */
+@import '/scss/mobile/nav.scss';
+@import '/scss/mobile/cards.scss';
+@import '/scss/mobile/detail.scss';

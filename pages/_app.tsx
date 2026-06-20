@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import React, { useState } from 'react';
@@ -17,6 +18,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 
 	return (
 		<ApolloProvider client={client}>
+			<Head>
+				<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+			</Head>
 			<ThemeProvider theme={theme}>
 				<CssBaseline />
 				<Component {...pageProps} />

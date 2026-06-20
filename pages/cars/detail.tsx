@@ -261,7 +261,229 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 	}
 
 	if (device === 'mobile') {
-		return <div>PRODUCT DETAIL PAGE</div>;
+		const scrollToDealer = () => {
+			document.getElementById('m-dealer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		};
+
+		return (
+			<div id={'carlen-product-detail-mobile'}>
+				{/* 1. GALLERY */}
+				<section className={'m-gallery'}>
+					<Swiper
+						className={'m-gallery-swiper'}
+						slidesPerView={1}
+						spaceBetween={0}
+						pagination={{ clickable: true }}
+						modules={[Pagination]}
+					>
+						{(product?.productImages ?? []).map((img: string) => (
+							<SwiperSlide key={img}>
+								<div
+									className={'m-slide'}
+									style={{ backgroundImage: `url(${img ? `${REACT_APP_API_URL}/${img}` : '/img/cars/bigImage.png'})` }}
+								/>
+							</SwiperSlide>
+						))}
+					</Swiper>
+					<div className={'m-gallery-overlay'}>
+						<div className={'m-gallery-top'}>
+							<span className={'m-badge verified'}>
+								<VerifiedOutlinedIcon /> Verified
+							</span>
+							{product?.productType && <span className={'m-badge type'}>{product?.productType}</span>}
+						</div>
+						<div className={'m-gallery-price'}>${formatterStr(product?.productPrice)}</div>
+					</div>
+				</section>
+
+				{/* 2. SUMMARY */}
+				<section className={'m-summary'}>
+					<h1 className={'m-title'}>{product?.productTitle}</h1>
+					<div className={'m-loc'}>
+						<PlaceOutlinedIcon /> {product?.productLocation}
+					</div>
+					<div className={'m-stats'}>
+						<span className={'m-stat'}>
+							<RemoveRedEyeIcon /> {product?.productViews}
+						</span>
+						<span
+							className={isLiked ? 'm-stat like active' : 'm-stat like'}
+							onClick={() => likeProductHandler(user, product?._id as string)}
+						>
+							{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />} {product?.productLikes}
+						</span>
+						<span className={'m-stat'}>{moment().diff(product?.createdAt, 'days')}d ago</span>
+					</div>
+					<div className={'m-pills'}>
+						{summaryPills.map((pill: string, i: number) => (
+							<span className={'m-pill'} key={`${pill}-${i}`}>
+								{pill}
+							</span>
+						))}
+					</div>
+				</section>
+
+				{/* 3. SPECS */}
+				<section className={'m-section m-specs'}>
+					<h2 className={'m-section-title'}>Specifications</h2>
+					<div className={'m-spec-grid'}>
+						{specs.map((spec) => (
+							<div className={'m-spec-card'} key={spec.label}>
+								<span className={'m-spec-icon'}>{spec.icon}</span>
+								<div className={'m-spec-text'}>
+									<span className={'m-spec-label'}>{spec.label}</span>
+									<strong className={'m-spec-value'}>{spec.value}</strong>
+								</div>
+							</div>
+						))}
+					</div>
+				</section>
+
+				{/* 4. DESCRIPTION */}
+				<section className={'m-section'}>
+					<h2 className={'m-section-title'}>Vehicle Description</h2>
+					<p className={'m-desc'}>{product?.productDesc ?? 'No description available.'}</p>
+				</section>
+
+				{/* 5. FEATURES */}
+				<section className={'m-section'}>
+					<h2 className={'m-section-title'}>Vehicle Features</h2>
+					<div className={'m-feature-grid'}>
+						{features.map((f) => (
+							<div className={'m-feature-card'} key={f.label}>
+								<span className={'m-feature-label'}>{f.label}</span>
+								<strong className={'m-feature-value'}>{f.value}</strong>
+							</div>
+						))}
+					</div>
+				</section>
+
+				{/* 6. MAP */}
+				<section className={'m-section'}>
+					<h2 className={'m-section-title'}>Location</h2>
+					<div className={'m-map'}>
+						{mapQuery ? (
+							<iframe
+								title={'vehicle-location'}
+								src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+								width="100%"
+								height="100%"
+								style={{ border: 0 }}
+								allowFullScreen={true}
+								loading="lazy"
+								referrerPolicy="no-referrer-when-downgrade"
+							></iframe>
+						) : (
+							<div className={'m-map-placeholder'}>
+								<PlaceOutlinedIcon />
+								<span>Location not specified</span>
+							</div>
+						)}
+					</div>
+				</section>
+
+				{/* 7. DEALER */}
+				<section className={'m-section m-dealer'} id={'m-dealer'}>
+					<h2 className={'m-section-title'}>Get More Information</h2>
+					<div className={'m-dealer-info'}>
+						<img
+							className={'m-dealer-avatar'}
+							src={
+								product?.memberData?.memberImage
+									? `${REACT_APP_API_URL}/${product?.memberData?.memberImage}`
+									: '/img/profile/defaultUser.svg'
+							}
+							alt={'dealer'}
+						/>
+						<div className={'m-dealer-meta'}>
+							<span className={'m-dealer-badge'}>
+								<VerifiedOutlinedIcon /> Verified Dealer
+							</span>
+							<Link href={`/member?memberId=${product?.memberData?._id}`}>
+								<span className={'m-dealer-name'}>{product?.memberData?.memberNick}</span>
+							</Link>
+							<span className={'m-dealer-phone'}>{product?.memberData?.memberPhone}</span>
+						</div>
+					</div>
+					<div className={'m-dealer-form'}>
+						<input type={'text'} placeholder={'Your name'} />
+						<input type={'text'} placeholder={'Your phone'} />
+						<textarea placeholder={'Hello, I am interested in this vehicle.'}></textarea>
+						<Button className={'m-send-inquiry'}>
+							<ChatBubbleOutlineRoundedIcon />
+							Send Inquiry
+						</Button>
+					</div>
+				</section>
+
+				{/* 8. REVIEWS */}
+				{commentTotal !== 0 && (
+					<section className={'m-section'}>
+						<h2 className={'m-section-title'}>{commentTotal} Reviews</h2>
+						<div className={'m-review-list'}>
+							{productComments?.map((comment: Comment) => (
+								<Review comment={comment} key={comment?._id} />
+							))}
+							<Box component={'div'} className={'m-pagination'}>
+								<MuiPagination
+									page={commentInquiry.page}
+									count={Math.ceil(commentTotal / commentInquiry.limit)}
+									onChange={commentPaginationChangeHandler}
+									shape="circular"
+									color="primary"
+								/>
+							</Box>
+						</div>
+					</section>
+				)}
+
+				<section className={'m-section'}>
+					<h2 className={'m-section-title'}>Leave a Review</h2>
+					<textarea
+						className={'m-review-input'}
+						placeholder={'Share your experience with this vehicle...'}
+						onChange={({ target: { value } }: any) => {
+							setInsertCommentData({ ...insertCommentData, commentContent: value });
+						}}
+						value={insertCommentData.commentContent}
+					></textarea>
+					<Button
+						className={'m-submit-review'}
+						disabled={insertCommentData.commentContent === '' || user?._id === ''}
+						onClick={createCommentHandler}
+					>
+						Submit Review
+						<EastIcon />
+					</Button>
+				</section>
+
+				{/* 9. SIMILAR CARS */}
+				{destinationProducts.length !== 0 && (
+					<section className={'m-section m-similar'}>
+						<h2 className={'m-section-title'}>Similar Cars</h2>
+						<Swiper className={'m-similar-swiper'} slidesPerView={'auto'} spaceBetween={14} modules={[]}>
+							{destinationProducts.map((p: Product) => (
+								<SwiperSlide className={'m-similar-slide'} key={p?._id}>
+									<ProductBigCard product={p} likePropertyHandler={likeProductHandler} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</section>
+				)}
+
+				{/* STICKY ACTION BAR */}
+				<div className={'m-action-bar'}>
+					<div className={'m-action-price'}>
+						<span className={'lbl'}>Price</span>
+						<strong>${formatterStr(product?.productPrice)}</strong>
+					</div>
+					<button type={'button'} className={'m-action-btn'} onClick={scrollToDealer}>
+						<ChatBubbleOutlineRoundedIcon />
+						Contact dealer
+					</button>
+				</div>
+			</div>
+		);
 	} else {
 		return (
 			<div id={'carlen-product-detail-page'}>

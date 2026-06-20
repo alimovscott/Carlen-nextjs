@@ -1,0 +1,288 @@
+/**
+ * Carlen mobile — Top navigation (bar + slide drawer).
+ * Bar is scoped under #mobile-wrap; the MUI Drawer portals to <body>, so it is
+ * styled via the dedicated .carlen-mobile-nav-drawer class.
+ */
+#mobile-wrap {
+	/* clear the fixed top bar (replaces the old in-flow .top height) */
+	padding-top: calc(60px + env(safe-area-inset-top, 0));
+	background-color: $c-base;
+	overflow-x: hidden;
+
+	#top {
+		.top {
+			height: auto;
+			display: block;
+		}
+
+		.mobile-top-bar {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 1100;
+			height: 60px;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 16px;
+			padding-top: env(safe-area-inset-top, 0);
+			background-color: rgba(11, 15, 23, 0.82);
+			backdrop-filter: blur(18px) saturate(140%);
+			-webkit-backdrop-filter: blur(18px) saturate(140%);
+			border-bottom: 1px solid $c-border;
+
+			.m-logo {
+				display: inline-flex;
+				align-items: center;
+				img {
+					height: 26px;
+					width: auto;
+				}
+			}
+
+			.m-actions {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+
+				.m-avatar {
+					width: 38px;
+					height: 38px;
+					border-radius: 50%;
+					overflow: hidden;
+					border: 1px solid $c-border;
+					background-color: $c-glass;
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+
+				.m-burger {
+					width: 44px;
+					height: 44px;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background-color: $c-glass;
+					color: $c-text;
+					.MuiSvgIcon-root {
+						font-size: 24px;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* -------------------------------------------------------------------- *
+ * SLIDE DRAWER (portaled to <body>)
+ * -------------------------------------------------------------------- */
+.carlen-mobile-nav-drawer {
+	.MuiDrawer-paper {
+		width: min(82vw, 340px);
+		box-sizing: border-box;
+		color: $c-text;
+		background-color: rgba(12, 17, 26, 0.98);
+		background-image:
+			radial-gradient(circle at 100% 0%, rgba(47, 107, 255, 0.08), transparent 36%),
+			radial-gradient(circle at 0% 100%, rgba(233, 44, 40, 0.1), transparent 40%);
+		border-left: 1px solid $c-border;
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+	}
+
+	.MuiBackdrop-root {
+		background-color: rgba(5, 7, 11, 0.6);
+	}
+
+	.m-drawer {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0));
+
+		.m-drawer-head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 16px;
+			.m-brand {
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.26em;
+				color: $c-faint;
+			}
+			.m-close {
+				width: 40px;
+				height: 40px;
+				border-radius: 10px;
+				border: 1px solid $c-border;
+				background-color: $c-glass;
+				color: $c-text;
+			}
+		}
+
+		/* PROFILE / LOGIN */
+		.m-profile {
+			margin-bottom: 16px;
+			.m-profile-card {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				padding: 12px;
+				border-radius: 16px;
+				border: 1px solid $c-border;
+				background-color: $c-glass;
+				text-decoration: none;
+				.m-profile-avatar {
+					width: 46px;
+					height: 46px;
+					border-radius: 50%;
+					object-fit: cover;
+					border: 1px solid $c-border-strong;
+				}
+				.m-profile-meta {
+					display: flex;
+					flex-direction: column;
+					min-width: 0;
+					strong {
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 600;
+						color: $c-text;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+					span {
+						font-family: $font;
+						font-size: 12px;
+						color: $c-muted;
+						text-transform: capitalize;
+					}
+				}
+			}
+			.m-login-btn {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				height: 50px;
+				border-radius: 14px;
+				background: $c-accent-grad;
+				box-shadow: $c-glow-red;
+				color: #fff;
+				text-decoration: none;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 600;
+				.MuiSvgIcon-root {
+					font-size: 20px;
+				}
+			}
+		}
+
+		/* NAV LINKS */
+		.m-nav {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			.m-nav-link {
+				display: flex;
+				align-items: center;
+				min-height: 48px;
+				padding: 0 14px;
+				border-radius: 12px;
+				font-family: $font;
+				font-size: 15px;
+				font-weight: 500;
+				color: $c-muted;
+				text-decoration: none;
+				transition: background-color 180ms $ease-out, color 180ms $ease-out;
+				&:active {
+					background-color: $c-glass-hover;
+				}
+				&.active {
+					color: $c-text;
+					background-color: $c-glass;
+					box-shadow: inset 3px 0 0 0 $c-red;
+				}
+			}
+		}
+
+		.m-divider {
+			margin: 16px 0;
+			border-color: $c-border;
+		}
+
+		/* LANGUAGE */
+		.m-lang {
+			.m-lang-label {
+				display: block;
+				margin-bottom: 10px;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.2em;
+				color: $c-faint;
+			}
+			.m-lang-options {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+			.m-lang-chip {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				min-height: 48px;
+				padding: 0 14px;
+				border-radius: 12px;
+				border: 1px solid $c-border;
+				background-color: $c-glass;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 500;
+				cursor: pointer;
+				transition: border-color 180ms $ease-out, color 180ms $ease-out;
+				img {
+					width: 24px;
+					height: 16px;
+					object-fit: cover;
+					border-radius: 3px;
+					pointer-events: none;
+				}
+				&.active {
+					color: $c-text;
+					border-color: rgba(233, 44, 40, 0.5);
+				}
+			}
+		}
+
+		/* LOGOUT (pinned to bottom) */
+		.m-logout {
+			margin-top: auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			height: 50px;
+			border-radius: 14px;
+			border: 1px solid rgba(233, 44, 40, 0.3);
+			background-color: rgba(233, 44, 40, 0.12);
+			color: #ff6b6b;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			.MuiSvgIcon-root {
+				font-size: 20px;
+			}
+		}
+	}
+}

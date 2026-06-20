@@ -31,7 +31,42 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 	const liked = product?.meLiked && product?.meLiked[0]?.myFavorite;
 
 	if (device === 'mobile') {
-		return <div>PRODUCT BIG CARD MOBILE</div>;
+		return (
+			<div className={'m-similar-card'} onClick={() => goProductDetailPage(product?._id)}>
+				<div
+					className={'m-similar-img'}
+					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})` }}
+				>
+					<button
+						type={'button'}
+						className={'m-similar-fav'}
+						aria-label={'favorite'}
+						onClick={(e: any) => {
+							e.stopPropagation();
+							e.preventDefault();
+							likePropertyHandler && likePropertyHandler(user, product?._id);
+						}}
+					>
+						<FavoriteIcon className={liked ? 'liked' : ''} />
+					</button>
+					<div className={'m-similar-price'}>${formatterStr(product?.productPrice)}</div>
+				</div>
+				<div className={'m-similar-info'}>
+					<strong className={'m-similar-title'}>{product?.productTitle}</strong>
+					<p className={'m-similar-addr'}>{product?.productAddress}</p>
+					<div className={'m-similar-stats'}>
+						<span className={'stat'}>
+							<RemoveRedEyeIcon />
+							<Typography className={'cnt'}>{product?.productViews}</Typography>
+						</span>
+						<span className={'stat'}>
+							<FavoriteIcon />
+							<Typography className={'cnt'}>{product?.productLikes}</Typography>
+						</span>
+					</div>
+				</div>
+			</div>
+		);
 	} else {
 		return (
 			<motion.div
