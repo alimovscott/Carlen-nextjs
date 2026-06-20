@@ -1,194 +1,420 @@
 #pc-wrap {
-  .join-page {
-    position: relative;
-    padding: 90px 0px;
-    width: 100%;
-    height: auto;
-   .container {
-     align-items: center;
-     .main {
-       width: 1200px;
-       height: 900px;
-       display: flex;
-       flex-direction: row;
-       border-radius: 12px 0px 0px 12px;
-       background: #FFF;
-       box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-       .left {
-         width: 50%;
-         height: 100%;
-         display: flex;
-         flex-direction: column;
-         align-items: center;
-         justify-content: center;
-         .logo {
-           display: flex;
-           flex-direction: row;
-           align-items: center;
-           img {
-             width: 40px;
-             height: 40px;
-           }
-           span {
-             margin-left: 10px;
-             font-family: $font ;
-             font-size: 22px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             letter-spacing: 0.44px;
-             color:#181A20;
-           }
-         }
-         .info {
-           margin-top: 30px;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           span {
-             font-family: $font;
-             font-size: 20px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             text-transform: uppercase;
-             color:  #181A20;
-           }
-           p {
-             margin-top: 5px;
-             font-family: $font;
-             font-size: 14px;
-             font-style: normal;
-             font-weight: 400;
-             line-height: 26px;
-             color: #181A20;
+	.carlen-auth-page {
+		position: relative;
+		width: 100%;
+		height: auto;
+		padding: 80px 0 90px;
+		background:
+			radial-gradient(circle at 14% 12%, rgba(47, 107, 255, 0.16), transparent 38%),
+			radial-gradient(circle at 88% 8%, rgba(233, 44, 40, 0.2), transparent 42%),
+			linear-gradient(180deg, $c-base 0%, $c-raised 60%, $c-base 100%);
 
-           }
-         }
-         .input-wrap {
-           margin-top: 45px;
-           width: 470px;
-           display: flex;
-           flex-direction: column;
+		.container {
+			align-items: center;
+		}
 
-          .input-box {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            &:first-child {
-              margin-top: 0px;
-            }
-            span {
-              margin-bottom: 8px;
-              font-family: $font;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 600;
-              line-height: normal;
-              color:  #181A20;
-            }
-            input {
-              padding: 0px 15px;
-              width: 100%;
-              height: 55px;
-              border-radius: 8px;
-              border: 1px solid #DDD;
-              background:  #FFF;
-              font-family: $font;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: 26px;
-              color: #717171;
-            }
-          }
-         }
-         .register {
-           margin-top: 45px;
-           width: 470px;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           .type-option {
-             display: flex;
-             flex-direction: row;
-             align-items: center;
-             span.text {
-               font-family: $font;
-               font-size: 14px;
-               font-style: normal;
-               font-weight: 600;
-               line-height: normal;
-               color:  #181A20;
-             }
-             div {
-               margin-left: 20px;
-               display: flex;
-               flex-direction: row;
-               &:nth-child(1){
-                 margin-right: 25px;
-               }
-             }
-           }
-           .remember-info {
-             width: 100%;
-             display: flex;
-             flex-direction: row;
-             justify-content: space-between;
-             align-items: center;
-             a {
-               font-family: $font;
-               font-size: 14px;
-               font-style: normal;
-               font-weight: 400;
-               line-height: 26px;
-               cursor: pointer;
-               color:  #181A20;
-             }
-           }
-           button {
-             margin-top: 25px;
-             width: 100%;
-             height: 55px;
-             border-radius: 12px;
-             background:  #EB6753;
-             font-family: $font;
-             font-size: 15px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             color:  #FFF;
-             img {
-               filter: brightness(0) invert(1);
-             }
-           }
-         }
-         .ask-info {
-           margin-top: 90px;
-           p {
-             font-family: $font;
-             font-size: 20px;
-             font-style: normal;
-             line-height: normal;
-             font-weight: 400;
-             color:  #181A20;
-             b {
-               margin-left: 10px;
-               font-weight: 600;
-               font-size: 32px;
-               cursor: pointer;
-               text-decoration: underline;
-             }
-           }
-         }
-       }
-       .right {
-         width: 50%;
-         height: 100%;
-         background-image: url("/img/banner/joinBg.svg");
-         background-size: cover;
-       }
-     }
-   }
-  }
+		.carlen-auth-shell {
+			width: 1200px;
+			max-width: 100%;
+			min-height: 760px;
+			display: flex;
+			flex-direction: row;
+			border-radius: 28px;
+			overflow: hidden;
+			border: 1px solid $c-border;
+			background-color: rgba(14, 19, 29, 0.82);
+			backdrop-filter: blur(22px);
+			-webkit-backdrop-filter: blur(22px);
+			box-shadow: $c-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.06);
+			@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+				background-color: $c-raised;
+			}
+		}
+
+		/** LEFT — FORM PANEL **/
+		.carlen-auth-panel {
+			width: 52%;
+			padding: 56px 64px;
+			display: flex;
+			flex-direction: column;
+
+			.logo {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				img {
+					width: 36px;
+					height: 36px;
+				}
+				span {
+					margin-left: 10px;
+					font-family: $font;
+					font-size: 20px;
+					font-weight: 600;
+					letter-spacing: 0.02em;
+					color: $c-text;
+				}
+			}
+
+			.info {
+				margin-top: 34px;
+				display: flex;
+				flex-direction: column;
+				.eyebrow {
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 600;
+					letter-spacing: 0.22em;
+					text-transform: uppercase;
+					color: $c-faint;
+				}
+				h1 {
+					margin: 12px 0 0;
+					font-family: $font;
+					font-size: 32px;
+					font-weight: 700;
+					letter-spacing: -0.02em;
+					line-height: 1.1;
+					color: $c-text;
+				}
+				p {
+					margin: 10px 0 0;
+					max-width: 440px;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 400;
+					line-height: 1.6;
+					color: $c-muted;
+				}
+			}
+
+			.carlen-auth-fields {
+				margin-top: 34px;
+				display: flex;
+				flex-direction: column;
+
+				.carlen-auth-field {
+					margin-top: 18px;
+					display: flex;
+					flex-direction: column;
+					&:first-child {
+						margin-top: 0;
+					}
+					label {
+						margin-bottom: 8px;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						color: $c-text;
+					}
+					input {
+						padding: 0 16px;
+						width: 100%;
+						height: 52px;
+						border-radius: $c-radius-sm;
+						border: 1px solid $c-border;
+						background-color: $c-glass;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 400;
+						color: $c-text;
+						transition:
+							border-color 200ms $ease-out,
+							background-color 200ms $ease-out,
+							box-shadow 200ms $ease-out;
+						&::placeholder {
+							color: $c-faint;
+						}
+						&:hover {
+							border-color: $c-border-strong;
+						}
+						&:focus,
+						&:focus-visible {
+							outline: none;
+							border-color: rgba(233, 44, 40, 0.6);
+							background-color: $c-glass-hover;
+							box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.18);
+						}
+					}
+				}
+			}
+
+			.carlen-auth-actions {
+				margin-top: 28px;
+				display: flex;
+				flex-direction: column;
+
+				.type-option {
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 22px;
+					span.text {
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						color: $c-muted;
+						margin-bottom: 12px;
+					}
+					.type-cards {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						gap: 12px;
+						.type-card {
+							display: flex;
+							flex-direction: column;
+							align-items: flex-start;
+							gap: 6px;
+							padding: 16px;
+							border-radius: $c-radius-sm;
+							border: 1px solid $c-border;
+							background-color: $c-glass;
+							cursor: pointer;
+							text-align: left;
+							transition:
+								border-color 200ms $ease-out,
+								background-color 200ms $ease-out,
+								box-shadow 200ms $ease-out,
+								transform 160ms $ease-out;
+							.MuiSvgIcon-root {
+								font-size: 22px;
+								color: $c-muted;
+								transition: color 200ms $ease-out;
+							}
+							strong {
+								font-family: $font;
+								font-size: 14px;
+								font-weight: 600;
+								color: $c-text;
+							}
+							span {
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 400;
+								color: $c-faint;
+							}
+							@media (hover: hover) and (pointer: fine) {
+								&:hover {
+									border-color: $c-border-strong;
+									background-color: $c-glass-hover;
+									transform: translateY(-2px);
+								}
+							}
+							&:active {
+								transform: scale(0.98);
+							}
+							&:focus-visible {
+								outline: 2px solid $c-blue-glow;
+								outline-offset: 2px;
+							}
+							&.active {
+								border-color: rgba(233, 44, 40, 0.6);
+								background: linear-gradient(120deg, rgba(233, 44, 40, 0.16), rgba(255, 106, 61, 0.1));
+								box-shadow: $c-glow-red;
+								.MuiSvgIcon-root {
+									color: $c-orange;
+								}
+							}
+						}
+					}
+				}
+
+				.remember-info {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					align-items: center;
+					.MuiFormControlLabel-label {
+						font-family: $font;
+						font-size: 13px;
+						color: $c-muted;
+					}
+					.MuiCheckbox-root {
+						color: $c-faint;
+						&.Mui-checked {
+							color: $c-red;
+						}
+					}
+					.lost-pw {
+						font-family: $font;
+						font-size: 13px;
+						color: $c-faint;
+						cursor: default;
+						user-select: none;
+						em {
+							margin-left: 6px;
+							padding: 2px 8px;
+							font-style: normal;
+							font-size: 10px;
+							font-weight: 600;
+							letter-spacing: 0.06em;
+							text-transform: uppercase;
+							color: $c-muted;
+							background-color: $c-glass;
+							border: 1px solid $c-border;
+							border-radius: $c-radius-pill;
+						}
+					}
+				}
+
+				.cta {
+					margin-top: 24px;
+					width: 100%;
+					height: 54px;
+					border-radius: $c-radius-pill;
+					background: $c-accent-grad;
+					box-shadow: $c-glow-red;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 600;
+					letter-spacing: 0.01em;
+					text-transform: none;
+					color: #fff;
+					transition:
+						transform 160ms $ease-out,
+						box-shadow 200ms $ease-out,
+						opacity 200ms $ease-out;
+					@media (hover: hover) and (pointer: fine) {
+						&:hover {
+							background: $c-accent-grad;
+							transform: translateY(-2px);
+							box-shadow: 0 22px 50px -18px rgba(233, 44, 40, 0.7);
+						}
+					}
+					&:active {
+						transform: scale(0.98);
+					}
+					&.Mui-disabled {
+						background: $c-glass;
+						color: $c-faint;
+						box-shadow: none;
+						cursor: not-allowed;
+					}
+				}
+			}
+
+			.carlen-auth-switch {
+				margin-top: 34px;
+				p {
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 400;
+					color: $c-muted;
+					b {
+						margin-left: 8px;
+						font-weight: 600;
+						color: $c-orange;
+						cursor: pointer;
+						transition: color 180ms $ease-out;
+						@media (hover: hover) and (pointer: fine) {
+							&:hover {
+								color: $c-red;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/** RIGHT — AUTOMOTIVE VISUAL **/
+		.carlen-auth-visual {
+			position: relative;
+			width: 48%;
+			min-height: 100%;
+			background-image: url('/img/banner/Lotus-Evija.jpg');
+			background-size: cover;
+			background-position: center;
+			isolation: isolate;
+
+			.visual-overlay {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				pointer-events: none;
+				background:
+					linear-gradient(180deg, rgba(11, 15, 23, 0.5) 0%, rgba(11, 15, 23, 0.82) 100%),
+					radial-gradient(circle at 80% 12%, rgba(233, 44, 40, 0.32), transparent 46%);
+			}
+
+			.visual-content {
+				position: relative;
+				z-index: 2;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				padding: 56px 48px;
+				h2 {
+					margin: 0 0 24px;
+					max-width: 420px;
+					font-family: $font;
+					font-size: 26px;
+					font-weight: 700;
+					letter-spacing: -0.02em;
+					line-height: 1.2;
+					color: $c-text;
+					text-wrap: balance;
+				}
+				.benefit-cards {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					.benefit-card {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 14px;
+						padding: 16px 18px;
+						border-radius: $c-radius;
+						border: 1px solid $c-border;
+						background-color: rgba(255, 255, 255, 0.06);
+						backdrop-filter: blur(14px);
+						-webkit-backdrop-filter: blur(14px);
+						box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+						.benefit-icon {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 42px;
+							height: 42px;
+							flex-shrink: 0;
+							border-radius: 50%;
+							background: $c-accent-grad;
+							.MuiSvgIcon-root {
+								font-size: 22px;
+								color: #fff;
+							}
+						}
+						.benefit-meta {
+							display: flex;
+							flex-direction: column;
+							strong {
+								font-family: $font;
+								font-size: 15px;
+								font-weight: 600;
+								color: $c-text;
+							}
+							span {
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 400;
+								color: $c-muted;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.carlen-auth-page {
+			.carlen-auth-actions .type-card:hover,
+			.carlen-auth-actions .type-card:active,
+			.carlen-auth-actions .cta:hover,
+			.carlen-auth-actions .cta:active {
+				transform: none;
+			}
+		}
+	}
 }

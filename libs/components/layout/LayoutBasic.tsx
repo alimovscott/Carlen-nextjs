@@ -83,7 +83,7 @@ const withLayoutBasic = (Component: any) => {
 			return { title, desc, bgImage };
 		}, [router.pathname]);
 
-		const hideHeaderBasic = ['/mypage', '/member', '/cs'].includes(router.pathname);
+		const hideHeaderBasic = ['/mypage', '/member', '/cs', '/account/join'].includes(router.pathname);
 
 		/** LIFECYCLES **/
 		useEffect(() => {

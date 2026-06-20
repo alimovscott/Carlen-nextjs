@@ -1,0 +1,335 @@
+/**
+ * Carlen notification dropdown — portaled to document.body by MUI Menu,
+ * so these selectors live at top level (not nested under #pc-wrap).
+ */
+.carlen-notif-dropdown.MuiPaper-root {
+	margin-top: 10px;
+	width: 380px;
+	max-width: calc(100vw - 32px);
+	color: $c-text;
+	background-color: rgba(14, 19, 29, 0.92);
+	background-image: none;
+	border: 1px solid $c-border;
+	border-radius: 18px;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	box-shadow: $c-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	transform-origin: top right;
+	overflow: hidden;
+
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		background-color: $c-raised;
+	}
+
+	.carlen-notif-head {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 16px 18px;
+		border-bottom: 1px solid $c-border;
+		strong {
+			font-family: $font;
+			font-size: 15px;
+			font-weight: 600;
+			color: $c-text;
+		}
+		.carlen-notif-actions {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 8px;
+		}
+		.mark-all,
+		.delete-all {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 10px;
+			border: 0;
+			border-radius: $c-radius-pill;
+			background-color: transparent;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition:
+				background-color 180ms $ease-out,
+				color 180ms $ease-out,
+				opacity 180ms $ease-out;
+			.MuiSvgIcon-root {
+				font-size: 16px;
+			}
+			&:focus-visible {
+				outline: 2px solid $c-blue-glow;
+				outline-offset: 2px;
+			}
+			&:disabled {
+				color: $c-faint;
+				cursor: default;
+				opacity: 0.6;
+			}
+		}
+		.mark-all {
+			color: $c-orange;
+			@media (hover: hover) and (pointer: fine) {
+				&:hover:not(:disabled) {
+					background-color: $c-glass-hover;
+				}
+			}
+		}
+		.delete-all {
+			color: $c-muted;
+			@media (hover: hover) and (pointer: fine) {
+				&:hover:not(:disabled) {
+					color: $c-red;
+					background-color: rgba(233, 44, 40, 0.12);
+				}
+			}
+		}
+	}
+
+	.carlen-notif-list {
+		max-height: 420px;
+		overflow-y: auto;
+		padding: 6px;
+
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: $c-border-strong;
+			border-radius: $c-radius-pill;
+		}
+	}
+
+	/** ITEM **/
+	.carlen-notif-item {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 12px 12px 12px 14px;
+		border-radius: 12px;
+		cursor: pointer;
+		transition:
+			background-color 180ms $ease-out,
+			transform 160ms $ease-out;
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				background-color: $c-glass;
+				transform: translateY(-1px);
+			}
+		}
+		&:active {
+			transform: scale(0.99);
+		}
+		&:focus-visible {
+			outline: 2px solid $c-blue-glow;
+			outline-offset: 2px;
+		}
+		&.unread {
+			background-color: rgba(233, 44, 40, 0.06);
+		}
+
+		.notif-avatar {
+			position: relative;
+			flex-shrink: 0;
+			width: 40px;
+			height: 40px;
+			img {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 1px solid $c-border;
+			}
+			.notif-type {
+				position: absolute;
+				right: -3px;
+				bottom: -3px;
+				width: 20px;
+				height: 20px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				background: $c-accent-grad;
+				border: 2px solid $c-raised;
+				.MuiSvgIcon-root {
+					font-size: 11px;
+					color: #fff;
+				}
+			}
+		}
+
+		.notif-body {
+			flex: 1;
+			min-width: 0;
+			.notif-title {
+				display: block;
+				font-family: $font;
+				font-size: 13.5px;
+				font-weight: 600;
+				color: $c-text;
+				line-height: 1.35;
+			}
+			.notif-desc {
+				margin: 2px 0 0;
+				font-family: $font;
+				font-size: 12.5px;
+				font-weight: 400;
+				color: $c-muted;
+				line-height: 1.4;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.notif-time {
+				margin-top: 4px;
+				display: block;
+				font-family: $font;
+				font-size: 11px;
+				color: $c-faint;
+			}
+		}
+
+		.notif-dot {
+			flex-shrink: 0;
+			margin-top: 6px;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: $c-accent-grad;
+			box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.18);
+		}
+
+		.notif-remove {
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			width: 24px;
+			height: 24px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border: 0;
+			border-radius: 50%;
+			background-color: transparent;
+			color: $c-faint;
+			cursor: pointer;
+			opacity: 0;
+			transition:
+				opacity 160ms $ease-out,
+				background-color 160ms $ease-out,
+				color 160ms $ease-out;
+			.MuiSvgIcon-root {
+				font-size: 16px;
+			}
+			@media (hover: hover) and (pointer: fine) {
+				&:hover {
+					background-color: $c-glass-hover;
+					color: $c-text;
+				}
+			}
+		}
+		@media (hover: hover) and (pointer: fine) {
+			&:hover .notif-remove {
+				opacity: 1;
+			}
+		}
+	}
+
+	/** SKELETON **/
+	.carlen-notif-skeleton {
+		padding: 6px;
+		.skeleton-row {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 14px;
+		}
+		.sk-avatar {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			flex-shrink: 0;
+		}
+		.sk-lines {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		.sk-line {
+			height: 10px;
+			border-radius: 6px;
+			width: 100%;
+			&.short {
+				width: 55%;
+			}
+		}
+		.sk-avatar,
+		.sk-line {
+			background: linear-gradient(
+				90deg,
+				rgba(255, 255, 255, 0.05) 25%,
+				rgba(255, 255, 255, 0.12) 37%,
+				rgba(255, 255, 255, 0.05) 63%
+			);
+			background-size: 400% 100%;
+			animation: carlen-notif-shimmer 1.4s ease infinite;
+		}
+	}
+
+	/** EMPTY **/
+	.carlen-notif-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 44px 24px;
+		gap: 6px;
+		.MuiSvgIcon-root {
+			font-size: 34px;
+			color: $c-faint;
+			margin-bottom: 6px;
+		}
+		strong {
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 600;
+			color: $c-text;
+		}
+		span {
+			font-family: $font;
+			font-size: 12.5px;
+			color: $c-muted;
+		}
+	}
+}
+
+@keyframes carlen-notif-shimmer {
+	0% {
+		background-position: 100% 0;
+	}
+	100% {
+		background-position: -100% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.carlen-notif-dropdown.MuiPaper-root {
+		.carlen-notif-item:hover,
+		.carlen-notif-item:active {
+			transform: none;
+		}
+		.carlen-notif-skeleton .sk-avatar,
+		.carlen-notif-skeleton .sk-line {
+			animation: none;
+		}
+	}
+}

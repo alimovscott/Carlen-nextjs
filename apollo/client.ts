@@ -134,6 +134,7 @@ function createApolloClient() {
 						getMember: replaceIncoming,
 						getMemberFollowers: replaceIncoming,
 						getMemberFollowings: replaceIncoming,
+						getNotifications: replaceIncoming,
 					},
 				},
 				Member: {

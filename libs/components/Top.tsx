@@ -15,10 +15,12 @@ import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import { useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
+import { GET_UNREAD_NOTIFICATIONS_COUNT } from '../../apollo/user/query';
+import NotificationDropdown from './common/NotificationDropdown';
 
 // Hoisted to module scope so it is not recreated on every render.
 const StyledMenu = styled((props: MenuProps) => (
@@ -139,6 +141,15 @@ const Top = () => {
 	const [bgColor, setBgColor] = useState<boolean>(false);
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
+	const [notifAnchor, setNotifAnchor] = useState<null | HTMLElement>(null);
+	const notifOpen = Boolean(notifAnchor);
+
+	/** APOLLO REQUESTS **/
+	const { data: unreadData } = useQuery(GET_UNREAD_NOTIFICATIONS_COUNT, {
+		fetchPolicy: 'cache-and-network',
+		skip: !user?._id,
+	});
+	const unreadCount: number = unreadData?.getUnreadNotificationsCount ?? 0;
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -274,10 +285,19 @@ const Top = () => {
 										type={'button'}
 										className={'notification-btn'}
 										aria-label={t('Notifications')}
-										data-count={0}
+										aria-haspopup={'true'}
+										aria-expanded={notifOpen}
+										data-count={unreadCount}
+										onClick={(event: any) => setNotifAnchor(event.currentTarget)}
 									>
 										<NotificationsOutlinedIcon className={'notification-icon'} />
 									</button>
+
+									<NotificationDropdown
+										anchorEl={notifAnchor}
+										open={notifOpen}
+										onClose={() => setNotifAnchor(null)}
+									/>
 
 									<button
 										type={'button'}
