@@ -1,0 +1,327 @@
+/**
+ * Carlen Admin Community — premium dark community console.
+ * Scoped to .carlen-admin-community so other admin pages are NOT affected.
+ * Mirrors the .carlen-admin-users / .carlen-admin-products design language and
+ * reuses the shared design tokens from scss/variables.scss ($c-*).
+ */
+#pc-wrap {
+	.carlen-admin-community {
+		width: 100%;
+
+		.cap-shell {
+			padding: 28px;
+			border-radius: 24px;
+			border: 1px solid $c-border;
+			background-color: rgba(14, 19, 29, 0.94);
+			background-image:
+				radial-gradient(circle at 12% 0%, rgba(47, 107, 255, 0.1), transparent 36%),
+				radial-gradient(circle at 92% 0%, rgba(233, 44, 40, 0.14), transparent 38%);
+			box-shadow: $c-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.06);
+			color: $c-text;
+		}
+
+		/** HEADER **/
+		.cap-head {
+			margin-bottom: 22px;
+			.eyebrow {
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 600;
+				letter-spacing: 0.22em;
+				color: $c-faint;
+			}
+			h1 {
+				margin: 8px 0 0;
+				font-family: $font;
+				font-size: 28px;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				color: $c-text;
+			}
+			p {
+				margin: 6px 0 0;
+				font-family: $font;
+				font-size: 14px;
+				color: $c-muted;
+			}
+		}
+
+		/** TOOLBAR: tabs + category filter **/
+		.cap-toolbar {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 18px;
+			flex-wrap: wrap;
+		}
+
+		.cap-tabs {
+			display: inline-flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 4px;
+			padding: 5px;
+			border-radius: $c-radius-pill;
+			border: 1px solid $c-border;
+			background-color: $c-glass;
+			.cap-tab {
+				display: inline-flex;
+				align-items: center;
+				height: 38px;
+				padding: 0 18px;
+				border: 0;
+				border-radius: $c-radius-pill;
+				background-color: transparent;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: color 180ms $ease-out, background-color 180ms $ease-out, box-shadow 180ms $ease-out;
+				@media (hover: hover) and (pointer: fine) {
+					&:hover:not(.active) {
+						color: $c-text;
+						background-color: $c-glass-hover;
+					}
+				}
+				&:focus-visible {
+					outline: 2px solid $c-blue-glow;
+					outline-offset: 2px;
+				}
+				&.active {
+					color: #fff;
+					background: $c-accent-grad;
+					box-shadow: $c-glow-red;
+				}
+			}
+		}
+
+		/** CATEGORY FILTER **/
+		.cap-filter {
+			display: inline-flex;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+
+			.cap-type-select.MuiInputBase-root {
+				min-width: 160px;
+				height: 44px;
+				border-radius: $c-radius-pill;
+				background-color: $c-glass;
+				color: $c-text;
+				font-family: $font;
+				font-size: 13px;
+				.MuiSelect-select {
+					padding: 0 36px 0 16px;
+					display: flex;
+					align-items: center;
+				}
+				.MuiOutlinedInput-notchedOutline {
+					border-color: $c-border;
+				}
+				&:hover .MuiOutlinedInput-notchedOutline {
+					border-color: $c-border-strong;
+				}
+				&.Mui-focused .MuiOutlinedInput-notchedOutline {
+					border-color: rgba(233, 44, 40, 0.6);
+					border-width: 1px;
+				}
+				.MuiSvgIcon-root {
+					color: $c-muted;
+				}
+			}
+		}
+
+		/** TABLE **/
+		.cap-table {
+			border: 1px solid $c-border;
+			border-radius: 18px;
+			overflow: hidden;
+			background-color: rgba(255, 255, 255, 0.02);
+
+			.MuiTableContainer-root {
+				box-shadow: none;
+				background-color: transparent;
+			}
+			table {
+				border-collapse: collapse;
+			}
+			thead th {
+				background-color: rgba(255, 255, 255, 0.03);
+				color: $c-faint;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				border-bottom: 1px solid $c-border;
+				padding: 14px 16px;
+				&:first-child {
+					padding-left: 20px;
+				}
+			}
+			tbody {
+				tr {
+					transition: background-color 180ms $ease-out;
+					@media (hover: hover) and (pointer: fine) {
+						&:hover {
+							background-color: $c-glass;
+						}
+					}
+				}
+				td {
+					border-bottom: 1px solid $c-border;
+					padding: 12px 16px;
+					font-family: $font;
+					font-size: 13.5px;
+					color: $c-muted;
+					&:first-child {
+						padding-left: 20px;
+					}
+				}
+				tr:last-child td {
+					border-bottom: 0;
+				}
+			}
+
+			/** WRITER CELL (avatar + nick link) **/
+			.name {
+				a {
+					display: inline-flex;
+					align-items: center;
+					text-decoration: none;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 600;
+					color: $c-text;
+					transition: color 160ms $ease-out;
+					.MuiAvatar-root {
+						width: 36px;
+						height: 36px;
+						border: 1px solid $c-border-strong;
+					}
+					@media (hover: hover) and (pointer: fine) {
+						&:hover {
+							color: $c-orange;
+						}
+					}
+				}
+			}
+
+			/** TITLE cell — open-in-browser action **/
+			.btn_window {
+				margin-left: 6px;
+				color: $c-faint;
+				transition: color 160ms $ease-out, background-color 160ms $ease-out;
+				.MuiSvgIcon-root {
+					font-size: 18px;
+				}
+				@media (hover: hover) and (pointer: fine) {
+					&:hover {
+						color: $c-text;
+						background-color: $c-glass-hover;
+					}
+				}
+			}
+
+			/** STATUS CHIP (the .badge button) **/
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				padding: 5px 14px;
+				border-radius: $c-radius-pill;
+				border: 1px solid $c-border;
+				background-color: $c-glass;
+				color: $c-text;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.04em;
+				line-height: 1.6;
+				text-transform: uppercase;
+				box-shadow: none;
+				transition: background-color 160ms $ease-out, border-color 160ms $ease-out;
+				&:hover {
+					background-color: $c-glass-hover;
+					border-color: $c-border-strong;
+				}
+				&.success {
+					color: $c-text;
+					background-color: $c-glass;
+				}
+			}
+
+			/** DELETE action button **/
+			.MuiButton-outlined {
+				min-width: 34px;
+				width: 34px;
+				height: 34px;
+				padding: 0;
+				border-radius: 10px;
+				border: 1px solid $c-border;
+				color: $c-red;
+				transition: background-color 160ms $ease-out, border-color 160ms $ease-out, color 160ms $ease-out;
+				.MuiSvgIcon-root {
+					font-size: 18px;
+				}
+				&:hover {
+					border: 1px solid rgba(233, 44, 40, 0.4);
+					background-color: rgba(233, 44, 40, 0.14);
+					color: $c-orange;
+				}
+			}
+
+			/** EMPTY STATE **/
+			.no-data {
+				display: block;
+				padding: 48px 24px;
+				text-align: center;
+				font-family: $font;
+				font-size: 14px;
+				color: $c-muted;
+			}
+		}
+
+		/** PAGINATION **/
+		.MuiTablePagination-root {
+			color: $c-muted;
+			border-top: 1px solid $c-border;
+			.MuiTablePagination-selectLabel,
+			.MuiTablePagination-displayedRows {
+				font-family: $font;
+				font-size: 13px;
+				color: $c-muted;
+			}
+			.MuiSelect-select {
+				color: $c-text;
+			}
+			.MuiSvgIcon-root {
+				color: $c-muted;
+			}
+			.MuiIconButton-root {
+				border-radius: 10px;
+				color: $c-text;
+				&.Mui-disabled {
+					color: $c-faint;
+					opacity: 0.5;
+				}
+				@media (hover: hover) and (pointer: fine) {
+					&:hover {
+						background-color: $c-glass-hover;
+					}
+				}
+			}
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.carlen-admin-community {
+			.cap-tab,
+			.cap-table tbody tr {
+				transition: none;
+			}
+		}
+	}
+}

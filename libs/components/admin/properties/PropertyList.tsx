@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import moment from 'moment';
 import {
 	TableCell,
 	TableHead,
@@ -7,105 +8,29 @@ import {
 	TableRow,
 	Table,
 	TableContainer,
-	Button,
 	Menu,
 	Fade,
 	MenuItem,
 } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import { Stack } from '@mui/material';
+import { motion, useReducedMotion } from 'framer-motion';
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
+import Typography from '@mui/material/Typography';
 import { Product } from '../../../types/product/product';
 import { REACT_APP_API_URL } from '../../../config';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Typography from '@mui/material/Typography';
 import { ProductStatus } from '../../../enums/product.enum';
 
-interface Data {
-	id: string;
-	title: string;
-	price: string;
-	agent: string;
-	location: string;
-	type: string;
-	status: string;
-}
+const headCells = ['Vehicle', 'Brand', 'Location', 'Status', 'Views', 'Created Date', 'Actions'];
 
-type Order = 'asc' | 'desc';
-
-interface HeadCell {
-	disablePadding: boolean;
-	id: keyof Data;
-	label: string;
-	numeric: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-	{
-		id: 'id',
-		numeric: true,
-		disablePadding: false,
-		label: 'MB ID',
-	},
-	{
-		id: 'title',
-		numeric: true,
-		disablePadding: false,
-		label: 'TITLE',
-	},
-	{
-		id: 'price',
-		numeric: false,
-		disablePadding: false,
-		label: 'PRICE',
-	},
-	{
-		id: 'agent',
-		numeric: false,
-		disablePadding: false,
-		label: 'AGENT',
-	},
-	{
-		id: 'location',
-		numeric: false,
-		disablePadding: false,
-		label: 'LOCATION',
-	},
-	{
-		id: 'type',
-		numeric: false,
-		disablePadding: false,
-		label: 'TYPE',
-	},
-	{
-		id: 'status',
-		numeric: false,
-		disablePadding: false,
-		label: 'STATUS',
-	},
-];
-
-interface EnhancedTableProps {
-	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	order: Order;
-	orderBy: string;
-	rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-	const { onSelectAllClick } = props;
-
+function EnhancedTableHead() {
 	return (
 		<TableHead>
 			<TableRow>
-				{headCells.map((headCell) => (
-					<TableCell
-						key={headCell.id}
-						align={headCell.numeric ? 'left' : 'center'}
-						padding={headCell.disablePadding ? 'none' : 'normal'}
-					>
-						{headCell.label}
+				{headCells.map((label, i) => (
+					<TableCell key={label} align={i === 0 ? 'left' : 'center'}>
+						{label}
 					</TableCell>
 				))}
 			</TableRow>
@@ -131,18 +56,24 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 		updatePropertyHandler,
 		removePropertyHandler,
 	} = props;
+	const shouldReduceMotion = useReducedMotion();
 
 	return (
-		<Stack>
+		<Stack className={'cap-table-inner'}>
 			<TableContainer>
-				<Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
-					{/*@ts-ignore*/}
+				<Table aria-labelledby="tableTitle" size={'medium'}>
 					<EnhancedTableHead />
 					<TableBody>
 						{products.length === 0 && (
 							<TableRow>
-								<TableCell align="center" colSpan={8}>
-									<span className={'no-data'}>data not found!</span>
+								<TableCell align="center" colSpan={headCells.length}>
+									<div className={'cap-empty'}>
+										<span className={'empty-icon'}>
+											<DirectionsCarFilledOutlinedIcon />
+										</span>
+										<strong>No vehicles found</strong>
+										<span className={'empty-hint'}>Try a different status tab or location filter.</span>
+									</div>
 								</TableCell>
 							</TableRow>
 						)}
@@ -150,61 +81,92 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 						{products.length !== 0 &&
 							products.map((product: Product, index: number) => {
 								const productImage = `${REACT_APP_API_URL}/${product?.productImages[0]}`;
+								const isActive = product.productStatus === ProductStatus.ACTIVE;
 
 								return (
-									<TableRow hover key={product?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-										<TableCell align="left">{product._id}</TableCell>
-										<TableCell align="left" className={'name'}>
-											{product.productStatus === ProductStatus.ACTIVE ?
-											 <Stack direction={'row'}>
-												<Link href={`/cars/detail?id=${product?._id}`}>
-													<div>
-														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
+									<motion.tr
+										className={'cap-row MuiTableRow-root'}
+										key={product?._id}
+										initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{ duration: 0.32, delay: Math.min(index * 0.03, 0.3), ease: [0.23, 1, 0.32, 1] }}
+									>
+										{/* VEHICLE */}
+										<TableCell align="left">
+											<div className={'cap-vehicle'}>
+												{isActive ? (
+													<Link href={`/cars/detail?id=${product?._id}`} className={'thumb'}>
+														<img src={productImage} alt={product.productTitle} />
+													</Link>
+												) : (
+													<div className={'thumb'}>
+														<img src={productImage} alt={product.productTitle} />
 													</div>
-												</Link>
-												<Link href={`/cars/detail?id=${product?._id}`}>
-													<div>{product.productTitle}</div>
-												</Link>
-											</Stack> : <Stack direction={'row'}>
-											
-													<div>
-														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
-													</div>
-													<div style={{marginTop: "10px"}}>{product.productTitle}</div>
-											
-											</Stack> }
-											
+												)}
+												<div className={'vehicle-meta'}>
+													{isActive ? (
+														<Link href={`/cars/detail?id=${product?._id}`} className={'v-title'}>
+															{product.productTitle}
+														</Link>
+													) : (
+														<span className={'v-title'}>{product.productTitle}</span>
+													)}
+													<span className={'v-price'}>${product.productPrice?.toLocaleString()}</span>
+													<span className={'v-sub'}>
+														{product.productModel} · {product.productYear}
+													</span>
+												</div>
+											</div>
 										</TableCell>
-										<TableCell align="center">{product.productPrice}</TableCell>
-										<TableCell align="center">{product.memberData?.memberNick}</TableCell>
-										<TableCell align="center">{product.productLocation}</TableCell>
+
+										{/* BRAND */}
 										<TableCell align="center">{product.productType}</TableCell>
+
+										{/* LOCATION */}
+										<TableCell align="center">{product.productLocation}</TableCell>
+
+										{/* STATUS */}
+										<TableCell align="center">
+											<span className={`cap-pill status-${product.productStatus?.toLowerCase()}`}>
+												{product.productStatus}
+											</span>
+										</TableCell>
+
+										{/* VIEWS */}
+										<TableCell align="center">{product.productViews}</TableCell>
+
+										{/* CREATED */}
+										<TableCell align="center">{moment(product.createdAt).format('MMM D, YYYY')}</TableCell>
+
+										{/* ACTIONS — behavior preserved per status */}
 										<TableCell align="center">
 											{product.productStatus === ProductStatus.DELETE && (
-												<Button
-													variant="outlined"
-													sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
+												<button
+													type={'button'}
+													className={'cap-action danger'}
+													aria-label={'Remove vehicle'}
 													onClick={() => removePropertyHandler(product._id)}
 												>
-													<DeleteIcon fontSize="small" />
-												</Button>
+													<DeleteOutlineRoundedIcon fontSize="small" />
+												</button>
 											)}
 
-											{product.productStatus === ProductStatus.SOLD && (
-												<Button className={'badge warning'}>{product.productStatus}</Button>
-											)}
+											{product.productStatus === ProductStatus.SOLD && <span className={'cap-action-muted'}>—</span>}
 
 											{product.productStatus === ProductStatus.ACTIVE && (
 												<>
-													<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-														{product.productStatus}
-													</Button>
+													<button
+														type={'button'}
+														className={'cap-action'}
+														aria-label={'Change status'}
+														onClick={(e: any) => menuIconClickHandler(e, index)}
+													>
+														<MoreVertRoundedIcon fontSize="small" />
+													</button>
 
 													<Menu
-														className={'menu-modal'}
-														MenuListProps={{
-															'aria-labelledby': 'fade-button',
-														}}
+														className={'menu-modal carlen-admin-action-menu'}
+														MenuListProps={{ 'aria-labelledby': 'fade-button' }}
 														anchorEl={anchorEl[index]}
 														open={Boolean(anchorEl[index])}
 														onClose={menuIconCloseHandler}
@@ -217,6 +179,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 																<MenuItem
 																	onClick={() => updatePropertyHandler({ _id: product._id, productStatus: status })}
 																	key={status}
+																	className={status === ProductStatus.DELETE ? 'danger' : ''}
 																>
 																	<Typography variant={'subtitle1'} component={'span'}>
 																		{status}
@@ -227,7 +190,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 												</>
 											)}
 										</TableCell>
-									</TableRow>
+									</motion.tr>
 								);
 							})}
 					</TableBody>

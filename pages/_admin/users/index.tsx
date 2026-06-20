@@ -2,15 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
 import { MemberPanelList } from '../../../libs/components/admin/users/MemberList';
-import { Box, InputAdornment, List, ListItem, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import { Box, InputAdornment } from '@mui/material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { TabContext } from '@mui/lab';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TablePagination from '@mui/material/TablePagination';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import { motion, useReducedMotion } from 'framer-motion';
 import { MembersInquiry } from '../../../libs/types/member/member.input';
 import { Member } from '../../../libs/types/member/member';
 import { MemberStatus, MemberType } from '../../../libs/enums/member.enum';
@@ -30,6 +29,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 	);
 	const [searchText, setSearchText] = useState('');
 	const [searchType, setSearchType] = useState('ALL');
+	const shouldReduceMotion = useReducedMotion();
 
 	/** APOLLO REQUESTS **/
 	const [updateMemberByAdmin] = useMutation(UPDATE_MEMBER_BY_ADMIN);
@@ -163,52 +163,61 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 		}
 	};
 
+	const stagger = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.06 } },
+	};
+	const fadeItem = {
+		hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 },
+		visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] } },
+	};
+
+	const TABS = [
+		{ id: 'ALL', label: 'All' },
+		{ id: 'ACTIVE', label: 'Active' },
+		{ id: 'BLOCK', label: 'Blocked' },
+		{ id: 'DELETE', label: 'Deleted' },
+	];
+
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Member List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'BLOCK')}
-									value="BLOCK"
-									className={value === 'BLOCK' ? 'li on' : 'li'}
-								>
-									Blocked
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Deleted
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
+		<Box component={'div'} className={'content carlen-admin-users'}>
+			<motion.div
+				className={'cap-shell'}
+				initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+			>
+				<TabContext value={value}>
+					<motion.div variants={stagger} initial={'hidden'} animate={'visible'}>
+						{/* HEADER */}
+						<motion.div className={'cap-head'} variants={fadeItem}>
+							<span className={'eyebrow'}>OPERATIONS</span>
+							<h1>Member Management</h1>
+							<p>Monitor and manage Carlen members, roles and access.</p>
+						</motion.div>
+
+						{/* TOOLBAR: segmented tabs + search/filter */}
+						<motion.div className={'cap-toolbar'} variants={fadeItem}>
+							<div className={'cap-tabs'} role={'tablist'}>
+								{TABS.map((tab) => (
+									<button
+										type={'button'}
+										role={'tab'}
+										aria-selected={value === tab.id}
+										key={tab.id}
+										className={`cap-tab ${value === tab.id ? 'active' : ''}`}
+										onClick={(e: any) => tabChangeHandler(e, tab.id)}
+									>
+										{tab.label}
+									</button>
+								))}
+							</div>
+
+							<div className={'cap-filter'}>
 								<OutlinedInput
 									value={searchText}
 									onChange={(e: any) => textHandler(e.target.value)}
-									sx={{ width: '100%' }}
-									className={'search'}
+									className={'cap-search'}
 									placeholder="Search user name"
 									onKeyDown={(event) => {
 										if (event.key == 'Enter') searchTextHandler();
@@ -217,6 +226,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 										<>
 											{searchText && (
 												<CancelRoundedIcon
+													className={'cap-search-clear'}
 													style={{ cursor: 'pointer' }}
 													onClick={async () => {
 														setSearchText('');
@@ -227,7 +237,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 																text: '',
 															},
 														});
-														await getAllMembersRefetch({input: membersInquiry})
+														await getAllMembersRefetch({ input: membersInquiry });
 													}}
 												/>
 											)}
@@ -237,7 +247,11 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 										</>
 									}
 								/>
-								<Select sx={{ width: '160px', ml: '20px' }} value={searchType}>
+								<Select
+									className={'cap-type-select'}
+									value={searchType}
+									MenuProps={{ classes: { paper: 'carlen-admin-select-menu' } }}
+								>
 									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
 										All
 									</MenuItem>
@@ -251,29 +265,32 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 										Admin
 									</MenuItem>
 								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<MemberPanelList
-							members={members}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateMemberHandler={updateMemberHandler}
-						/>
+							</div>
+						</motion.div>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={membersTotal}
-							rowsPerPage={membersInquiry?.limit}
-							page={membersInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
+						{/* TABLE */}
+						<motion.div className={'cap-table'} variants={fadeItem}>
+							<MemberPanelList
+								members={members}
+								anchorEl={anchorEl}
+								menuIconClickHandler={menuIconClickHandler}
+								menuIconCloseHandler={menuIconCloseHandler}
+								updateMemberHandler={updateMemberHandler}
+							/>
+
+							<TablePagination
+								rowsPerPageOptions={[10, 20, 40, 60]}
+								component="div"
+								count={membersTotal}
+								rowsPerPage={membersInquiry?.limit}
+								page={membersInquiry?.page - 1}
+								onPageChange={changePageHandler}
+								onRowsPerPageChange={changeRowsPerPageHandler}
+							/>
+						</motion.div>
+					</motion.div>
+				</TabContext>
+			</motion.div>
 		</Box>
 	);
 };

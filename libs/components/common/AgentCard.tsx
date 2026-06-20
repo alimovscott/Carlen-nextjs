@@ -21,6 +21,7 @@ const AgentCard = (props: AgentCardProps) => {
 	const { agent, likeMemberHandler, variant } = props;
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
+	const publicListingsCount = agent?.activeProducts ?? 0;
 	const imagePath: string = agent?.memberImage
 		? `${REACT_APP_API_URL}/${agent?.memberImage}`
 		: '/img/profile/defaultUser.svg';
@@ -40,7 +41,7 @@ const AgentCard = (props: AgentCardProps) => {
 				<span className={'carlen-agent-card-location'}>{agent?.memberAddress ?? 'Korea'}</span>
 				<div className={'carlen-agent-card-stats'}>
 					<div>
-						<strong>{agent?.memberProducts ?? 0}</strong>
+						<strong>{publicListingsCount}</strong>
 						<span>Listings</span>
 					</div>
 					<div>
@@ -93,7 +94,7 @@ const AgentCard = (props: AgentCardProps) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{agent?.memberProducts} products</div>
+						<div>{publicListingsCount} products</div>
 					</Box>
 				</Link>
 

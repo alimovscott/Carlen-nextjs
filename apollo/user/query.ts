@@ -59,6 +59,7 @@ export const GET_AGENTS = gql`
 				memberAddress
 				memberDesc
 				memberProducts
+				activeProducts
 				memberArticles
 				memberFollowers
 				memberFollowings

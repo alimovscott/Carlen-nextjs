@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
-import { Box, Stack, MenuItem } from '@mui/material';
-import { List, ListItem } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import { Box, MenuItem } from '@mui/material';
 import Select from '@mui/material/Select';
 import { TabContext } from '@mui/lab';
 import TablePagination from '@mui/material/TablePagination';
+import { motion, useReducedMotion } from 'framer-motion';
 import CommunityArticleList from '../../../libs/components/admin/community/CommunityArticleList';
 import { AllBoardArticlesInquiry } from '../../../libs/types/board-article/board-article.input';
 import { BoardArticle } from '../../../libs/types/board-article/board-article';
@@ -28,6 +26,7 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 		communityInquiry?.search?.articleStatus ? communityInquiry?.search?.articleStatus : 'ALL',
 	);
 	const [searchType, setSearchType] = useState('ALL');
+	const shouldReduceMotion = useReducedMotion();
 
 	/** APOLLO REQUESTS **/
 	const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
@@ -153,41 +152,61 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	console.log('+communityInquiry', communityInquiry);
 	console.log('+articles', articles);
 
+	const stagger = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.06 } },
+	};
+	const fadeItem = {
+		hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 },
+		visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] } },
+	};
+
+	const TABS = [
+		{ id: 'ALL', label: 'All' },
+		{ id: 'ACTIVE', label: 'Active' },
+		{ id: 'DELETE', label: 'Delete' },
+	];
+
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Arricle List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
+		<Box component={'div'} className={'content carlen-admin-community'}>
+			<motion.div
+				className={'cap-shell'}
+				initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+			>
+				<TabContext value={value}>
+					<motion.div variants={stagger} initial={'hidden'} animate={'visible'}>
+						{/* HEADER */}
+						<motion.div className={'cap-head'} variants={fadeItem}>
+							<span className={'eyebrow'}>OPERATIONS</span>
+							<h1>Article Management</h1>
+							<p>Review, filter, and manage community posts across Carlen.</p>
+						</motion.div>
+
+						{/* TOOLBAR: segmented tabs + category filter */}
+						<motion.div className={'cap-toolbar'} variants={fadeItem}>
+							<div className={'cap-tabs'} role={'tablist'}>
+								{TABS.map((tab) => (
+									<button
+										type={'button'}
+										role={'tab'}
+										aria-selected={value === tab.id}
+										key={tab.id}
+										className={`cap-tab ${value === tab.id ? 'active' : ''}`}
+										onClick={(e: any) => tabChangeHandler(e, tab.id)}
+									>
+										{tab.label}
+									</button>
+								))}
+							</div>
+
+							<div className={'cap-filter'}>
+								<Select
+									className={'cap-type-select'}
+									value={searchType}
+									MenuProps={{ classes: { paper: 'carlen-admin-select-menu' } }}
 								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Delete
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
 									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
 										ALL
 									</MenuItem>
@@ -197,30 +216,33 @@ const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 										</MenuItem>
 									))}
 								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<CommunityArticleList
-							articles={articles}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateArticleHandler={updateArticleHandler}
-							removeArticleHandler={removeArticleHandler}
-						/>
+							</div>
+						</motion.div>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={articleTotal}
-							rowsPerPage={communityInquiry?.limit}
-							page={communityInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
+						{/* TABLE */}
+						<motion.div className={'cap-table'} variants={fadeItem}>
+							<CommunityArticleList
+								articles={articles}
+								anchorEl={anchorEl}
+								menuIconClickHandler={menuIconClickHandler}
+								menuIconCloseHandler={menuIconCloseHandler}
+								updateArticleHandler={updateArticleHandler}
+								removeArticleHandler={removeArticleHandler}
+							/>
+
+							<TablePagination
+								rowsPerPageOptions={[10, 20, 40, 60]}
+								component="div"
+								count={articleTotal}
+								rowsPerPage={communityInquiry?.limit}
+								page={communityInquiry?.page - 1}
+								onPageChange={changePageHandler}
+								onRowsPerPageChange={changeRowsPerPageHandler}
+							/>
+						</motion.div>
+					</motion.div>
+				</TabContext>
+			</motion.div>
 		</Box>
 	);
 };

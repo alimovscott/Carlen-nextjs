@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
-import { Box, List, ListItem, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
+import { Box, Select } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { TabContext } from '@mui/lab';
 import TablePagination from '@mui/material/TablePagination';
+import { motion, useReducedMotion } from 'framer-motion';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
+import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import { PropertyPanelList } from '../../../libs/components/admin/properties/PropertyList';
 import { AllProductsInquiry } from '../../../libs/types/product/product.input';
 import { Product } from '../../../libs/types/product/product';
@@ -28,6 +30,7 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 		productsInquiry?.search?.productStatus ? productsInquiry?.search?.productStatus : 'ALL',
 	);
 	const [searchType, setSearchType] = useState('ALL');
+	const shouldReduceMotion = useReducedMotion();
 
 	/** APOLLO REQUESTS **/
 	const [updatePropertyByAdmin] = useMutation(UPDATE_PRODUCT_BY_ADMIN);
@@ -47,6 +50,53 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 			setPropertiesTotal(data?.getAllProductsByAdmin?.metaCounter[0]?.total ?? 0);
 		}
 	});
+
+	/**
+	 * KPI / tab-badge counts — additive, READ-ONLY reuse of the SAME admin query
+	 * with status-scoped variables. No new GraphQL operation, no backend change.
+	 */
+	const countVars = (status?: ProductStatus) => ({
+		input: { page: 1, limit: 1, sort: 'createdAt', direction: 'DESC', search: status ? { productStatus: status } : {} },
+	});
+	const { data: totalCountData, refetch: refetchTotalCount } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
+		fetchPolicy: 'network-only',
+		variables: countVars(),
+	});
+	const { data: activeCountData, refetch: refetchActiveCount } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
+		fetchPolicy: 'network-only',
+		variables: countVars(ProductStatus.ACTIVE),
+	});
+	const { data: soldCountData, refetch: refetchSoldCount } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
+		fetchPolicy: 'network-only',
+		variables: countVars(ProductStatus.SOLD),
+	});
+	const { data: deletedCountData, refetch: refetchDeletedCount } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
+		fetchPolicy: 'network-only',
+		variables: countVars(ProductStatus.DELETE),
+	});
+
+	const readTotal = (d: T) => d?.getAllProductsByAdmin?.metaCounter?.[0]?.total ?? 0;
+	const totalCount = readTotal(totalCountData);
+	const activeCount = readTotal(activeCountData);
+	const soldCount = readTotal(soldCountData);
+	const deletedCount = readTotal(deletedCountData);
+
+	const refetchCounts = async () => {
+		await Promise.all([refetchTotalCount(), refetchActiveCount(), refetchSoldCount(), refetchDeletedCount()]);
+	};
+
+	const KPIS = [
+		{ key: 'total', label: 'Total inventory', value: totalCount, Icon: Inventory2OutlinedIcon, tone: 'neutral' },
+		{ key: 'active', label: 'Active vehicles', value: activeCount, Icon: DirectionsCarFilledOutlinedIcon, tone: 'active' },
+		{ key: 'sold', label: 'Sold vehicles', value: soldCount, Icon: SellOutlinedIcon, tone: 'sold' },
+		{ key: 'deleted', label: 'Deleted vehicles', value: deletedCount, Icon: DeleteOutlineRoundedIcon, tone: 'deleted' },
+	];
+	const TABS = [
+		{ id: 'ALL', label: 'All', count: totalCount },
+		{ id: 'ACTIVE', label: 'Active', count: activeCount },
+		{ id: 'SOLD', label: 'Sold', count: soldCount },
+		{ id: 'DELETE', label: 'Deleted', count: deletedCount },
+	];
 
 	/** LIFECYCLES **/
 	useEffect(() => {}, [productsInquiry]);
@@ -78,21 +128,21 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 	const tabChangeHandler = async (event: any, newValue: string) => {
 		setValue(newValue);
 
-		setProductsInquiry({ ...productsInquiry, page: 1, sort: 'createdAt' });
+		const baseInquiry = { ...productsInquiry, page: 1, sort: 'createdAt' };
+		const { productStatus, ...restSearch } = productsInquiry.search ?? {};
 
 		switch (newValue) {
 			case 'ACTIVE':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.ACTIVE } });
+				setProductsInquiry({ ...baseInquiry, search: { ...restSearch, productStatus: ProductStatus.ACTIVE } });
 				break;
 			case 'SOLD':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.SOLD } });
+				setProductsInquiry({ ...baseInquiry, search: { ...restSearch, productStatus: ProductStatus.SOLD } });
 				break;
 			case 'DELETE':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.DELETE } });
+				setProductsInquiry({ ...baseInquiry, search: { ...restSearch, productStatus: ProductStatus.DELETE } });
 				break;
 			default:
-				delete productsInquiry?.search?.productStatus;
-				setProductsInquiry({ ...productsInquiry });
+				setProductsInquiry({ ...baseInquiry, search: { ...restSearch } });
 				break;
 		}
 	};
@@ -106,6 +156,7 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 					},
 				});
 				await getAllProductsByAdminRefetch({ input: productsInquiry });
+				await refetchCounts();
 			}
 			menuIconCloseHandler();
 		} catch (err: any) {
@@ -128,8 +179,8 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 					},
 				});
 			} else {
-				delete productsInquiry?.search?.productLocationList;
-				setProductsInquiry({ ...productsInquiry });
+				const { productLocationList, ...restSearch } = productsInquiry.search ?? {};
+				setProductsInquiry({ ...productsInquiry, page: 1, sort: 'createdAt', search: { ...restSearch } });
 			}
 		} catch (err: any) {
 			console.log('searchTypeHandler: ', err.message);
@@ -138,75 +189,100 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	const updatePropertyHandler = async (updateData: ProductUpdate) => {
 		try {
-			console.log('+updateData: ', updateData);
 			await updatePropertyByAdmin({
 				variables: {
 					input: updateData,
 				},
 			});
-			
+
 			menuIconCloseHandler();
 			await getAllProductsByAdminRefetch({ input: productsInquiry });
+			await refetchCounts();
 		} catch (err: any) {
 			menuIconCloseHandler();
 			sweetErrorHandling(err).then();
 		}
 	};
 
+	const stagger = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.06 } },
+	};
+	const fadeItem = {
+		hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 },
+		visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] } },
+	};
+
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Product List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
+		<Box component={'div'} className={'content carlen-admin-products'}>
+			<motion.div
+				className={'cap-shell'}
+				initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+			>
+				{/* HEADER + KPI */}
+				<div className={'cap-head'}>
+					<div className={'cap-title'}>
+						<span className={'eyebrow'}>OPERATIONS</span>
+						<h1>Product Management</h1>
+						<p>Monitor and manage the Carlen vehicle inventory.</p>
+					</div>
+				</div>
+
+				<motion.div className={'cap-kpis'} variants={stagger} initial={'hidden'} animate={'visible'}>
+					{KPIS.map((k) => (
+						<motion.div className={`cap-kpi tone-${k.tone}`} key={k.key} variants={fadeItem}>
+							<span className={'kpi-icon'}>
+								<k.Icon />
+							</span>
+							<div className={'kpi-meta'}>
+								<span className={'kpi-label'}>{k.label}</span>
+								<strong className={'kpi-value'}>{k.value}</strong>
+							</div>
+						</motion.div>
+					))}
+				</motion.div>
+
+				{/* TOOLBAR: segmented tabs + filter */}
+				<TabContext value={value}>
+					<div className={'cap-toolbar'}>
+						<div className={'cap-tabs'} role={'tablist'}>
+							{TABS.map((tab) => (
+								<button
+									type={'button'}
+									role={'tab'}
+									aria-selected={value === tab.id}
+									key={tab.id}
+									className={`cap-tab ${value === tab.id ? 'active' : ''}`}
+									onClick={(e: any) => tabChangeHandler(e, tab.id)}
 								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'SOLD')}
-									value="SOLD"
-									className={value === 'SOLD' ? 'li on' : 'li'}
-								>
-									Sold
-								</ListItem>
-								<ListItem
-									onClick={(e: React.MouseEvent<HTMLLIElement>) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Delete
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										ALL
+									{tab.label}
+									<span className={'tab-badge'}>{tab.count}</span>
+								</button>
+							))}
+						</div>
+
+						<div className={'cap-filter'}>
+							<Select
+								className={'cap-location-select'}
+								value={searchType}
+								MenuProps={{ classes: { paper: 'carlen-admin-select-menu' } }}
+							>
+								<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
+									All locations
+								</MenuItem>
+								{Object.values(ProductLocation).map((location: string) => (
+									<MenuItem value={location} onClick={() => searchTypeHandler(location)} key={location}>
+										{location}
 									</MenuItem>
-									{Object.values(ProductLocation).map((location: string) => (
-										<MenuItem value={location} onClick={() => searchTypeHandler(location)} key={location}>
-											{location}
-										</MenuItem>
-									))}
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
+								))}
+							</Select>
+						</div>
+					</div>
+
+					{/* TABLE */}
+					<div className={'cap-table'}>
 						<PropertyPanelList
 							products={products}
 							anchorEl={anchorEl}
@@ -225,9 +301,9 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 							onPageChange={changePageHandler}
 							onRowsPerPageChange={changeRowsPerPageHandler}
 						/>
-					</TabContext>
-				</Box>
-			</Box>
+					</div>
+				</TabContext>
+			</motion.div>
 		</Box>
 	);
 };
