@@ -16,10 +16,12 @@ import { useRouter } from 'next/router';
 import { GET_AGENT_PRODUCTS, GET_MEMBER } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
+import { useTranslation } from 'next-i18next';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
 	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
@@ -76,7 +78,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 
 	const deleteProductHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert(`Are you sure delete to this product?`)) {
+			if (await sweetConfirmAlert(t('Are you sure you want to delete this car?'))) {
 				await updateProduct({
 					variables: {
 						input: {
@@ -97,7 +99,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 
 	const updateProductStatusHandler = async (status: string, id: string) => {
 		try {
-			if (await sweetConfirmAlert(`Are you sure to change to ${status} status?`)) {
+			if (await sweetConfirmAlert(t('Are you sure to change this status?'))) {
 				await updateProduct({
 					variables: {
 						input: {
@@ -142,25 +144,25 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 			<div id="carlen-my-products-page">
 				<motion.div className="inventory-header-block" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>
-						<span className="eyebrow">Dealer Inventory</span>
-						<Typography className="title">Manage Your Vehicle Listings</Typography>
+						<span className="eyebrow">{t('Dealer Inventory')}</span>
+						<Typography className="title">{t('Manage Your Vehicle Listings')}</Typography>
 						<Typography className="subtitle">
-							Track active and sold vehicles, update status, and manage your Carlen inventory.
+							{t('Track active and sold vehicles, update status, and manage your Carlen inventory.')}
 						</Typography>
 					</motion.div>
 
 					<motion.div className="carlen-inventory-stats" variants={item}>
 						<Stack className="stat-card">
 							<Typography className="stat-value">{activeCount}</Typography>
-							<Typography className="stat-label">Active Listings</Typography>
+							<Typography className="stat-label">{t('Active Listings')}</Typography>
 						</Stack>
 						<Stack className="stat-card">
 							<Typography className="stat-value">{soldCount}</Typography>
-							<Typography className="stat-label">Sold Vehicles</Typography>
+							<Typography className="stat-label">{t('Sold Vehicles')}</Typography>
 						</Stack>
 						<Stack className="stat-card">
 							<Typography className="stat-value">{activeCount + soldCount}</Typography>
-							<Typography className="stat-label">Total Inventory</Typography>
+							<Typography className="stat-label">{t('Total Inventory')}</Typography>
 						</Stack>
 					</motion.div>
 				</motion.div>
@@ -171,23 +173,23 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
 							className={isActiveTab ? 'segment active' : 'segment'}
 						>
-							On Sale
+							{t('On Sale')}
 						</Typography>
 						<Typography
 							onClick={() => changeStatusHandler(ProductStatus.SOLD)}
 							className={searchFilter.search.productStatus === 'SOLD' ? 'segment active' : 'segment'}
 						>
-							Sold
+							{t('Sold')}
 						</Typography>
 					</Stack>
 
 					<Stack className="carlen-inventory-list">
 						<Stack className="carlen-inventory-header">
-							<Typography className="col-vehicle title-text">Vehicle</Typography>
-							<Typography className="title-text">Published</Typography>
-							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">Views</Typography>
-							{isActiveTab && <Typography className="title-text">Actions</Typography>}
+							<Typography className="col-vehicle title-text">{t('Vehicle')}</Typography>
+							<Typography className="title-text">{t('Published')}</Typography>
+							<Typography className="title-text">{t('Status')}</Typography>
+							<Typography className="title-text">{t('Views')}</Typography>
+							{isActiveTab && <Typography className="title-text">{t('Actions')}</Typography>}
 						</Stack>
 
 						{getAgentProductsLoading && agentProducts.length === 0 ? (
@@ -208,8 +210,8 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 								<span className="empty-icon">
 									<DirectionsCarFilledOutlinedIcon />
 								</span>
-								<Typography className="empty-title">No vehicles found</Typography>
-								<Typography className="empty-helper">Create your first listing or switch inventory status.</Typography>
+								<Typography className="empty-title">{t('No vehicles found')}</Typography>
+								<Typography className="empty-helper">{t('Create your first listing or switch inventory status.')}</Typography>
 								<motion.button
 									type="button"
 									className="cta-primary"
@@ -218,7 +220,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 									whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 								>
 									<AddRoundedIcon />
-									Add New Car
+									{t('Add New Car')}
 								</motion.button>
 							</Stack>
 						) : (
@@ -254,7 +256,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 								</Stack>
 								<Stack className="total-result">
 									<Typography>
-										Total {total} vehicle{total > 1 ? 's' : ''} available
+										{t('totalCarsAvailable', { count: total })}
 									</Typography>
 								</Stack>
 							</Stack>

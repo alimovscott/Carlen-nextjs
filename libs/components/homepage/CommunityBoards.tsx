@@ -13,6 +13,7 @@ import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { BoardArticleCategory } from '../../enums/board-article.enum';
 import { T } from '../../types/common';
+import { useTranslation } from 'next-i18next';
 
 const TABS: { label: string; value: BoardArticleCategory }[] = [
 	{ label: 'News', value: BoardArticleCategory.NEWS },
@@ -28,6 +29,7 @@ const TRUST_ITEMS = [
 
 const CommunityBoards = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const [searchCommunity, setSearchCommunity] = useState({
 		page: 1,
 		sort: 'articleViews',
@@ -79,33 +81,33 @@ const CommunityBoards = () => {
 				<Stack className={'container'}>
 					<Stack className={'carlen-community-header'}>
 						<Box component={'div'} className={'carlen-community-head-left'}>
-							<span className={'carlen-community-eyebrow'}>Community</span>
-							<h2 className={'carlen-community-title'}>Community Board Highlights</h2>
+							<span className={'carlen-community-eyebrow'}>{t('Community')}</span>
+							<h2 className={'carlen-community-title'}>{t('Community Board Highlights')}</h2>
 							<p className={'carlen-community-subtitle'}>
-								Stay updated with the latest news, discussions and free board posts from our community.
+								{t('Stay updated with the latest news, discussions and free board posts from our community.')}
 							</p>
 						</Box>
 						<Link href={`/community?articleCategory=${activeTab}`} className={'carlen-community-view-all'}>
-							<span>View All</span>
+							<span>{t('View All')}</span>
 							<img src="/img/icons/rightup.svg" alt="" />
 						</Link>
 					</Stack>
 
 					<div className={'carlen-community-tabs'} role={'tablist'}>
-						{TABS.map((t) => (
+						{TABS.map((tab) => (
 							<button
-								key={t.value}
-								className={activeTab === t.value ? 'tab active' : 'tab'}
-								onClick={() => setActiveTab(t.value)}
+								key={tab.value}
+								className={activeTab === tab.value ? 'tab active' : 'tab'}
+								onClick={() => setActiveTab(tab.value)}
 							>
-								{activeTab === t.value && (
+								{activeTab === tab.value && (
 									<motion.span
 										layoutId={'carlen-community-tab'}
 										className={'tab-bg'}
 										transition={{ type: 'spring', stiffness: 380, damping: 32 }}
 									/>
 								)}
-								<span className={'tab-label'}>{t.label}</span>
+								<span className={'tab-label'}>{t(tab.label)}</span>
 							</button>
 						))}
 					</div>
@@ -126,8 +128,8 @@ const CommunityBoards = () => {
 							<div className={'carlen-community-trust-item'} key={item.label}>
 								<span className={'icon'}>{item.icon}</span>
 								<div className={'text'}>
-									<strong>{item.label}</strong>
-									<p>{item.desc}</p>
+									<strong>{t(item.label)}</strong>
+									<p>{t(item.desc)}</p>
 								</div>
 							</div>
 						))}

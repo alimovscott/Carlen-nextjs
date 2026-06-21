@@ -22,11 +22,13 @@ import { REACT_APP_API_URL } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert } from '../../sweetAlert';
 import { GET_MEMBER } from '../../../apollo/user/query';
+import { useTranslation } from 'next-i18next';
 
 const MyMenu = () => {
 	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const category: any = router.query?.category ?? 'myProfile';
 	const normalizedCategory =
 		category === 'addProduct' || category === 'addProperty'
@@ -46,7 +48,7 @@ const MyMenu = () => {
 	/** HANDLERS **/
 	const logoutHandler = async () => {
 		try {
-			if (await sweetConfirmAlert('Do you want to logout?')) logOut();
+			if (await sweetConfirmAlert(t('Do you want to logout?'))) logOut();
 		} catch (err: any) {
 			console.log('ERROR, logoutHandler:', err.message);
 		}
@@ -129,15 +131,15 @@ const MyMenu = () => {
 					<div className="profile-stats">
 						<div className="stat">
 							<span className="stat-value">{statsMember?.memberProducts ?? 0}</span>
-							<span className="stat-label">Cars</span>
+							<span className="stat-label">{t('Cars')}</span>
 						</div>
 						<div className="stat">
 							<span className="stat-value">{statsMember?.memberLikes ?? 0}</span>
-							<span className="stat-label">Likes</span>
+							<span className="stat-label">{t('Likes')}</span>
 						</div>
 						<div className="stat">
 							<span className="stat-value">{statsMember?.memberArticles ?? 0}</span>
-							<span className="stat-label">Articles</span>
+							<span className="stat-label">{t('Articles')}</span>
 						</div>
 					</div>
 				</motion.div>
@@ -145,7 +147,7 @@ const MyMenu = () => {
 				<div className="menu-nav">
 					{MENU_SECTIONS.map((sec) => (
 						<motion.div className="nav-section" variants={item} key={sec.title}>
-							<Typography className="section-title">{sec.title}</Typography>
+							<Typography className="section-title">{t(sec.title)}</Typography>
 							{sec.items.map(({ category: cat, label, Icon }) => (
 								<Link
 									key={cat}
@@ -160,7 +162,7 @@ const MyMenu = () => {
 										<span className="nav-icon">
 											<Icon />
 										</span>
-										<Typography className="nav-label">{label}</Typography>
+										<Typography className="nav-label">{t(label)}</Typography>
 									</motion.div>
 								</Link>
 							))}
@@ -173,7 +175,7 @@ const MyMenu = () => {
 									<span className="nav-icon">
 										<LogoutOutlinedIcon />
 									</span>
-									<Typography className="nav-label">Logout</Typography>
+									<Typography className="nav-label">{t('Logout')}</Typography>
 								</motion.div>
 							)}
 						</motion.div>

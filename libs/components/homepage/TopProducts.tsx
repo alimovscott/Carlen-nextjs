@@ -12,6 +12,7 @@ import { T } from '../../types/common';
 import { Message } from '../../enums/common.enum';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface TopProductsProps {
 	initialInput: ProductsInquiry;
@@ -20,6 +21,7 @@ interface TopProductsProps {
 const TopProducts = (props: TopProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const [topProducts, setTopProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
@@ -60,7 +62,7 @@ const TopProducts = (props: TopProductsProps) => {
 			<Stack className={'top-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top products</span>
+						<span>{t('Top Rated Cars')}</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -88,10 +90,10 @@ const TopProducts = (props: TopProductsProps) => {
 				<Stack className={'container'}>
 					<Stack className={'carlen-top-rated-header'}>
 						<Box component={'div'} className={'carlen-top-rated-head-left'}>
-							<span className={'carlen-top-rated-eyebrow'}>Premium Picks</span>
-							<h2 className={'carlen-top-rated-title'}>Top Rated Cars</h2>
+							<span className={'carlen-top-rated-eyebrow'}>{t('Premium Picks')}</span>
+							<h2 className={'carlen-top-rated-title'}>{t('Top Rated Cars')}</h2>
 							<p className={'carlen-top-rated-subtitle'}>
-								Hand-picked premium vehicles selected for performance and reliability.
+								{t('Hand-picked premium vehicles selected for performance and reliability.')}
 							</p>
 						</Box>
 					</Stack>

@@ -13,6 +13,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -30,6 +31,7 @@ const Join: NextPage = () => {
 	const router = useRouter();
 	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
 	const [loginView, setLoginView] = useState<boolean>(true);
 
@@ -72,7 +74,7 @@ const Join: NextPage = () => {
 		return <div>LOGIN MOBILE</div>;
 	} else {
 		return (
-			<Stack className={'carlen-auth-page'} component={'section'} aria-label={'Carlen account access'}>
+			<Stack className={'carlen-auth-page'} component={'section'} aria-label={t('Carlen account access')}>
 				<Stack className={'container'}>
 					<Stack className={'carlen-auth-shell'}>
 						{/* LEFT — form panel */}
@@ -84,12 +86,12 @@ const Join: NextPage = () => {
 							</Box>
 
 							<Box className={'info'}>
-								<span className={'eyebrow'}>{loginView ? 'SIGN IN' : 'CREATE ACCOUNT'}</span>
-								<h1>{loginView ? 'Welcome back' : 'Create your account'}</h1>
+								<span className={'eyebrow'}>{loginView ? t('SIGN IN') : t('CREATE ACCOUNT')}</span>
+								<h1>{loginView ? t('Welcome back') : t('Create your account')}</h1>
 								<p>
 									{loginView
-										? 'Access your Carlen account, listings, and dashboard.'
-										: 'Join Carlen to buy, sell, and connect across the marketplace.'}
+										? t('Access your Carlen account, listings, and dashboard.')
+										: t('Join Carlen to buy, sell, and connect across the marketplace.')}
 								</p>
 							</Box>
 
@@ -101,11 +103,11 @@ const Join: NextPage = () => {
 							>
 								<Box className={'carlen-auth-fields'}>
 									<div className={'carlen-auth-field'}>
-										<label htmlFor={'auth-nick'}>Nickname</label>
+										<label htmlFor={'auth-nick'}>{t('Nickname')}</label>
 										<input
 											id={'auth-nick'}
 											type="text"
-											placeholder={'Enter Nickname'}
+											placeholder={t('Enter Nickname')}
 											onChange={(e) => handleInput('nick', e.target.value)}
 											required={true}
 											onKeyDown={(event) => {
@@ -115,11 +117,11 @@ const Join: NextPage = () => {
 										/>
 									</div>
 									<div className={'carlen-auth-field'}>
-										<label htmlFor={'auth-password'}>Password</label>
+										<label htmlFor={'auth-password'}>{t('Password')}</label>
 										<input
 											id={'auth-password'}
 											type="password"
-											placeholder={'Enter Password'}
+											placeholder={t('Enter Password')}
 											onChange={(e) => handleInput('password', e.target.value)}
 											required={true}
 											onKeyDown={(event) => {
@@ -130,11 +132,11 @@ const Join: NextPage = () => {
 									</div>
 									{!loginView && (
 										<div className={'carlen-auth-field'}>
-											<label htmlFor={'auth-phone'}>Phone</label>
+											<label htmlFor={'auth-phone'}>{t('Phone')}</label>
 											<input
 												id={'auth-phone'}
 												type="tel"
-												placeholder={'Enter Phone'}
+												placeholder={t('Enter Phone')}
 												onChange={(e) => handleInput('phone', e.target.value)}
 												required={true}
 												onKeyDown={(event) => {
@@ -147,8 +149,8 @@ const Join: NextPage = () => {
 
 								<Box className={'carlen-auth-actions'}>
 									{!loginView && (
-										<div className={'type-option'} role={'radiogroup'} aria-label={'Account type'}>
-											<span className={'text'}>I want to be registered as:</span>
+										<div className={'type-option'} role={'radiogroup'} aria-label={t('Account type')}>
+											<span className={'text'}>{t('I want to be registered as:')}</span>
 											<div className={'type-cards'}>
 												<button
 													type={'button'}
@@ -158,8 +160,8 @@ const Join: NextPage = () => {
 													onClick={() => handleInput('type', 'USER')}
 												>
 													<PersonOutlineRoundedIcon />
-													<strong>Buyer</strong>
-													<span>Browse and buy vehicles</span>
+													<strong>{t('Buyer')}</strong>
+													<span>{t('Browse and buy vehicles')}</span>
 												</button>
 												<button
 													type={'button'}
@@ -169,8 +171,8 @@ const Join: NextPage = () => {
 													onClick={() => handleInput('type', 'AGENT')}
 												>
 													<StorefrontOutlinedIcon />
-													<strong>Dealer / Agent</strong>
-													<span>List and manage inventory</span>
+													<strong>{t('Dealer / Agent')}</strong>
+													<span>{t('List and manage inventory')}</span>
 												</button>
 											</div>
 										</div>
@@ -179,10 +181,10 @@ const Join: NextPage = () => {
 									{loginView && (
 										<div className={'remember-info'}>
 											<FormGroup>
-												<FormControlLabel control={<Checkbox defaultChecked size="small" />} label="Remember me" />
+												<FormControlLabel control={<Checkbox defaultChecked size="small" />} label={t('Remember me')} />
 											</FormGroup>
 											<span className={'lost-pw'}>
-												Lost your password? <em>soon</em>
+												{t('Lost your password?')} <em>{t('soon')}</em>
 											</span>
 										</div>
 									)}
@@ -195,7 +197,7 @@ const Join: NextPage = () => {
 											disabled={input.nick == '' || input.password == ''}
 											onClick={doLogin}
 										>
-											Sign In
+											{t('Sign In')}
 										</Button>
 									) : (
 										<Button
@@ -205,7 +207,7 @@ const Join: NextPage = () => {
 											disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == ''}
 											onClick={doSignUp}
 										>
-											Create Account
+											{t('Create Account')}
 										</Button>
 									)}
 								</Box>
@@ -214,19 +216,19 @@ const Join: NextPage = () => {
 							<Box className={'carlen-auth-switch'}>
 								{loginView ? (
 									<p>
-										Not registered yet?
+										{t('Not registered yet?')}
 										<b
 											onClick={() => {
 												viewChangeHandler(false);
 											}}
 										>
-											Create Account
+											{t('Create Account')}
 										</b>
 									</p>
 								) : (
 									<p>
-										Have an account?
-										<b onClick={() => viewChangeHandler(true)}>Sign In</b>
+										{t('Have an account?')}
+										<b onClick={() => viewChangeHandler(true)}>{t('Sign In')}</b>
 									</p>
 								)}
 							</Box>
@@ -236,7 +238,7 @@ const Join: NextPage = () => {
 						<Stack className={'carlen-auth-visual'}>
 							<div className={'visual-overlay'} />
 							<div className={'visual-content'}>
-								<h2>Premium access to the Carlen marketplace.</h2>
+								<h2>{t('Premium access to the Carlen marketplace.')}</h2>
 								<div className={'benefit-cards'}>
 									{BENEFITS.map((b, i) => (
 										<motion.div className={'benefit-card'} key={b.title} {...fadeUp(0.15 + i * 0.08)}>
@@ -244,8 +246,8 @@ const Join: NextPage = () => {
 												<b.Icon />
 											</span>
 											<div className={'benefit-meta'}>
-												<strong>{b.title}</strong>
-												<span>{b.desc}</span>
+												<strong>{t(b.title)}</strong>
+												<span>{t(b.desc)}</span>
 											</div>
 										</motion.div>
 									))}

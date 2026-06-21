@@ -70,6 +70,7 @@ const Events = () => {
 
 	if (device === 'mobile') {
 	// 	return <div>EVENT CARD</div>;
+		return null;
 	} else {
 		return ( null
 	// 		<Stack className={'events'}>

@@ -14,10 +14,12 @@ import { MemberUpdate } from '../../types/member/member.update';
 import { UPDATE_MEMBER } from '../../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { useMutation } from '@apollo/client';
+import { useTranslation } from 'next-i18next';
 
 const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const token = getJwtToken();
 	const user = useReactiveVar(userVar);
 	const [updateData, setUpdateData] = useState<MemberUpdate>(initialValues);
@@ -97,7 +99,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			const jwtToken = result.data.updateMember?.accessToken;
 			await updateStorage({ jwtToken });
 			updateUserInfo(result.data.updateMember?.accessToken);
-			await sweetMixinSuccessAlert('Information updated successfully.');
+			await sweetMixinSuccessAlert(t('Information updated successfully.'));
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
@@ -133,13 +135,13 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			<div id="carlen-my-profile-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>
-						<span className="eyebrow">ACCOUNT SETTINGS</span>
-						<Typography className="title">My Profile</Typography>
-						<Typography className="subtitle">Update your personal information and profile image.</Typography>
+						<span className="eyebrow">{t('ACCOUNT SETTINGS')}</span>
+						<Typography className="title">{t('My Profile')}</Typography>
+						<Typography className="subtitle">{t('Update your personal information and profile image.')}</Typography>
 					</motion.div>
 					<motion.span className={isProfileReady ? 'completeness-chip ready' : 'completeness-chip missing'} variants={item}>
 						<i className="dot" />
-						{isProfileReady ? 'Profile Ready' : 'Missing Information'}
+						{isProfileReady ? t('Profile Ready') : t('Missing Information')}
 					</motion.span>
 				</motion.div>
 
@@ -166,27 +168,27 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 							/>
 							<label htmlFor="hidden-input" className={imageLoading ? 'upload-btn loading' : 'upload-btn'}>
 								<CloudUploadOutlinedIcon />
-								<Typography>{imageLoading ? 'Uploading…' : 'Upload Profile Image'}</Typography>
+								<Typography>{imageLoading ? t('Uploading') : t('Upload Profile Image')}</Typography>
 							</label>
-							<Typography className="upload-text">JPG, JPEG or PNG format only</Typography>
+							<Typography className="upload-text">{t('JPG, JPEG or PNG format only')}</Typography>
 						</div>
 					</motion.div>
 
 					<motion.div className="carlen-profile-fields" variants={item}>
 						<div className="field">
-							<Typography className="field-label">Username</Typography>
+							<Typography className="field-label">{t('Username')}</Typography>
 							<input
 								type="text"
-								placeholder="Your username"
+								placeholder={t('Your username')}
 								value={updateData.memberNick}
 								onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberNick: value })}
 							/>
 						</div>
 						<div className="field">
-							<Typography className="field-label">Phone</Typography>
+							<Typography className="field-label">{t('Phone')}</Typography>
 							<input
 								type="text"
-								placeholder="Your phone"
+								placeholder={t('Your phone')}
 								value={updateData.memberPhone}
 								onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberPhone: value })}
 							/>
@@ -194,10 +196,10 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 					</motion.div>
 
 					<motion.div className="carlen-profile-address" variants={item}>
-						<Typography className="field-label">Address</Typography>
+						<Typography className="field-label">{t('Address')}</Typography>
 						<input
 							type="text"
-							placeholder="Your address"
+							placeholder={t('Your address')}
 							value={updateData.memberAddress}
 							onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberAddress: value })}
 						/>
@@ -211,7 +213,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 							whileHover={shouldReduceMotion ? undefined : { y: -2 }}
 							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						>
-							Update Profile
+							{t('Update Profile')}
 							<NorthEastRoundedIcon />
 						</motion.button>
 					</motion.div>

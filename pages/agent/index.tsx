@@ -18,6 +18,7 @@ import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,6 +30,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [filterSortName, setFilterSortName] = useState('Recent');
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -159,7 +161,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 							<SearchRoundedIcon className={'lead-icon'} />
 							<input
 								type="text"
-								placeholder={'Search for a dealer'}
+								placeholder={t('Search for a dealer')}
 								value={searchText}
 								onChange={(e: any) => setSearchText(e.target.value)}
 								onKeyDown={(event: any) => {
@@ -173,23 +175,23 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 							/>
 						</Box>
 						<Box component={'div'} className={'carlen-agent-sort'}>
-							<span>Sort by</span>
+							<span>{t('Sort by')}</span>
 							<div>
 								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-									{filterSortName}
+									{t(filterSortName)}
 								</Button>
 								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
 									<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
-										Recent
+										{t('Recent')}
 									</MenuItem>
 									<MenuItem onClick={sortingHandler} id={'old'} disableRipple>
-										Oldest
+										{t('Oldest')}
 									</MenuItem>
 									<MenuItem onClick={sortingHandler} id={'likes'} disableRipple>
-										Likes
+										{t('Likes')}
 									</MenuItem>
 									<MenuItem onClick={sortingHandler} id={'views'} disableRipple>
-										Views
+										{t('Views')}
 									</MenuItem>
 								</Menu>
 							</div>
@@ -199,13 +201,13 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 					{getAgentsLoading && agents.length === 0 ? (
 						<Stack className={'carlen-agent-loading'}>
 							<CircularProgress />
-							<p>Loading verified dealers…</p>
+							<p>{t('Loading verified dealers')}</p>
 						</Stack>
 					) : agents?.length === 0 ? (
 						<Stack className={'carlen-agent-empty'}>
 							<PersonSearchOutlinedIcon />
-							<strong>No verified dealers found</strong>
-							<span>Search yoki sortingni o‘zgartirib ko‘ring.</span>
+							<strong>{t('No verified dealers found')}</strong>
+							<span>{t("Search or sortingni o'zgartirib ko'ring.")}</span>
 						</Stack>
 					) : (
 						<motion.div
@@ -236,7 +238,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 						)}
 						{agents.length !== 0 && (
 							<span>
-								Total {total} dealer{total > 1 ? 's' : ''} available
+								{t('totalDealersAvailable', { count: total })}
 							</span>
 						)}
 					</Stack>

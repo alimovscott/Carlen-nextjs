@@ -13,12 +13,14 @@ import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { CREATE_PRODUCT, UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_MEMBER, GET_PRODUCT } from '../../../apollo/user/query';
+import { useTranslation } from 'next-i18next';
 
 const AddProduct = ({ initialValues, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const inputRef = useRef<any>(null);
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [insertPropertyData, setInsertPropertyData] = useState<ProductInput>(initialValues);
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
 	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
@@ -147,7 +149,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				awaitRefetchQueries: true,
 			});
 
-			await sweetMixinSuccessAlert('This product has been created successfully');
+			await sweetMixinSuccessAlert(t('This car has been created successfully'));
 			await router.push({
 				pathname: '/mypage',
 				query: {
@@ -171,7 +173,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				awaitRefetchQueries: true,
 			});
 
-			await sweetMixinSuccessAlert('This product has been updated successfully.');
+			await sweetMixinSuccessAlert(t('This car has been updated successfully.'));
 			await router.push({
 				pathname: '/mypage',
 				query: {
@@ -208,26 +210,26 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			<div id="add-product-page">
 				<motion.div className="studio-shell" variants={container} initial="hidden" animate="visible">
 					<motion.div className="studio-header" variants={item}>
-						<span className="studio-eyebrow">Dealer Studio</span>
-						<Typography className="studio-title">{isEdit ? 'Edit Vehicle' : 'Add New Vehicle'}</Typography>
+						<span className="studio-eyebrow">{t('Dealer Studio')}</span>
+						<Typography className="studio-title">{isEdit ? t('Edit Vehicle') : t('Add New Vehicle')}</Typography>
 						<Typography className="studio-subtitle">
-							Curate the listing — specs, gallery, and details — then publish to the Carlen showroom.
+							{t('Curate the listing specs gallery and details then publish to the Carlen showroom.')}
 						</Typography>
 					</motion.div>
 
 					{/** VEHICLE IDENTITY **/}
 					<motion.section className="studio-card" variants={item}>
 						<Stack className="card-head">
-							<Typography className="card-title">Vehicle Identity</Typography>
-							<Typography className="card-hint">Core listing details buyers see first.</Typography>
+							<Typography className="card-title">{t('Vehicle Identity')}</Typography>
+							<Typography className="card-hint">{t('Core listing details buyers see first.')}</Typography>
 						</Stack>
 
 						<Stack className="field-column">
-							<Typography className="field-label">Title</Typography>
+							<Typography className="field-label">{t('Title')}</Typography>
 							<input
 								type="text"
 								className="studio-input"
-								placeholder={'e.g. 2023 Porsche Taycan Turbo S'}
+								placeholder={t('e.g. 2023 Porsche Taycan Turbo S')}
 								value={insertPropertyData.productTitle}
 								onChange={({ target: { value } }) =>
 									setInsertPropertyData({ ...insertPropertyData, productTitle: value })
@@ -237,11 +239,11 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 						<Stack className="field-grid">
 							<Stack className="field-cell">
-								<Typography className="field-label">Model</Typography>
+								<Typography className="field-label">{t('Model')}</Typography>
 								<input
 									type="text"
 									className="studio-input"
-									placeholder={'Model'}
+									placeholder={t('Model')}
 									value={insertPropertyData.productModel}
 									onChange={({ target: { value } }) =>
 										setInsertPropertyData({ ...insertPropertyData, productModel: value })
@@ -249,11 +251,11 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								/>
 							</Stack>
 							<Stack className="field-cell">
-								<Typography className="field-label">Year</Typography>
+								<Typography className="field-label">{t('Year')}</Typography>
 								<input
 									type="number"
 									className="studio-input"
-									placeholder={'Year'}
+									placeholder={t('Year')}
 									value={insertPropertyData.productYear}
 									onChange={({ target: { value } }) =>
 										setInsertPropertyData({ ...insertPropertyData, productYear: parseInt(value) || 0 })
@@ -261,11 +263,11 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								/>
 							</Stack>
 							<Stack className="field-cell">
-								<Typography className="field-label">Price</Typography>
+								<Typography className="field-label">{t('Price')}</Typography>
 								<input
 									type="text"
 									className="studio-input"
-									placeholder={'Price'}
+									placeholder={t('Price')}
 									value={insertPropertyData.productPrice}
 									onChange={({ target: { value } }) =>
 										setInsertPropertyData({ ...insertPropertyData, productPrice: parseInt(value) })
@@ -273,7 +275,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								/>
 							</Stack>
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Type</Typography>
+								<Typography className="field-label">{t('Car type')}</Typography>
 								<select
 									className={'studio-select'}
 									defaultValue={insertPropertyData.productType || 'select'}
@@ -284,7 +286,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{productType.map((type: any) => (
 										<option value={`${type}`} key={type}>
@@ -300,13 +302,13 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 					{/** LOCATION **/}
 					<motion.section className="studio-card" variants={item}>
 						<Stack className="card-head">
-							<Typography className="card-title">Location</Typography>
-							<Typography className="card-hint">Where the vehicle is available.</Typography>
+							<Typography className="card-title">{t('Location')}</Typography>
+							<Typography className="card-hint">{t('Where the vehicle is available.')}</Typography>
 						</Stack>
 
 						<Stack className="field-grid two">
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Location</Typography>
+								<Typography className="field-label">{t('Location')}</Typography>
 								<select
 									className={'studio-select'}
 									defaultValue={insertPropertyData.productLocation || 'select'}
@@ -317,7 +319,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{productLocation.map((location: any) => (
 										<option value={`${location}`} key={location}>
@@ -328,11 +330,11 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 							<Stack className="field-cell">
-								<Typography className="field-label">Address</Typography>
+								<Typography className="field-label">{t('Address')}</Typography>
 								<input
 									type="text"
 									className="studio-input"
-									placeholder={'Address'}
+									placeholder={t('Address')}
 									value={insertPropertyData.productAddress}
 									onChange={({ target: { value } }) =>
 										setInsertPropertyData({ ...insertPropertyData, productAddress: value })
@@ -345,13 +347,13 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 					{/** SPECIFICATIONS **/}
 					<motion.section className="studio-card" variants={item}>
 						<Stack className="card-head">
-							<Typography className="card-title">Specifications</Typography>
-							<Typography className="card-hint">Powertrain and configuration.</Typography>
+							<Typography className="card-title">{t('Specifications')}</Typography>
+							<Typography className="card-hint">{t('Powertrain and configuration.')}</Typography>
 						</Stack>
 
 						<Stack className="spec-grid">
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Fuel</Typography>
+								<Typography className="field-label">{t('Fuel')}</Typography>
 								<select
 									className={'studio-select'}
 									value={insertPropertyData.productFuelType || 'select'}
@@ -362,7 +364,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{productFuelType.map((fuel: string) => (
 										<option value={fuel} key={fuel}>
@@ -373,7 +375,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Transmission</Typography>
+								<Typography className="field-label">{t('Transmission')}</Typography>
 								<select
 									className={'studio-select'}
 									value={insertPropertyData.productTransmission || 'select'}
@@ -384,7 +386,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{productTransmission.map((transmission: string) => (
 										<option value={transmission} key={transmission}>
@@ -395,7 +397,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Doors</Typography>
+								<Typography className="field-label">{t('Doors')}</Typography>
 								<select
 									className={'studio-select'}
 									value={insertPropertyData.productDoors || 'select'}
@@ -405,7 +407,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{[1, 2, 3, 4, 5].map((room: number) => (
 										<option value={`${room}`} key={room}>
@@ -416,7 +418,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Seats</Typography>
+								<Typography className="field-label">{t('Seats')}</Typography>
 								<select
 									className={'studio-select'}
 									value={insertPropertyData.productSeats || 'select'}
@@ -426,7 +428,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{[1, 2, 3, 4, 5].map((bed: number) => (
 										<option value={`${bed}`} key={bed}>
@@ -437,7 +439,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 							</Stack>
 							<Stack className="field-cell select-cell">
-								<Typography className="field-label">Mileage</Typography>
+								<Typography className="field-label">{t('Mileage')}</Typography>
 								<select
 									className={'studio-select'}
 									value={insertPropertyData.productMileage || 'select'}
@@ -447,7 +449,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									}
 								>
 									<option disabled={true} value={'select'}>
-										Select
+										{t('Select')}
 									</option>
 									{productMileageRange.map((square: number) => {
 										if (square !== 0) {
@@ -467,12 +469,12 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 					{/** DESCRIPTION **/}
 					<motion.section className="studio-card" variants={item}>
 						<Stack className="card-head">
-							<Typography className="card-title">Description</Typography>
-							<Typography className="card-hint">Tell the story of this vehicle.</Typography>
+							<Typography className="card-title">{t('Description')}</Typography>
+							<Typography className="card-hint">{t('Tell the story of this vehicle.')}</Typography>
 						</Stack>
 						<textarea
 							className="studio-textarea"
-							placeholder={'Condition, history, standout features…'}
+							placeholder={t('Condition, history, standout features')}
 							value={insertPropertyData.productDesc}
 							onChange={({ target: { value } }) =>
 								setInsertPropertyData({ ...insertPropertyData, productDesc: value })
@@ -483,8 +485,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 					{/** GALLERY **/}
 					<motion.section className="studio-card" variants={item}>
 						<Stack className="card-head">
-							<Typography className="card-title">Gallery</Typography>
-							<Typography className="card-hint">Up to 5 photos · JPEG or PNG · min 2048×768.</Typography>
+							<Typography className="card-title">{t('Gallery')}</Typography>
+							<Typography className="card-hint">{t('Up to 5 photos JPEG or PNG min 2048x768.')}</Typography>
 						</Stack>
 
 						<Stack className="images-box">
@@ -531,8 +533,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									</defs>
 								</svg>
 								<Stack className="text-box">
-									<Typography className="drag-title">Drag and drop images here</Typography>
-									<Typography className="format-title">Photos must be JPEG or PNG format and least 2048x768</Typography>
+									<Typography className="drag-title">{t('Drag and drop images here')}</Typography>
+									<Typography className="format-title">{t('Photos must be JPEG or PNG format and least 2048x768')}</Typography>
 								</Stack>
 								<Button
 									className="browse-button"
@@ -540,7 +542,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 										inputRef.current.click();
 									}}
 								>
-									<Typography className="browse-button-text">Browse Files</Typography>
+									<Typography className="browse-button-text">{t('Browse Files')}</Typography>
 									<input
 										ref={inputRef}
 										type="file"
@@ -580,7 +582,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 					{/** STICKY PUBLISH BAR **/}
 					<Stack className="studio-actionbar">
 						<Typography className="actionbar-hint">
-							{doDisabledCheck() ? 'Complete all fields to publish.' : 'Ready to publish.'}
+							{doDisabledCheck() ? t('Complete all fields to publish.') : t('Ready to publish.')}
 						</Typography>
 						{isEdit ? (
 							<motion.button
@@ -591,7 +593,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								whileHover={shouldReduceMotion || doDisabledCheck() ? undefined : { y: -2 }}
 								whileTap={shouldReduceMotion || doDisabledCheck() ? undefined : { scale: 0.97 }}
 							>
-								Save Changes
+								{t('Save Changes')}
 							</motion.button>
 						) : (
 							<motion.button
@@ -602,7 +604,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								whileHover={shouldReduceMotion || doDisabledCheck() ? undefined : { y: -2 }}
 								whileTap={shouldReduceMotion || doDisabledCheck() ? undefined : { scale: 0.97 }}
 							>
-								Publish Vehicle
+								{t('Publish Vehicle')}
 							</motion.button>
 						)}
 					</Stack>

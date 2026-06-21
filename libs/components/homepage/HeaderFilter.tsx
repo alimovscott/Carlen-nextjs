@@ -562,13 +562,13 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 								<CloseIcon />
 							</div>
 							<div className={'top'}>
-								<span>Find your car</span>
+								<span>{t('Find your car')}</span>
 								<div className={'search-input-box'}>
 									<img src="/img/icons/search.svg" alt="" />
 									<input
 										value={searchFilter?.search?.text ?? ''}
 										type="text"
-										placeholder={'What are you looking for?'}
+										placeholder={t('What are you looking for?')}
 										onChange={(e: any) => {
 											setSearchFilter({
 												...searchFilter,
@@ -582,13 +582,13 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<div className={'middle'}>
 								<div className={'row-box'}>
 									<div className={'box'}>
-										<span>seats</span>
+										<span>{t('seats')}</span>
 										<div className={'inside'}>
 											<div
 												className={`room ${!searchFilter?.search?.seatsList ? 'active' : ''}`}
 												onClick={() => productSeatsSelectHandler(0)}
 											>
-												Any
+												{t('Any')}
 											</div>
 											{[1, 2, 3, 4, 5].map((bed: number) => (
 												<div
@@ -596,22 +596,22 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 													onClick={() => productSeatsSelectHandler(bed)}
 													key={bed}
 												>
-													{bed == 0 ? 'Any' : bed}
+													{bed == 0 ? t('Any') : bed}
 												</div>
 											))}
 										</div>
 									</div>
 									<div className={'box'}>
-										<span>options</span>
+										<span>{t('Options')}</span>
 										<div className={'inside'}>
 											<FormControl>
 												<Select
 													value={optionCheck}
 													onChange={productOptionSelectHandler}
 													displayEmpty
-													inputProps={{ 'aria-label': 'Without label' }}
+													inputProps={{ 'aria-label': t('Options') }}
 												>
-													<MenuItem value={'all'}>All Options</MenuItem>
+													<MenuItem value={'all'}>{t('All Options')}</MenuItem>
 													{Object.values(ProductFuelType).map((fuelType) => (
 														<MenuItem value={`fuelTypeList:${fuelType}`} key={fuelType}>
 															{fuelType}
@@ -629,14 +629,14 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 								</div>
 								<div className={'row-box'} style={{ marginTop: '44px' }}>
 									<div className={'box'}>
-										<span>Vehicle year</span>
+										<span>{t('Vehicle year')}</span>
 										<div className={'inside space-between align-center'}>
 											<FormControl sx={{ width: '122px' }}>
 												<Select
 													value={yearCheck.start.toString()}
 													onChange={yearStartChangeHandler}
 													displayEmpty
-													inputProps={{ 'aria-label': 'Without label' }}
+													inputProps={{ 'aria-label': t('Start year') }}
 													MenuProps={MenuProps}
 												>
 													{productYears?.slice(0)?.map((year: number) => (
@@ -652,7 +652,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 													value={yearCheck.end.toString()}
 													onChange={yearEndChangeHandler}
 													displayEmpty
-													inputProps={{ 'aria-label': 'Without label' }}
+													inputProps={{ 'aria-label': t('End year') }}
 													MenuProps={MenuProps}
 												>
 													{productYears
@@ -668,14 +668,14 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 										</div>
 									</div>
 									<div className={'box'}>
-										<span>Mileage</span>
+										<span>{t('Mileage')}</span>
 										<div className={'inside space-between align-center'}>
 											<FormControl sx={{ width: '122px' }}>
 												<Select
 													value={searchFilter?.search?.mileageRange?.start}
 													onChange={(e: any) => productMileageHandler(e, 'start')}
 													displayEmpty
-													inputProps={{ 'aria-label': 'Without label' }}
+													inputProps={{ 'aria-label': t('Minimum mileage') }}
 													MenuProps={MenuProps}
 												>
 													{productMileageRange.map((square: number) => (
@@ -695,7 +695,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 													value={searchFilter?.search?.mileageRange?.end}
 													onChange={(e: any) => productMileageHandler(e, 'end')}
 													displayEmpty
-													inputProps={{ 'aria-label': 'Without label' }}
+													inputProps={{ 'aria-label': t('Maximum mileage') }}
 													MenuProps={MenuProps}
 												>
 													{productMileageRange.map((square: number) => (
@@ -717,7 +717,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<div className={'bottom'}>
 								<div onClick={resetFilterHandler}>
 									<img src="/img/icons/reset.svg" alt="" />
-									<span>Reset all filters</span>
+									<span>{t('Reset all filters')}</span>
 								</div>
 								<Button
 									startIcon={<img src={'/img/icons/search.svg'} />}

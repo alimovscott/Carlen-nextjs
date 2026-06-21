@@ -21,6 +21,7 @@ import MemberFollowings from '../../libs/components/member/MemberFollowings';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { Messages } from '../../libs/config';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -33,6 +34,7 @@ const MyPage: NextPage = () => {
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const category: any = router.query?.category ?? 'myProfile';
 	const normalizedCategory =
 		category === 'addProduct' || category === 'addProperty'
@@ -123,9 +125,9 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 				<div className="container">
 					<Stack className={'my-page'}>
 						<Stack className={'mypage-topbar'}>
-							<span className={'eyebrow'}>Carlen Account</span>
-							<Typography className={'title'}>Account Center</Typography>
-							<Typography className={'subtitle'}>Manage your vehicles, activity, and profile.</Typography>
+							<span className={'eyebrow'}>{t('Carlen Account')}</span>
+							<Typography className={'title'}>{t('Account Center')}</Typography>
+							<Typography className={'subtitle'}>{t('Manage your vehicles, activity, and profile.')}</Typography>
 						</Stack>
 						<Stack className={'back-frame'}>
 							<Stack className={'left-config'}>

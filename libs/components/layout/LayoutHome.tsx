@@ -11,6 +11,7 @@ import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
+import { useTranslation } from 'next-i18next';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -21,6 +22,7 @@ const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
+		const { t } = useTranslation('common');
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -45,9 +47,9 @@ const withLayoutMain = (Component: any) => {
 						<Stack className={'header-main mobile-header-main'}>
 							<Stack className={'container'}>
 								<Stack className={'carlen-hero-copy'}>
-									<span className={'eyebrow'}>CARLEN · PREMIUM MARKETPLACE</span>
-									<strong>Find the car you&apos;ll love to drive.</strong>
-									<p>Premium listings and smart filters in one place.</p>
+									<span className={'eyebrow'}>{t('Carlen Premium Marketplace')}</span>
+									<strong>{t("Find the car you'll love to drive.")}</strong>
+									<p>{t('Premium listings and smart filters in one place.')}</p>
 								</Stack>
 								<HeaderFilter />
 							</Stack>
@@ -81,15 +83,15 @@ const withLayoutMain = (Component: any) => {
 							</Stack>
 							<Stack className={'container'}>
 								<Stack className={'carlen-hero-copy'}>
-									<span className={'eyebrow'}>CARLEN · PREMIUM MARKETPLACE</span>
-									<strong>Find the car you&apos;ll love to drive.</strong>
-									<p>Premium listings, smart filters, and a faster road from first look to test drive.</p>
+									<span className={'eyebrow'}>{t('Carlen Premium Marketplace')}</span>
+									<strong>{t("Find the car you'll love to drive.")}</strong>
+									<p>{t('Premium listings, smart filters, and a faster road from first look to test drive.')}</p>
 									<Stack className={'carlen-hero-cta'}>
 										<Link href={'/cars'} className={'cta-primary'}>
-											Explore all cars
+											{t('Explore all cars')}
 										</Link>
 										<Link href={'/agent'} className={'cta-secondary'}>
-											Browse dealers
+											{t('Browse dealers')}
 										</Link>
 									</Stack>
 								</Stack>

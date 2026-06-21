@@ -20,6 +20,7 @@ import ProductCard from '../../libs/components/product/PropductCard';
 import { sanitizeProductsInquiry } from '../../libs/utils';
 import { motion, useReducedMotion } from 'framer-motion';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -31,6 +32,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const parseInput = (input: any) => {
 		try {
 			return input ? sanitizeProductsInquiry(JSON.parse(input as string), initialInput) : sanitizeProductsInquiry(initialInput);
@@ -154,10 +156,10 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 			<div id="carlen-product-list-page" style={{ position: 'relative' }}>
 				<div className="container">
 					<Box component={'div'} className={'right'}>
-						<span>Sort by</span>
+						<span>{t('Sort by')}</span>
 						<div>
 							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-								{filterSortName}
+								{t(filterSortName)}
 							</Button>
 							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
 								<MenuItem
@@ -166,7 +168,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 									disableRipple
 									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 								>
-									New
+									{t('New')}
 								</MenuItem>
 								<MenuItem
 									onClick={sortingHandler}
@@ -174,7 +176,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 									disableRipple
 									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 								>
-									Lowest Price
+									{t('Lowest Price')}
 								</MenuItem>
 								<MenuItem
 									onClick={sortingHandler}
@@ -182,7 +184,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 									disableRipple
 									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 								>
-									Highest Price
+									{t('Highest Price')}
 								</MenuItem>
 							</Menu>
 						</div>
@@ -196,13 +198,13 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 							{getProductsLoading && products.length === 0 ? (
 								<Stack className={'carlen-product-loading'}>
 									<CircularProgress />
-									<p>Finding premium cars…</p>
+									<p>{t('Finding premium cars')}</p>
 								</Stack>
 							) : products?.length === 0 ? (
 								<div className={'no-data'}>
 									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No Products found!</p>
-									<span>Try adjusting your filters to see more cars.</span>
+									<p>{t('No cars found')}</p>
+									<span>{t('Try adjusting your filters to see more cars.')}</span>
 								</div>
 							) : (
 								<motion.div
@@ -234,7 +236,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 								{products.length !== 0 && (
 									<Stack className="total-result">
 										<Typography>
-											Total {total} propert{total > 1 ? 'ies' : 'y'} available
+											{t('totalCarsAvailable', { count: total })}
 										</Typography>
 									</Stack>
 								)}

@@ -10,6 +10,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import { useTranslation } from 'next-i18next';
 
 interface AgentCardProps {
 	agent: any;
@@ -20,6 +21,7 @@ interface AgentCardProps {
 const AgentCard = (props: AgentCardProps) => {
 	const { agent, likeMemberHandler, variant } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const publicListingsCount = agent?.activeProducts ?? 0;
 	const imagePath: string = agent?.memberImage
@@ -32,7 +34,7 @@ const AgentCard = (props: AgentCardProps) => {
 		return (
 			<Stack className={'carlen-agent-card'}>
 				<span className={'carlen-agent-card-badge'}>
-					<VerifiedOutlinedIcon /> Verified Dealer
+					<VerifiedOutlinedIcon /> {t('Verified Dealer')}
 				</span>
 				<Link href={{ pathname: '/agent/detail', query: { agentId: agent?._id } }}>
 					<div className={'carlen-agent-card-avatar'} style={{ backgroundImage: `url(${imagePath})` }} />
@@ -42,22 +44,22 @@ const AgentCard = (props: AgentCardProps) => {
 				<div className={'carlen-agent-card-stats'}>
 					<div>
 						<strong>{publicListingsCount}</strong>
-						<span>Listings</span>
+						<span>{t('Listings')}</span>
 					</div>
 					<div>
 						<strong>{agent?.memberLikes ?? 0}</strong>
-						<span>Likes</span>
+						<span>{t('Likes')}</span>
 					</div>
 					<div>
 						<strong>{agent?.memberViews ?? 0}</strong>
-						<span>Views</span>
+						<span>{t('Views')}</span>
 					</div>
 				</div>
 				<div className={'carlen-agent-card-actions'}>
 					<IconButton
 						className={'like'}
 						color={'default'}
-						aria-label={'Like'}
+						aria-label={t('Like')}
 						onClick={() => likeMemberHandler && likeMemberHandler(user, agent._id)}
 					>
 						{agent?.meLiked && agent?.meLiked[0]?.myFavorite ? (
@@ -70,7 +72,7 @@ const AgentCard = (props: AgentCardProps) => {
 						href={{ pathname: '/agent/detail', query: { agentId: agent?._id } }}
 						className={'view-profile'}
 					>
-						View Profile
+						{t('View Profile')}
 					</Link>
 				</div>
 			</Stack>
@@ -94,7 +96,7 @@ const AgentCard = (props: AgentCardProps) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{publicListingsCount} products</div>
+						<div>{t('listing_other', { count: publicListingsCount })}</div>
 					</Box>
 				</Link>
 
@@ -108,7 +110,7 @@ const AgentCard = (props: AgentCardProps) => {
 						>
 							<strong>{agent?.memberFullName ?? agent?.memberNick}</strong>
 						</Link>
-						<span>Agent</span>
+						<span>{t('Agents')}</span>
 					</Box>
 					<Box component={'div'} className={'buttons'}>
 						<IconButton color={'default'}>

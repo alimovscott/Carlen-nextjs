@@ -11,11 +11,13 @@ import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
 import { useQuery } from '@apollo/client';
 import { GET_VISITED } from '../../../apollo/user/query';
+import { useTranslation } from 'next-i18next';
 
 const RecentlyVisited: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -58,18 +60,18 @@ const RecentlyVisited: NextPage = () => {
 			<div id="carlen-recently-visited-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.span className="eyebrow" variants={item}>
-						Recently Viewed
+						{t('Recently Viewed')}
 					</motion.span>
 					<motion.h1 className="title" variants={item}>
-						Recently Viewed Cars
+						{t('Recently Viewed Cars')}
 					</motion.h1>
 					<motion.p className="subtitle" variants={item}>
-						Quickly return to vehicles you recently explored.
+						{t('Quickly return to vehicles you recently explored.')}
 					</motion.p>
 					{total > 0 && (
 						<motion.span className="stat-chip" variants={item}>
 							<i className="dot" />
-							Total {total} viewed car{total > 1 ? 's' : ''}
+							{t('totalViewedCars', { count: total })}
 						</motion.span>
 					)}
 				</motion.div>
@@ -111,8 +113,8 @@ const RecentlyVisited: NextPage = () => {
 						<span className="empty-icon">
 							<HistoryRoundedIcon />
 						</span>
-						<Typography className="empty-title">No recently viewed cars yet</Typography>
-						<Typography className="empty-helper">Browse vehicles and your viewed cars will appear here.</Typography>
+						<Typography className="empty-title">{t('No recently viewed cars yet')}</Typography>
+						<Typography className="empty-helper">{t('Browse vehicles and your viewed cars will appear here.')}</Typography>
 						<motion.button
 							type="button"
 							className="cta-primary"
@@ -121,7 +123,7 @@ const RecentlyVisited: NextPage = () => {
 							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						>
 							<DirectionsCarFilledOutlinedIcon />
-							Browse Cars
+							{t('Browse Cars')}
 						</motion.button>
 					</motion.div>
 				)}
@@ -144,7 +146,7 @@ const RecentlyVisited: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently viewed vehicle{total > 1 ? 's' : ''}
+								{t('totalViewedCars', { count: total })}
 							</Typography>
 						</Stack>
 					</motion.div>

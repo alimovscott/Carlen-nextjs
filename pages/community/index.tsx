@@ -22,6 +22,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_BOARD_ARTICLES } from '../../apollo/user/query';
 import { Messages } from '../../libs/config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -47,6 +48,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const { query } = router;
 	const articleCategory = query?.articleCategory as string;
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
@@ -160,10 +162,10 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						animate="visible"
 					>
 						<motion.div className="header-text" variants={item}>
-							<span className="header-eyebrow">Carlen Community</span>
-							<h1 className="header-title">Join the Automotive Conversation</h1>
+							<span className="header-eyebrow">{t('Carlen Community')}</span>
+							<h1 className="header-title">{t('Join the Automotive Conversation')}</h1>
 							<p className="header-subtitle">
-								Share experiences, recommendations, reviews, and automotive news with enthusiasts.
+								{t('Share experiences, recommendations, reviews, and automotive news with enthusiasts.')}
 							</p>
 						</motion.div>
 						<motion.div className="header-aside" variants={item}>
@@ -175,13 +177,13 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 							>
 								<EditOutlinedIcon />
-								Write Article
+								{t('Write Article')}
 							</motion.button>
 							<div className="header-stats">
 								{['5K+ Members', 'Daily Discussions', 'Verified Community'].map((stat) => (
 									<span className="stat-chip" key={stat}>
 										<i className="dot" />
-										{stat}
+										{t(stat)}
 									</span>
 								))}
 							</div>
@@ -197,7 +199,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						>
 							<Stack className="brand-row">
 								<img src={'/img/logo/logoText.svg'} alt="Carlen" className={'carlen-logo-hover'} />
-								<Typography className="brand-name">Carlen Community</Typography>
+								<Typography className="brand-name">{t('Carlen Community')}</Typography>
 							</Stack>
 
 							<nav className="sidebar-nav">
@@ -212,7 +214,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 										onClick={(e: T) => tabChangeHandler(e, tab.value)}
 									>
 										<span className="nav-icon">{tab.icon}</span>
-										<span className="nav-label">{tab.label}</span>
+										<span className="nav-label">{t(tab.label)}</span>
 									</motion.button>
 								))}
 							</nav>
@@ -221,8 +223,8 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						<Stack className="carlen-community-content">
 							<Stack className="carlen-community-panel">
 								<Stack className="content-header">
-									<Typography className="content-title">{meta.title}</Typography>
-									<Typography className="content-subtitle">{meta.subtitle}</Typography>
+									<Typography className="content-title">{t(meta.title)}</Typography>
+									<Typography className="content-subtitle">{t(meta.subtitle)}</Typography>
 								</Stack>
 
 								{boardArticlesLoading && !boardArticles?.length ? (
@@ -254,8 +256,8 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 										<span className="empty-icon">
 											<ForumRoundedIcon />
 										</span>
-										<Typography className="empty-title">No discussions yet</Typography>
-										<Typography className="empty-subtitle">Be the first to start the conversation.</Typography>
+										<Typography className="empty-title">{t('No discussions yet')}</Typography>
+										<Typography className="empty-subtitle">{t('Be the first to start the conversation.')}</Typography>
 										<motion.button
 											type="button"
 											className="cta-primary"
@@ -264,7 +266,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 											whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 										>
 											<EditOutlinedIcon />
-											Write Article
+											{t('Write Article')}
 										</motion.button>
 									</Stack>
 								)}
@@ -284,7 +286,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								/>
 							</Stack>
 							<Stack className="total-result">
-								<Typography>Total {totalCount} discussions available</Typography>
+								<Typography>{t('totalDiscussionsAvailable', { count: totalCount })}</Typography>
 							</Stack>
 						</Stack>
 					)}

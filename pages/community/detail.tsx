@@ -32,6 +32,7 @@ import { GET_BOARD_ARTICLE, GET_BOARD_ARTICLES, GET_COMMENTS } from '../../apoll
 import {  sweetConfirmAlert, sweetMixinErrorAlert, sweetMixinSuccessAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { Messages } from '../../libs/config';
 import { CommentUpdate } from '../../libs/types/comment/comment.update';
+import { useTranslation } from 'next-i18next';
 const ToastViewerComponent = dynamic(() => import('../../libs/components/community/TViewer'), { ssr: false });
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -59,6 +60,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const router = useRouter();
 	const { query } = router;
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 
 	const articleId = query?.id as string;
 	const articleCategory = query?.articleCategory as string;
@@ -198,7 +200,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 			await getBoardArticleRefetch({ input: articleId });
 			setComment('');
 			setWordsCnt(0);
-			await sweetTopSmallSuccessAlert('Successfully commented!');
+			await sweetTopSmallSuccessAlert(t('Successfully commented!'));
 		} catch (error: any) {
 			await sweetMixinErrorAlert(error.message);
 		}
@@ -220,13 +222,13 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 				throw new Error('Provide data to update your comment!');
 
 			if (commentStatus) {
-				if (await sweetConfirmAlert('Do you want to delete the comment?')) {
+				if (await sweetConfirmAlert(t('Do you want to delete the comment?'))) {
 					await updateComment({
 						variables: {
 							input: updateData,
 						},
 					});
-					await sweetMixinSuccessAlert('Successfullu deleted!');
+				await sweetMixinSuccessAlert(t('Successfully deleted!'));
 				} else return;
 			} else {
 				await updateComment({
@@ -234,7 +236,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						input: updateData,
 					},
 				});
-				await sweetMixinSuccessAlert('Successfully updated!');
+				await sweetMixinSuccessAlert(t('Successfully updated!'));
 			}
 			await getCommentsRefetch({ input: commentsInquiryInput });
 		} catch (error: any) {
@@ -343,7 +345,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						>
 							<Stack className="brand-row">
 								<img src={'/img/logo/logoText.svg'} alt="Carlen" className={'carlen-logo-hover'} />
-								<Typography className="brand-name">Carlen Community</Typography>
+								<Typography className="brand-name">{t('Carlen Community')}</Typography>
 							</Stack>
 							<nav className="sidebar-nav">
 								{CATEGORY_TABS.map((tab) => (
@@ -357,7 +359,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										onClick={(e: React.SyntheticEvent) => tabChangeHandler(e, tab.value)}
 									>
 										<span className="nav-icon">{tab.icon}</span>
-										<span className="nav-label">{tab.label}</span>
+										<span className="nav-label">{t(tab.label)}</span>
 									</motion.button>
 								))}
 							</nav>
@@ -372,7 +374,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 								animate="visible"
 							>
 								<motion.div className="panel-top" variants={item}>
-									<span className="category-chip">{CATEGORY_META[articleCategory] ?? 'Discussion'}</span>
+									<span className="category-chip">{t(CATEGORY_META[articleCategory] ?? 'Discussion')}</span>
 									<motion.button
 										type="button"
 										className="write-cta"
@@ -381,7 +383,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 									>
 										<EditOutlinedIcon />
-										Write
+										{t('Write')}
 									</motion.button>
 								</motion.div>
 
@@ -451,17 +453,17 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
 								>
 									{boardArticle?.meLiked?.[0]?.myFavorite ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
-									<span className="reaction-label">Like</span>
+									<span className="reaction-label">{t('Like')}</span>
 									<span className="reaction-count">{boardArticle?.articleLikes ?? 0}</span>
 								</motion.button>
 								<div className="reaction-btn static">
 									<VisibilityIcon />
-									<span className="reaction-label">Views</span>
+									<span className="reaction-label">{t('Views')}</span>
 									<span className="reaction-count">{boardArticle?.articleViews ?? 0}</span>
 								</div>
 								<div className="reaction-btn static">
 									<ChatBubbleOutlineRoundedIcon />
-									<span className="reaction-label">Comments</span>
+									<span className="reaction-label">{t('Comments')}</span>
 									<span className="reaction-count">{displayedCommentsCount}</span>
 								</div>
 							</Stack>
@@ -494,13 +496,13 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							{/** COMMENTS **/}
 							<Stack className="carlen-comment-form">
 								<Stack className="discussion-header">
-									<Typography className="discussion-title">Discussion</Typography>
-									<Typography className="discussion-subtitle">Join the conversation.</Typography>
+									<Typography className="discussion-title">{t('Discussion')}</Typography>
+									<Typography className="discussion-subtitle">{t('Join the conversation.')}</Typography>
 								</Stack>
 								<Stack className="leave-comment">
 									<textarea
 										className="comment-textarea"
-										placeholder="Share your thoughts with the community…"
+										placeholder={t('Share your thoughts with the community')}
 										value={comment}
 										maxLength={100}
 										onChange={(e) => {
@@ -518,7 +520,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 											whileHover={shouldReduceMotion ? undefined : { y: -2 }}
 											whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 										>
-											Post Comment
+											{t('Post Comment')}
 										</motion.button>
 									</Stack>
 								</Stack>
@@ -541,8 +543,8 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									<span className="empty-icon">
 										<ForumOutlinedIcon />
 									</span>
-									<Typography className="empty-title">No discussions yet</Typography>
-									<Typography className="empty-subtitle">Be the first to join the conversation.</Typography>
+									<Typography className="empty-title">{t('No discussions yet')}</Typography>
+									<Typography className="empty-subtitle">{t('Be the first to join the conversation.')}</Typography>
 								</Stack>
 							) : (
 								<motion.div
@@ -607,7 +609,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							{/** EDIT MODAL **/}
 							<Backdrop className="carlen-edit-backdrop" open={openBackdrop}>
 								<Stack className="carlen-edit-modal">
-									<Typography className="modal-title">Update comment</Typography>
+									<Typography className="modal-title">{t('Update comment')}</Typography>
 									<textarea
 										autoFocus
 										className="modal-textarea"
@@ -619,14 +621,14 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										<Typography className="char-count">{updatedCommentWordsCnt}/100</Typography>
 										<Stack className="modal-buttons">
 											<button type="button" className="cta-secondary" onClick={() => cancelButtonHandler()}>
-												Cancel
+												{t('Cancel')}
 											</button>
 											<button
 												type="button"
 												className="cta-primary"
 												onClick={() => updateButtonHandler(updatedCommentId, undefined)}
 											>
-												Update
+												{t('Update')}
 											</button>
 										</Stack>
 									</Stack>

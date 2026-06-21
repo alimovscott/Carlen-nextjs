@@ -20,6 +20,7 @@ import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Messages } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
@@ -35,6 +36,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [agentId, setAgentId] = useState<string | null>(null);
 	const [agent, setAgent] = useState<Member | null>(null);
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
@@ -232,8 +234,8 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 					{/* 3. DEALER PRODUCTS */}
 					<Stack className={'carlen-agent-products'}>
 						<div className={'carlen-agent-section-head'}>
-							<h2>Dealer Listings</h2>
-							<p>Premium vehicles from this dealer</p>
+							<h2>{t('Dealer Listings')}</h2>
+							<p>{t('Premium vehicles from this dealer')}</p>
 						</div>
 						<motion.div
 							className={'card-wrap'}
@@ -281,14 +283,14 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 										/>
 									</Stack>
 									<span>
-										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
+										{t('totalCarsAvailable', { count: productTotal })}
 									</span>
 								</>
 							) : (
 								!getProductsLoading && (
 									<div className={'no-data'}>
 										<img src="/img/icons/icoAlert.svg" alt="" />
-										<p>No products found!</p>
+										<p>{t('No cars found')}</p>
 									</div>
 								)
 							)}
@@ -298,8 +300,8 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 					{/* 4 + 5. REVIEWS + LEAVE REVIEW */}
 					<Stack className={'carlen-agent-reviews'}>
 						<div className={'carlen-agent-section-head'}>
-							<h2>Customer Reviews</h2>
-							<p>See what customers are saying</p>
+							<h2>{t('Customer Reviews')}</h2>
+							<p>{t('See what customers are saying')}</p>
 						</div>
 						{commentTotal !== 0 && (
 							<Stack className={'review-wrap'}>
@@ -335,10 +337,10 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 						)}
 
 						<Stack className={'carlen-agent-review-form'}>
-							<Typography className={'main-title'}>Leave A Review</Typography>
-							<Typography className={'review-title'}>Review</Typography>
+							<Typography className={'main-title'}>{t('Leave A Review')}</Typography>
+							<Typography className={'review-title'}>{t('Review')}</Typography>
 							<textarea
-								placeholder={'Share your experience with this dealer...'}
+								placeholder={t('Share your experience with this dealer...')}
 								onChange={({ target: { value } }: any) => {
 									setInsertCommentData({ ...insertCommentData, commentContent: value });
 								}}
@@ -351,7 +353,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 										disabled={insertCommentData.commentContent === '' || user?._id === ''}
 										onClick={createCommentHandler}
 									>
-										<Typography className={'title'}>Submit Review</Typography>
+										<Typography className={'title'}>{t('Submit Review')}</Typography>
 										<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 											<g clipPath="url(#clip0_6975_3642)">
 												<path

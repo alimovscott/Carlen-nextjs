@@ -14,6 +14,7 @@ import { T } from '../../types/common';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { Message } from '../../enums/common.enum';
+import { useTranslation } from 'next-i18next';
 
 interface TrendProductsProps {
 	initialInput: ProductsInquiry;
@@ -22,6 +23,7 @@ interface TrendProductsProps {
 const TrendProducts = (props: TrendProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
@@ -61,12 +63,12 @@ const TrendProducts = (props: TrendProductsProps) => {
 			<Stack className={'trend-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Trend Products</span>
+						<span>{t('Trending Cars')}</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						{trendProducts.length === 0 ? (
 							<Box component={'div'} className={'empty-list'}>
-								Trends Empty
+								{t('No cars found')}
 							</Box>
 						) : (
 							<Swiper
@@ -95,8 +97,8 @@ const TrendProducts = (props: TrendProductsProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Trend Products</span>
-							<p>Trend is based on likes</p>
+							<span>{t('Trending Cars')}</span>
+							<p>{t('Most liked premium listings this week')}</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
@@ -109,7 +111,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 					<Stack className={'card-box'}>
 						{trendProducts.length === 0 ? (
 							<Box component={'div'} className={'empty-list'}>
-								Trends Empty
+								{t('No cars found')}
 							</Box>
 						) : (
 							<Swiper

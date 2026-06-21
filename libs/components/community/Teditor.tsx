@@ -15,11 +15,13 @@ import { GET_MEMBER } from '../../../apollo/user/query';
 import { sweetErrorHandling, sweetTopSuccessAlert } from '../../sweetAlert';
 import { Message } from '../../enums/common.enum';
 import { userVar } from '../../../apollo/store';
+import { useTranslation } from 'next-i18next';
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
 		token = getJwtToken(),
 		router = useRouter();
+	const { t } = useTranslation('common');
 	const shouldReduceMotion = useReducedMotion();
 	const user = useReactiveVar(userVar);
 	const [articleCategory, setArticleCategory] = useState<BoardArticleCategory>(BoardArticleCategory.FREE);
@@ -139,10 +141,10 @@ const TuiEditor = () => {
 					Community Studio
 				</motion.span>
 				<motion.h1 className="editor-title" variants={item}>
-					Create a New Discussion
+					{t('Create a New Discussion')}
 				</motion.h1>
 				<motion.p className="editor-subtitle" variants={item}>
-					Share updates, recommendations, and stories with the Carlen community.
+					{t('Share updates, recommendations, and stories with the Carlen community.')}
 				</motion.p>
 			</motion.div>
 
@@ -153,31 +155,31 @@ const TuiEditor = () => {
 				animate="visible"
 			>
 				<motion.div className="meta-field" variants={item}>
-					<Typography className="meta-label">Category</Typography>
+					<Typography className="meta-label">{t('Category')}</Typography>
 					<FormControl fullWidth className="meta-select">
 						<Select
 							value={articleCategory}
 							onChange={changeCategoryHandler}
 							displayEmpty
-							inputProps={{ 'aria-label': 'Article category' }}
+							inputProps={{ 'aria-label': t('Article category') }}
 						>
-							<MenuItem value={BoardArticleCategory.FREE}>Free Discussion</MenuItem>
-							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
-							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
+							<MenuItem value={BoardArticleCategory.FREE}>{t('Free Discussion')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.RECOMMEND}>{t('Recommendation')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.NEWS}>{t('News')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.HUMOR}>{t('Humor')}</MenuItem>
 						</Select>
 					</FormControl>
 				</motion.div>
 
 				<motion.div className="meta-field" variants={item}>
-					<Typography className="meta-label">Title</Typography>
+					<Typography className="meta-label">{t('Title')}</Typography>
 					<TextField
 						fullWidth
 						className="meta-input"
 						value={articleTitle}
 						onChange={articleTitleHandler}
-						placeholder="Write a clear title for your discussion"
-						inputProps={{ 'aria-label': 'Article title' }}
+						placeholder={t('Write a clear title for your discussion')}
+						inputProps={{ 'aria-label': t('Article title') }}
 					/>
 				</motion.div>
 			</motion.div>
@@ -189,8 +191,8 @@ const TuiEditor = () => {
 				transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
 			>
 				<Editor
-					initialValue={'Type here'}
-					placeholder={'Type here'}
+					initialValue={t('Type here')}
+					placeholder={t('Type here')}
 					previewStyle={'vertical'}
 					height={'640px'}
 					// @ts-ignore

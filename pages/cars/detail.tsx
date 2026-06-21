@@ -36,6 +36,7 @@ import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFi
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -58,6 +59,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [productId, setProductId] = useState<string | null>(null);
 	const [product, setProduct] = useState<Product | null>(null);
 	const [slideImage, setSlideImage] = useState<string>('');
@@ -218,21 +220,21 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 		yearValue,
 	].filter(Boolean) as string[];
 	const specs = [
-		{ icon: <EventSeatOutlinedIcon />, label: 'Seats', value: product?.productSeats },
-		{ icon: <MeetingRoomOutlinedIcon />, label: 'Doors', value: product?.productDoors },
-		{ icon: <SpeedOutlinedIcon />, label: 'Mileage', value: `${formatterStr(product?.productMileage)} km` },
-		{ icon: <LocalGasStationOutlinedIcon />, label: 'Fuel', value: product?.productFuelType },
-		{ icon: <SettingsOutlinedIcon />, label: 'Transmission', value: product?.productTransmission },
-		{ icon: <CalendarTodayOutlinedIcon />, label: 'Year', value: yearValue },
-		{ icon: <DirectionsCarFilledOutlinedIcon />, label: 'Type', value: product?.productType },
+		{ icon: <EventSeatOutlinedIcon />, label: t('Seats'), value: product?.productSeats },
+		{ icon: <MeetingRoomOutlinedIcon />, label: t('Doors'), value: product?.productDoors },
+		{ icon: <SpeedOutlinedIcon />, label: t('Mileage'), value: `${formatterStr(product?.productMileage)} km` },
+		{ icon: <LocalGasStationOutlinedIcon />, label: t('Fuel'), value: product?.productFuelType },
+		{ icon: <SettingsOutlinedIcon />, label: t('Transmission'), value: product?.productTransmission },
+		{ icon: <CalendarTodayOutlinedIcon />, label: t('Year'), value: yearValue },
+		{ icon: <DirectionsCarFilledOutlinedIcon />, label: t('Car type'), value: product?.productType },
 	];
 	const features = [
-		{ label: 'Fuel Type', value: product?.productFuelType },
-		{ label: 'Transmission', value: product?.productTransmission },
-		{ label: 'Product Type', value: product?.productType },
-		{ label: 'Seats', value: product?.productSeats ? `${product?.productSeats} seats` : '-' },
-		{ label: 'Doors', value: product?.productDoors ? `${product?.productDoors} doors` : '-' },
-		{ label: 'Mileage', value: `${formatterStr(product?.productMileage)} km` },
+		{ label: t('Fuel Type'), value: product?.productFuelType },
+		{ label: t('Transmission'), value: product?.productTransmission },
+		{ label: t('Car type'), value: product?.productType },
+		{ label: t('Seats'), value: product?.productSeats ? `${product?.productSeats} ${t('seats')}` : '-' },
+		{ label: t('Doors'), value: product?.productDoors ? `${product?.productDoors} ${t('doors')}` : '-' },
+		{ label: t('Mileage'), value: `${formatterStr(product?.productMileage)} km` },
 	];
 
 	const reveal: any = shouldReduceMotion
@@ -325,7 +327,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 				{/* 3. SPECS */}
 				<section className={'m-section m-specs'}>
-					<h2 className={'m-section-title'}>Specifications</h2>
+					<h2 className={'m-section-title'}>{t('Specifications')}</h2>
 					<div className={'m-spec-grid'}>
 						{specs.map((spec) => (
 							<div className={'m-spec-card'} key={spec.label}>
@@ -341,13 +343,13 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 				{/* 4. DESCRIPTION */}
 				<section className={'m-section'}>
-					<h2 className={'m-section-title'}>Vehicle Description</h2>
-					<p className={'m-desc'}>{product?.productDesc ?? 'No description available.'}</p>
+					<h2 className={'m-section-title'}>{t('Vehicle Description')}</h2>
+					<p className={'m-desc'}>{product?.productDesc ?? t('No description available.')}</p>
 				</section>
 
 				{/* 5. FEATURES */}
 				<section className={'m-section'}>
-					<h2 className={'m-section-title'}>Vehicle Features</h2>
+					<h2 className={'m-section-title'}>{t('Vehicle Features')}</h2>
 					<div className={'m-feature-grid'}>
 						{features.map((f) => (
 							<div className={'m-feature-card'} key={f.label}>
@@ -360,7 +362,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 				{/* 6. MAP */}
 				<section className={'m-section'}>
-					<h2 className={'m-section-title'}>Location</h2>
+					<h2 className={'m-section-title'}>{t('Location')}</h2>
 					<div className={'m-map'}>
 						{mapQuery ? (
 							<iframe
@@ -376,7 +378,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						) : (
 							<div className={'m-map-placeholder'}>
 								<PlaceOutlinedIcon />
-								<span>Location not specified</span>
+								<span>{t('Location not specified')}</span>
 							</div>
 						)}
 					</div>
@@ -384,7 +386,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 				{/* 7. DEALER */}
 				<section className={'m-section m-dealer'} id={'m-dealer'}>
-					<h2 className={'m-section-title'}>Get More Information</h2>
+					<h2 className={'m-section-title'}>{t('Contact Dealer')}</h2>
 					<div className={'m-dealer-info'}>
 						<img
 							className={'m-dealer-avatar'}
@@ -397,7 +399,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						/>
 						<div className={'m-dealer-meta'}>
 							<span className={'m-dealer-badge'}>
-								<VerifiedOutlinedIcon /> Verified Dealer
+								<VerifiedOutlinedIcon /> {t('Verified Dealer')}
 							</span>
 							<Link href={`/member?memberId=${product?.memberData?._id}`}>
 								<span className={'m-dealer-name'}>{product?.memberData?.memberNick}</span>
@@ -406,9 +408,9 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 						</div>
 					</div>
 					<div className={'m-dealer-form'}>
-						<input type={'text'} placeholder={'Your name'} />
-						<input type={'text'} placeholder={'Your phone'} />
-						<textarea placeholder={'Hello, I am interested in this vehicle.'}></textarea>
+						<input type={'text'} placeholder={t('Your name')} />
+						<input type={'text'} placeholder={t('Your phone')} />
+						<textarea placeholder={t('Hello, I am interested in this vehicle.')}></textarea>
 						<Button className={'m-send-inquiry'}>
 							<ChatBubbleOutlineRoundedIcon />
 							Send Inquiry
@@ -419,7 +421,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				{/* 8. REVIEWS */}
 				{commentTotal !== 0 && (
 					<section className={'m-section'}>
-						<h2 className={'m-section-title'}>{commentTotal} Reviews</h2>
+						<h2 className={'m-section-title'}>{t('review_other', { count: commentTotal })}</h2>
 						<div className={'m-review-list'}>
 							{productComments?.map((comment: Comment) => (
 								<Review comment={comment} key={comment?._id} />
@@ -438,10 +440,10 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				)}
 
 				<section className={'m-section'}>
-					<h2 className={'m-section-title'}>Leave a Review</h2>
+					<h2 className={'m-section-title'}>{t('Leave A Review')}</h2>
 					<textarea
 						className={'m-review-input'}
-						placeholder={'Share your experience with this vehicle...'}
+						placeholder={t('Share your experience with this vehicle...')}
 						onChange={({ target: { value } }: any) => {
 							setInsertCommentData({ ...insertCommentData, commentContent: value });
 						}}
@@ -460,7 +462,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				{/* 9. SIMILAR CARS */}
 				{destinationProducts.length !== 0 && (
 					<section className={'m-section m-similar'}>
-						<h2 className={'m-section-title'}>Similar Cars</h2>
+						<h2 className={'m-section-title'}>{t('Similar Cars')}</h2>
 						<Swiper className={'m-similar-swiper'} slidesPerView={'auto'} spaceBetween={14} modules={[]}>
 							{destinationProducts.map((p: Product) => (
 								<SwiperSlide className={'m-similar-slide'} key={p?._id}>
@@ -474,7 +476,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				{/* STICKY ACTION BAR */}
 				<div className={'m-action-bar'}>
 					<div className={'m-action-price'}>
-						<span className={'lbl'}>Price</span>
+						<span className={'lbl'}>{t('Price')}</span>
 						<strong>${formatterStr(product?.productPrice)}</strong>
 					</div>
 					<button type={'button'} className={'m-action-btn'} onClick={scrollToDealer}>
@@ -584,13 +586,13 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 							{/* 4. DESCRIPTION */}
 							<motion.section className={'carlen-product-description'} {...reveal}>
-								<h2 className={'section-title'}>Vehicle Description</h2>
-								<p className={'desc'}>{product?.productDesc ?? 'No description available.'}</p>
+								<h2 className={'section-title'}>{t('Vehicle Description')}</h2>
+								<p className={'desc'}>{product?.productDesc ?? t('No description available.')}</p>
 							</motion.section>
 
 							{/* 5. VEHICLE FEATURES */}
 							<motion.section className={'carlen-product-features'} {...reveal}>
-								<h2 className={'section-title'}>Vehicle Features</h2>
+								<h2 className={'section-title'}>{t('Vehicle Features')}</h2>
 								<div className={'feature-grid'}>
 									{features.map((f) => (
 										<div className={'feature-card'} key={f.label}>
@@ -603,7 +605,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 
 							{/* 6. LOCATION / MAP */}
 							<motion.section className={'carlen-product-map'} {...reveal}>
-								<h2 className={'section-title'}>Location</h2>
+								<h2 className={'section-title'}>{t('Location')}</h2>
 								<div className={'map-box'}>
 									{mapQuery ? (
 										<iframe
@@ -619,7 +621,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 									) : (
 										<div className={'map-placeholder'}>
 											<PlaceOutlinedIcon />
-											<span>Location not specified</span>
+											<span>{t('Location not specified')}</span>
 										</div>
 									)}
 								</div>
@@ -630,7 +632,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<motion.section className={'carlen-product-reviews'} {...reveal}>
 									<div className={'reviews-head'}>
 										<StarRoundedIcon />
-										<h2 className={'section-title'}>{commentTotal} Reviews</h2>
+										<h2 className={'section-title'}>{t('review_other', { count: commentTotal })}</h2>
 									</div>
 									<div className={'review-list'}>
 										{productComments?.map((comment: Comment) => {
@@ -650,9 +652,9 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							)}
 
 							<motion.section className={'carlen-leave-review'} {...reveal}>
-								<h2 className={'section-title'}>Leave a Review</h2>
+								<h2 className={'section-title'}>{t('Leave A Review')}</h2>
 								<textarea
-									placeholder={'Share your experience with this vehicle...'}
+									placeholder={t('Share your experience with this vehicle...')}
 									onChange={({ target: { value } }: any) => {
 										setInsertCommentData({ ...insertCommentData, commentContent: value });
 									}}
@@ -663,7 +665,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 									disabled={insertCommentData.commentContent === '' || user?._id === ''}
 									onClick={createCommentHandler}
 								>
-									Submit Review
+									{t('Submit Review')}
 									<EastIcon />
 								</Button>
 							</motion.section>
@@ -677,7 +679,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							viewport={{ once: true, margin: '-80px' }}
 							transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
 						>
-							<h3 className={'dealer-title'}>Get More Information</h3>
+							<h3 className={'dealer-title'}>{t('Contact Dealer')}</h3>
 							<div className={'dealer-info'}>
 								<img
 									className={'dealer-avatar'}
@@ -690,23 +692,23 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								/>
 								<div className={'dealer-meta'}>
 									<span className={'dealer-badge'}>
-										<VerifiedOutlinedIcon /> Verified Dealer
+										<VerifiedOutlinedIcon /> {t('Verified Dealer')}
 									</span>
 									<Link href={`/member?memberId=${product?.memberData?._id}`}>
 										<span className={'dealer-name'}>{product?.memberData?.memberNick}</span>
 									</Link>
 									<span className={'dealer-phone'}>{product?.memberData?.memberPhone}</span>
-									<span className={'dealer-listings'}>{product?.memberData?.memberProducts ?? 0} listings</span>
+									<span className={'dealer-listings'}>{t('listing_other', { count: product?.memberData?.memberProducts ?? 0 })}</span>
 								</div>
 							</div>
 							<div className={'dealer-form'}>
-								<input type={'text'} placeholder={'Your name'} />
-								<input type={'text'} placeholder={'Your phone'} />
-								<input type={'text'} placeholder={'Your email'} />
-								<textarea placeholder={'Hello, I am interested in this vehicle.'}></textarea>
+								<input type={'text'} placeholder={t('Your name')} />
+								<input type={'text'} placeholder={t('Your phone')} />
+								<input type={'text'} placeholder={t('Your email')} />
+								<textarea placeholder={t('Hello, I am interested in this vehicle.')}></textarea>
 								<Button className={'send-inquiry'}>
 									<ChatBubbleOutlineRoundedIcon />
-									Send Inquiry
+									{t('Send Inquiry')}
 								</Button>
 							</div>
 						</motion.aside>
@@ -718,16 +720,16 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							<div className={'carlen-similar-wrapper'}>
 								<div className={'carlen-similar-header'}>
 									<div className={'carlen-similar-titles'}>
-										<span className={'carlen-similar-eyebrow'}>Recommended For You</span>
-										<h2 className={'carlen-similar-title'}>Similar Cars</h2>
-										<span className={'carlen-similar-subtitle'}>Vehicles you may also like</span>
+										<span className={'carlen-similar-eyebrow'}>{t('Recommended For You')}</span>
+										<h2 className={'carlen-similar-title'}>{t('Similar Cars')}</h2>
+										<span className={'carlen-similar-subtitle'}>{t('Vehicles you may also like')}</span>
 									</div>
 									<div className={'carlen-similar-controls'}>
-										<button className={'carlen-similar-prev swiper-similar-prev'} aria-label={'Previous'}>
+										<button className={'carlen-similar-prev swiper-similar-prev'} aria-label={t('Previous')}>
 											<WestIcon />
 										</button>
 										<div className={'carlen-similar-pagination swiper-similar-pagination'}></div>
-										<button className={'carlen-similar-next swiper-similar-next'} aria-label={'Next'}>
+										<button className={'carlen-similar-next swiper-similar-next'} aria-label={t('Next')}>
 											<EastIcon />
 										</button>
 									</div>

@@ -15,6 +15,7 @@ import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { Message } from '../../enums/common.enum';
 import { T } from '../../types/common';
+import { useTranslation } from 'next-i18next';
 
 interface PopularProductsProps {
 	initialInput: ProductsInquiry;
@@ -23,6 +24,7 @@ interface PopularProductsProps {
 const PopularProducts = (props: PopularProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const [popularProducts, setPopularProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
@@ -64,7 +66,7 @@ const PopularProducts = (props: PopularProductsProps) => {
 			<Stack className={'popular-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Popular products</span>
+						<span>{t('Popular Cars')}</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -92,13 +94,13 @@ const PopularProducts = (props: PopularProductsProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Popular Cars</span>
-							<p>Most loved premium vehicles chosen by our community</p>
+							<span>{t('Popular Cars')}</span>
+							<p>{t('Most loved premium vehicles chosen by our community')}</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'more-box'}>
 								<Link href={'/cars'}>
-									<span>View All Cars</span>
+									<span>{t('View All Cars')}</span>
 								</Link>
 								<img src="/img/icons/rightup.svg" alt="" />
 							</div>

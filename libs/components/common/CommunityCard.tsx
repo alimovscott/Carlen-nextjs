@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useTranslation } from 'next-i18next';
 
 interface CommunityCardProps {
 	boardArticle: BoardArticle;
@@ -26,6 +27,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 	const { boardArticle, size = 'normal', likeArticleHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const shouldReduceMotion = useReducedMotion();
 	const imagePath: string = boardArticle?.articleImage
@@ -87,7 +89,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 					{preview && <Typography className="preview">{preview}</Typography>}
 
 					<Stack className={'buttons'}>
-						<IconButton className="stat-btn" color={'default'} aria-label="views" disableRipple>
+						<IconButton className="stat-btn" color={'default'} aria-label={t('Views')} disableRipple>
 							<RemoveRedEyeIcon />
 						</IconButton>
 						<Typography className="view-cnt">{boardArticle?.articleViews}</Typography>
@@ -96,7 +98,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 							whileTap={shouldReduceMotion ? undefined : { scale: 0.9 }}
 							className="stat-btn like-btn"
 							color={'default'}
-							aria-label={liked ? 'Unlike article' : 'Like article'}
+							aria-label={liked ? t('Unlike article') : t('Like article')}
 							onClick={(e: any) => {
 								e.stopPropagation();
 								if (likeArticleHandler) likeArticleHandler(e, user, boardArticle?._id);

@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, Variants } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
 
 const ProductsHero = () => {
+	const { t } = useTranslation('common');
 	const shouldReduceMotion = useReducedMotion();
 	const { scrollY } = useScroll();
 	const visualY = useTransform(scrollY, [0, 400], [0, shouldReduceMotion ? 0 : -28]);
@@ -21,13 +23,13 @@ const ProductsHero = () => {
 			<div className={'carlen-products-inner'}>
 				<motion.div className={'carlen-products-content'} variants={container} initial={'hidden'} animate={'visible'}>
 					<motion.span className={'carlen-products-eyebrow'} variants={item}>
-						Premium Automotive Marketplace
+						{t('Premium Automotive Marketplace')}
 					</motion.span>
 					<motion.h1 className={'carlen-products-title'} variants={item}>
-						Find Your Next <span className={'accent'}>Premium</span> Car
+						{t('Find Your Next Premium Car')}
 					</motion.h1>
 					<motion.p className={'carlen-products-subtitle'} variants={item}>
-						Explore verified vehicles from trusted dealers across Korea.
+						{t('Explore verified vehicles from trusted dealers across Korea.')}
 					</motion.p>
 					<motion.button
 						className={'carlen-products-cta'}
@@ -36,7 +38,7 @@ const ProductsHero = () => {
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						onClick={() => document.getElementById('main')?.scrollIntoView({ behavior: 'smooth' })}
 					>
-						Explore Cars
+						{t('Explore Cars')}
 					</motion.button>
 				</motion.div>
 				<motion.div

@@ -14,11 +14,13 @@ import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_FAVORITES } from '../../../apollo/user/query';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyFavorites: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [myFavorites, setMyFavorites] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchFavorites, setSearchFavorites] = useState<T>({ page: 1, limit: 6 });
@@ -80,18 +82,18 @@ const MyFavorites: NextPage = () => {
 			<div id="carlen-my-favorites-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.span className="eyebrow" variants={item}>
-						Saved Collection
+						{t('Saved Collection')}
 					</motion.span>
 					<motion.h1 className="title" variants={item}>
-						My Favorite Cars
+						{t('My Favorite Cars')}
 					</motion.h1>
 					<motion.p className="subtitle" variants={item}>
-						Keep track of vehicles you are interested in and revisit them anytime.
+						{t('Keep track of vehicles you are interested in and revisit them anytime.')}
 					</motion.p>
 					{total > 0 && (
 						<motion.span className="stat-chip" variants={item}>
 							<i className="dot" />
-							Total {total} saved car{total > 1 ? 's' : ''}
+							{t('totalSavedCars', { count: total })}
 						</motion.span>
 					)}
 				</motion.div>
@@ -133,8 +135,8 @@ const MyFavorites: NextPage = () => {
 						<span className="empty-icon">
 							<FavoriteBorderIcon />
 						</span>
-						<Typography className="empty-title">No saved cars yet</Typography>
-						<Typography className="empty-helper">Save vehicles you like and they will appear here.</Typography>
+						<Typography className="empty-title">{t('No saved cars yet')}</Typography>
+						<Typography className="empty-helper">{t('Save vehicles you like and they will appear here.')}</Typography>
 						<motion.button
 							type="button"
 							className="cta-primary"
@@ -143,7 +145,7 @@ const MyFavorites: NextPage = () => {
 							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						>
 							<DirectionsCarFilledOutlinedIcon />
-							Browse Cars
+							{t('Browse Cars')}
 						</motion.button>
 					</motion.div>
 				)}
@@ -166,7 +168,7 @@ const MyFavorites: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} saved vehicle{total > 1 ? 's' : ''}
+								{t('totalSavedCars', { count: total })}
 							</Typography>
 						</Stack>
 					</motion.div>

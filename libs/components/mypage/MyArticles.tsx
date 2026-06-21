@@ -15,11 +15,13 @@ import { LIKE_TARGET_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [searchCommunity, setSearchCommunity] = useState({
 		...initialInput,
@@ -91,13 +93,13 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 			<div id="carlen-my-articles-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>
-						<span className="eyebrow">PUBLISHING CENTER</span>
-						<Typography className="title">My Articles</Typography>
-						<Typography className="subtitle">Manage your published community posts and insights.</Typography>
+						<span className="eyebrow">{t('PUBLISHING CENTER')}</span>
+						<Typography className="title">{t('My Articles')}</Typography>
+						<Typography className="subtitle">{t('Manage your published community posts and insights.')}</Typography>
 						{totalCount > 0 && (
 							<span className="stat-chip">
 								<i className="dot" />
-								Total {totalCount} article{totalCount !== 1 ? 's' : ''}
+								{t('totalArticles', { count: totalCount })}
 							</span>
 						)}
 					</motion.div>
@@ -109,7 +111,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 					>
 						<AddRoundedIcon />
-						Write New Article
+						{t('Write New Article')}
 					</motion.button>
 				</motion.div>
 
@@ -132,10 +134,10 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 							<ArticleOutlinedIcon />
 						</motion.span>
 						<motion.p className="empty-title" variants={item}>
-							No articles published yet
+							{t('No articles published yet')}
 						</motion.p>
 						<motion.p className="empty-helper" variants={item}>
-							Start sharing your thoughts with the Carlen community.
+							{t('Start sharing your thoughts with the Carlen community.')}
 						</motion.p>
 						<motion.button
 							className="cta-primary"
@@ -145,7 +147,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 							whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						>
 							<AddRoundedIcon />
-							Write Article
+							{t('Write Article')}
 						</motion.button>
 					</motion.div>
 				) : (
@@ -176,9 +178,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 							/>
 						</Stack>
 						<Stack className="total">
-							<Typography>
-								Total {totalCount ?? 0} article{(totalCount ?? 0) !== 1 ? 's' : ''} available
-							</Typography>
+							<Typography>{t('totalArticlesAvailable', { count: totalCount ?? 0 })}</Typography>
 						</Stack>
 					</Stack>
 				)}

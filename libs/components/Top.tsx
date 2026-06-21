@@ -130,13 +130,15 @@ const StyledMenu = styled((props: MenuProps) => (
 	},
 }));
 
+const flagLocale = (locale?: string | null) => (locale === 'ko' ? 'kr' : locale || 'en');
+
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [lang, setLang] = useState<string | null>('en');
+	const [lang, setLang] = useState<string>('en');
 	const drop = Boolean(anchorEl2);
 	const [colorChange, setColorChange] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
@@ -157,13 +159,10 @@ const Top = () => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
-			localStorage.setItem('locale', 'en');
-			setLang('en');
-		} else {
-			setLang(localStorage.getItem('locale'));
-		}
-	}, [router]);
+		const activeLocale = router.locale === 'kr' ? 'ko' : router.locale || localStorage.getItem('locale') || 'en';
+		localStorage.setItem('locale', activeLocale);
+		setLang(activeLocale);
+	}, [router.locale]);
 
 	useEffect(() => {
 		switch (router.pathname) {
@@ -197,10 +196,12 @@ const Top = () => {
 
 	const langChoice = useCallback(
 		async (e: any) => {
-			setLang(e.target.id);
-			localStorage.setItem('locale', e.target.id);
+			const selectedLocale = e.currentTarget?.dataset?.locale || e.currentTarget?.id;
+			if (!selectedLocale) return;
+			setLang(selectedLocale);
+			localStorage.setItem('locale', selectedLocale);
 			setAnchorEl2(null);
-			await router.push(router.asPath, router.asPath, { locale: e.target.id });
+			await router.push(router.asPath, router.asPath, { locale: selectedLocale });
 		},
 		[router],
 	);
@@ -233,7 +234,7 @@ const Top = () => {
 	if (device == 'mobile') {
 		const navLinks = [
 			{ href: '/', match: '/', label: t('Home') },
-			{ href: '/cars', match: '/cars', label: t('Products') },
+			{ href: '/cars', match: '/cars', label: t('Cars') },
 			{ href: '/agent', match: '/agent', label: t('Agents') },
 			{ href: '/community?articleCategory=FREE', match: '/community', label: t('Community') },
 			...(user?._id ? [{ href: '/mypage', match: '/mypage', label: t('Dashboard') }] : []),
@@ -241,7 +242,7 @@ const Top = () => {
 		];
 		const langs = [
 			{ id: 'en', label: t('English') },
-			{ id: 'kr', label: t('Korean') },
+			{ id: 'ko', label: t('Korean') },
 			{ id: 'ru', label: t('Russian') },
 		];
 		const closeDrawer = () => setDrawerOpen(false);
@@ -263,7 +264,7 @@ const Top = () => {
 						)}
 						<IconButton
 							className={'m-burger'}
-							aria-label={'Open menu'}
+							aria-label={t('Open menu')}
 							aria-haspopup={'true'}
 							aria-expanded={drawerOpen}
 							aria-controls={'carlen-mobile-nav'}
@@ -283,8 +284,8 @@ const Top = () => {
 				>
 					<div className={'m-drawer'}>
 						<div className={'m-drawer-head'}>
-							<span className={'m-brand'}>MENU</span>
-							<IconButton className={'m-close'} aria-label={'Close menu'} onClick={closeDrawer}>
+							<span className={'m-brand'}>{t('MENU')}</span>
+							<IconButton className={'m-close'} aria-label={t('Close menu')} onClick={closeDrawer}>
 								<CloseRoundedIcon />
 							</IconButton>
 						</div>
@@ -314,7 +315,7 @@ const Top = () => {
 							)}
 						</div>
 
-						<nav className={'m-nav'} aria-label={'Primary'}>
+						<nav className={'m-nav'} aria-label={t('Primary')}>
 							{navLinks.map((item) => (
 								<Link
 									href={item.href}
@@ -337,13 +338,14 @@ const Top = () => {
 										type={'button'}
 										key={l.id}
 										id={l.id}
+										data-locale={l.id}
 										className={lang === l.id ? 'm-lang-chip active' : 'm-lang-chip'}
 										onClick={(e: any) => {
 											langChoice(e);
 											closeDrawer();
 										}}
 									>
-										<img src={`/img/flag/lang${l.id}.png`} id={l.id} alt={l.label} />
+										<img src={`/img/flag/lang${flagLocale(l.id)}.png`} id={l.id} alt={l.label} />
 										<span id={l.id}>{l.label}</span>
 									</button>
 								))}
@@ -362,7 +364,7 @@ const Top = () => {
 		);
 	} else {
 		return (
-			<Stack className={'navbar'} component={'nav'} aria-label={'Primary'}>
+			<Stack className={'navbar'} component={'nav'} aria-label={t('Primary')}>
 				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
@@ -375,7 +377,7 @@ const Top = () => {
 								<div className={isActiveRoute('/') ? 'active' : ''}>{t('Home')}</div>
 							</Link>
 							<Link href={'/cars'}>
-								<div className={isActiveRoute('/cars') ? 'active' : ''}>{t('Products')}</div>
+								<div className={isActiveRoute('/cars') ? 'active' : ''}>{t('Cars')}</div>
 							</Link>
 							<Link href={'/agent'}>
 								<div className={isActiveRoute('/agent') ? 'active' : ''}>{t('Agents')}</div>
@@ -491,15 +493,15 @@ const Top = () => {
 								>
 									<Box component={'div'} className={'flag'}>
 										{lang !== null ? (
-											<img src={`/img/flag/lang${lang}.png`} alt={'usaFlag'} />
+											<img src={`/img/flag/lang${flagLocale(lang)}.png`} alt={t('Language')} />
 										) : (
-											<img src={`/img/flag/langen.png`} alt={'usaFlag'} />
+											<img src={`/img/flag/langen.png`} alt={t('Language')} />
 										)}
 									</Box>
 								</Button>
 
 								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
-									<MenuItem disableRipple onClick={langChoice} id="en">
+									<MenuItem disableRipple onClick={langChoice} data-locale="en">
 										<img
 											className="img-flag"
 											src={'/img/flag/langen.png'}
@@ -509,17 +511,15 @@ const Top = () => {
 										/>
 										{t('English')}
 									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="kr">
+									<MenuItem disableRipple onClick={langChoice} data-locale="ko">
 										<img
 											className="img-flag"
 											src={'/img/flag/langkr.png'}
-											onClick={langChoice}
-											id="uz"
 											alt={'koreanFlag'}
 										/>
 										{t('Korean')}
 									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="ru">
+									<MenuItem disableRipple onClick={langChoice} data-locale="ru">
 										<img
 											className="img-flag"
 											src={'/img/flag/langru.png'}
