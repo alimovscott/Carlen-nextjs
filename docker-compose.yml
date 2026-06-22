@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   carlen-next:
     container_name: carlen-next
