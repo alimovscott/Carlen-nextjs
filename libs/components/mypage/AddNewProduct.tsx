@@ -430,7 +430,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 									<option disabled={true} value={'select'}>
 										{t('Select')}
 									</option>
-									{[1, 2, 3, 4, 5].map((bed: number) => (
+									{[1, 2, 3, 4, 5, 7].map((bed: number) => (
 										<option value={`${bed}`} key={bed}>
 											{bed}
 										</option>
