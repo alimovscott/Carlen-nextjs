@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, Select, MenuItem, Tooltip } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
@@ -36,7 +35,6 @@ interface FilterType {
 
 const Filter = (props: FilterType) => {
 	const { searchFilter, setSearchFilter, initialInput, total } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const [productLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
 	const [productType] = useState<ProductType[]>(Object.values(ProductType));
@@ -207,10 +205,7 @@ const Filter = (props: FilterType) => {
 		);
 	};
 
-	if (device === 'mobile') {
-		return <div>PROPERTIES FILTER</div>;
-	} else {
-		return (
+	return (
 			<motion.aside
 				className={'carlen-filter-panel'}
 				initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
@@ -407,7 +402,6 @@ const Filter = (props: FilterType) => {
 				</motion.div>
 			</motion.aside>
 		);
-	}
 };
 
 export default Filter;
