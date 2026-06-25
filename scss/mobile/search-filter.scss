@@ -1,0 +1,111 @@
+/**
+ * Carlen mobile/tablet — Homepage Advanced Search modal.
+ * The MUI <Modal> portals to <body> (outside #mobile-wrap), so it is scoped by its own class.
+ * Loaded AFTER scss/pc/main.scss, and only inside media queries, so desktop (>1023px) is untouched.
+ * 769–1023px: fields in 2 columns. <=768px: single column, full-width controls.
+ */
+@media (max-width: 1023px) {
+	.advanced-filter-modal.carlen-advanced-search-modal {
+		width: min(620px, calc(100vw - 32px));
+		max-width: 100%;
+		max-height: calc(100vh - 32px);
+		padding: 24px 16px 18px;
+		overflow-x: hidden;
+		overflow-y: auto;
+		box-sizing: border-box;
+
+		.top,
+		.middle,
+		.bottom {
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			box-sizing: border-box;
+		}
+
+		.top {
+			div.search-input-box {
+				width: 100%;
+				box-sizing: border-box;
+			}
+		}
+
+		.middle {
+			.row-box {
+				flex-wrap: wrap;
+				gap: 16px;
+
+				.box {
+					width: calc(50% - 8px);
+					min-width: 0;
+					max-width: 100%;
+					box-sizing: border-box;
+
+					.inside {
+						min-width: 0;
+						max-width: 100%;
+						box-sizing: border-box;
+
+						&.space-between {
+							gap: 10px;
+						}
+
+						/* override inline sx={{ width: '122px' }} on year/mileage selects */
+						.MuiFormControl-root {
+							flex: 1 1 0;
+							width: auto;
+							min-width: 0;
+						}
+
+						.MuiInputBase-root {
+							width: 100%;
+							min-height: 48px;
+						}
+					}
+				}
+			}
+		}
+
+		.bottom {
+			width: 100%;
+			gap: 16px;
+			flex-wrap: wrap;
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.advanced-filter-modal.carlen-advanced-search-modal {
+		width: calc(100vw - 24px);
+		overflow-x: hidden;
+
+		.middle {
+			.row-box {
+				gap: 12px;
+
+				.box {
+					width: 100%;
+
+					/* seats row never overflows narrow screens */
+					.inside {
+						flex-wrap: wrap;
+					}
+				}
+			}
+		}
+
+		.bottom {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 14px;
+
+			div {
+				justify-content: center;
+			}
+
+			button {
+				width: 100%;
+			}
+		}
+	}
+}

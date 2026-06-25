@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Stack, Box } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { Stack, Box, useMediaQuery } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper';
 import TopProductCard from './TopProductCard';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { Product } from '../../types/product/product';
@@ -13,6 +11,7 @@ import { Message } from '../../enums/common.enum';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 
 interface TopProductsProps {
 	initialInput: ProductsInquiry;
@@ -20,7 +19,8 @@ interface TopProductsProps {
 
 const TopProducts = (props: TopProductsProps) => {
 	const { initialInput } = props;
-	const device = useDeviceDetect();
+	const isCompact = useMediaQuery('(max-width:1023px)');
+	const isMobile = useMediaQuery('(max-width:768px)');
 	const { t } = useTranslation('common');
 	const [topProducts, setTopProducts] = useState<Product[]>([]);
 
@@ -57,29 +57,46 @@ const TopProducts = (props: TopProductsProps) => {
 			}
 		};
 
-	if (device === 'mobile') {
+	if (isCompact) {
 		return (
-			<Stack className={'top-products'}>
+			<Stack className={'top-products carlen-top-responsive'}>
 				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>{t('Top Rated Cars')}</span>
+					<Stack component={'header'} className={'top-responsive-header'}>
+						<Stack className={'top-responsive-copy'}>
+							<span className={'eyebrow'}>{t('Top Rated')}</span>
+							<strong>{t('Highest Rated Cars')}</strong>
+							<p>{t('Premium vehicles trusted and loved by our community.')}</p>
+						</Stack>
+						<Link href={'/cars'} className={'top-responsive-view-all'}>
+							{t('View All')}
+						</Link>
 					</Stack>
 					<Stack className={'card-box'}>
-						<Swiper
-							className={'top-product-swiper'}
-							slidesPerView={'auto'}
-							centeredSlides={true}
-							spaceBetween={15}
-							modules={[Autoplay]}
-						>
-							{topProducts.map((product: Product) => {
-								return (
-									<SwiperSlide className={'top-product-slide'} key={product?._id}>
-										<TopProductCard product={product} likePropertyHandler={likePropertyHandler}/>
-									</SwiperSlide>
-								);
-							})}
-						</Swiper>
+						{topProducts.length === 0 ? (
+							<Box component={'div'} className={'empty-list'}>
+								{t('No cars found')}
+							</Box>
+						) : (
+							<Swiper
+								className={'top-product-swiper'}
+								slidesPerView={isMobile ? 1.12 : 2}
+								spaceBetween={isMobile ? 16 : 18}
+								centeredSlides={false}
+								grabCursor={true}
+							>
+								{topProducts.map((product: Product, index: number) => {
+									return (
+										<SwiperSlide className={'top-product-slide'} key={product?._id}>
+											<TopProductCard
+												product={product}
+												likePropertyHandler={likePropertyHandler}
+												index={index}
+											/>
+										</SwiperSlide>
+									);
+								})}
+							</Swiper>
+						)}
 					</Stack>
 				</Stack>
 			</Stack>

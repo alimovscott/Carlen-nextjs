@@ -1,7 +1,6 @@
 import React from 'react';
-import { Stack, Box, Divider, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Product } from '../../types/product/product';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -29,67 +28,80 @@ const getBadge = (p: Product): { label: string; tone: 'red' | 'blue' } => {
 
 const PopularProductCard = (props: PopularProductCardProps) => {
 	const { product, variant = 'standard', likePropertyHandler, index = 0 } = props;
-	const device = useDeviceDetect();
+	const isCompact = useMediaQuery('(max-width:1023px)');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const isLiked = product?.meLiked?.[0]?.myFavorite;
 	const badge = getBadge(product);
 	const shouldReduceMotion = useReducedMotion();
+	const transmissionLabel = product.productTransmission
+		? product.productTransmission.toLowerCase()
+		: 'transmission';
+	const fuelLabel = product.productFuelType ? product.productFuelType.toLowerCase() : 'fuel';
 
 	/** HANDLERS **/
 	const pushDetailHandler = async (productId: string) => {
 		await router.push({pathname: 'cars/detail', query: {id: productId}});
 	};
 
-	if (device === 'mobile') {
+	if (isCompact) {
 		return (
-			<Stack className="popular-card-box">
+			<Box component={'article'} className={'popular-card-box carlen-popular-responsive-card'}>
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages[0]})` }}
+					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})` }}
 					onClick={() => pushDetailHandler(product._id)}
 				>
-					{product?.productRank && product?.productRank >= topProductRank ? (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					) : (
-						''
-					)}
-
-					<div className={'price'}>${product.productPrice}</div>
+					<span className={'popular-card-badge'}>Popular</span>
+					<div className={'popular-card-price'}>${formatterStr(product.productPrice)}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
-					<strong className={'title'} >{product.productTitle}</strong>
-					<p className={'desc'}>{product.productAddress}</p>
+					<div className="meta-row">
+						<span>{product.productYear}</span>
+						<span>{product.productType}</span>
+						<span>{product.productLocation}</span>
+					</div>
+					<strong className={'title'} onClick={() => pushDetailHandler(product._id)}>
+						{product.productTitle}
+					</strong>
+					<p className={'desc'}>{product.productDesc ?? 'Fresh vehicle listing with verified details.'}</p>
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/car-seat.svg" alt="" />
-							<span>{product?.productSeats} seats</span>
+							<span>{product.productSeats} seats</span>
 						</div>
 						<div>
 							<img src="/img/icons/car-door.svg" alt="" />
-							<span>{product?.productDoors} doors</span>
+							<span>{product.productDoors} doors</span>
 						</div>
 						<div>
 							<img src="/img/icons/odometer.svg" alt="" />
-							<span>{product?.productMileage} km</span>
+							<span>{formatterStr(product.productMileage)} km</span>
 						</div>
 					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<p>{product?.productTransmission ? 'automatic' : 'manual'}</p>
+						<p>
+							{transmissionLabel} / {fuelLabel}
+						</p>
 						<div className="view-like-box">
-							<IconButton color={'default'}>
+							<span className="stat-chip">
 								<RemoveRedEyeIcon />
+								<Typography className="view-cnt">{product?.productViews}</Typography>
+							</span>
+							<IconButton
+								className={isLiked ? 'like-button active' : 'like-button'}
+								color={'default'}
+								aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+								onClick={() => likePropertyHandler && likePropertyHandler(user, product._id)}
+							>
+								<FavoriteIcon />
 							</IconButton>
-							<Typography className="view-cnt">{product?.productViews}</Typography>
+							<Typography className="view-cnt">{product?.productLikes}</Typography>
 						</div>
 					</div>
 				</Box>
-			</Stack>
+			</Box>
 		);
 	} else {
 		return (

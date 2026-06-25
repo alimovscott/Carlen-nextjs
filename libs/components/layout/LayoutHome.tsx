@@ -7,6 +7,7 @@ import Top from '../Top';
 import Footer from '../Footer';
 import { Stack } from '@mui/material';
 import HeaderFilter from '../homepage/HeaderFilter';
+import MobileBottomNav from '../common/MobileBottomNav';
 import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
@@ -62,6 +63,8 @@ const withLayoutMain = (Component: any) => {
 						<Stack id={'footer'}>
 							<Footer />
 						</Stack>
+
+						<MobileBottomNav />
 					</Stack>
 				</>
 			);
