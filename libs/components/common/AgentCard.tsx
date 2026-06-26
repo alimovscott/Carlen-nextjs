@@ -1,5 +1,4 @@
 import React from 'react';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import { REACT_APP_API_URL } from '../../config';
@@ -20,7 +19,6 @@ interface AgentCardProps {
 
 const AgentCard = (props: AgentCardProps) => {
 	const { agent, likeMemberHandler, variant } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const publicListingsCount = agent?.activeProducts ?? 0;
@@ -28,9 +26,7 @@ const AgentCard = (props: AgentCardProps) => {
 		? `${REACT_APP_API_URL}/${agent?.memberImage}`
 		: '/img/profile/defaultUser.svg';
 
-	if (device === 'mobile') {
-		return <div>AGENT CARD</div>;
-	} else if (variant === 'dealer') {
+	if (variant === 'dealer') {
 		return (
 			<Stack className={'carlen-agent-card'}>
 				<span className={'carlen-agent-card-badge'}>

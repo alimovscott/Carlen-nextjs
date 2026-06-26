@@ -10,7 +10,6 @@ import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSati
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
 import CommunityCard from '../../libs/components/common/CommunityCard';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { BoardArticle } from '../../libs/types/board-article/board-article';
 import { T } from '../../libs/types/common';
@@ -45,7 +44,6 @@ const CATEGORY_META: Record<string, { title: string; subtitle: string }> = {
 };
 
 const Community: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
@@ -149,10 +147,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const activeCategory = (searchCommunity.search.articleCategory as string) || 'FREE';
 	const meta = CATEGORY_META[activeCategory] ?? CATEGORY_META.FREE;
 
-	if (device === 'mobile') {
-		return <h1>COMMUNITY PAGE MOBILE</h1>;
-	} else {
-		return (
+	return (
 			<div id="carlen-community-page">
 				<div className="container">
 					<motion.section
@@ -293,7 +288,6 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 				</div>
 			</div>
 		);
-	}
 };
 
 Community.defaultProps = {

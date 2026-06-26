@@ -1,0 +1,480 @@
+/**
+ * Carlen mobile/tablet — Agent Detail page.
+ * Desktop design lives under #pc-wrap (scss/pc/agent/detail.scss) and never reaches #mobile-wrap,
+ * so the mobile page is styled here from scratch. Dark theme (reuse $c-* tokens).
+ * Scoped #mobile-wrap .carlen-agent-detail-page.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap {
+		.carlen-agent-detail-page {
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			box-sizing: border-box;
+			overflow-x: hidden;
+			background: $c-base;
+			padding: 16px 0 calc(96px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				padding: 0 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				box-sizing: border-box;
+			}
+
+			/* ===== HERO (profile header) ===== */
+			.carlen-agent-detail-hero {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+
+				.carlen-agent-profile {
+					flex-direction: column;
+					align-items: center;
+					text-align: center;
+					gap: 14px;
+					padding: 20px 16px;
+					border-radius: 18px;
+					border: 1px solid $c-border;
+					background: $c-raised;
+					box-sizing: border-box;
+
+					.avatar-ring {
+						cursor: pointer;
+						img {
+							width: 120px;
+							height: 120px;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 1px solid $c-border-strong;
+						}
+					}
+
+					.info {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						gap: 8px;
+						min-width: 0;
+						width: 100%;
+
+						.verified-chip {
+							display: inline-flex;
+							align-items: center;
+							gap: 5px;
+							padding: 5px 11px;
+							border-radius: 999px;
+							border: 1px solid rgba(52, 211, 153, 0.4);
+							background: rgba(52, 211, 153, 0.14);
+							color: #34d399;
+							font-family: $font;
+							font-size: 11px;
+							font-weight: 700;
+							svg { font-size: 14px; }
+						}
+
+						strong {
+							color: $c-text;
+							font-family: $font;
+							font-size: 22px;
+							font-weight: 800;
+							line-height: 1.2;
+							cursor: pointer;
+							overflow-wrap: anywhere;
+						}
+
+						.phone-row {
+							display: inline-flex;
+							align-items: center;
+							gap: 6px;
+							color: $c-muted;
+							font-family: $font;
+							font-size: 14px;
+							svg { font-size: 16px; color: $c-orange; }
+						}
+
+						.dealer-desc {
+							margin: 4px 0 0;
+							color: $c-muted;
+							font-family: $font;
+							font-size: 14px;
+							line-height: 1.6;
+							overflow-wrap: anywhere;
+						}
+
+						.cta-row {
+							display: flex;
+							flex-direction: column;
+							gap: 10px;
+							width: 100%;
+							margin-top: 6px;
+
+							.cta-primary,
+							.cta-secondary {
+								width: 100%;
+								display: inline-flex;
+								align-items: center;
+								justify-content: center;
+								gap: 8px;
+								min-height: 48px;
+								border-radius: 14px;
+								font-family: $font;
+								font-size: 15px;
+								font-weight: 700;
+								text-decoration: none;
+								box-sizing: border-box;
+								cursor: pointer;
+							}
+							.cta-primary {
+								border: none;
+								background: $c-accent-grad;
+								color: #fff;
+							}
+							.cta-secondary {
+								border: 1px solid $c-border;
+								background: $c-glass;
+								color: $c-text;
+							}
+						}
+					}
+				}
+
+				.carlen-agent-stats {
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 10px;
+					width: 100%;
+
+					.stat-card {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						gap: 4px;
+						padding: 14px 6px;
+						border-radius: 14px;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						min-width: 0;
+						box-sizing: border-box;
+
+						.stat-icon svg { font-size: 18px; color: $c-orange; }
+						.stat-value { color: $c-text; font-family: $font; font-size: 16px; font-weight: 800; line-height: 1; }
+						.stat-label {
+							color: $c-faint;
+							font-family: $font;
+							font-size: 10px;
+							font-weight: 600;
+							text-transform: uppercase;
+							letter-spacing: 0.04em;
+						}
+					}
+				}
+			}
+
+			/* ===== shared section head ===== */
+			.carlen-agent-section-head {
+				width: 100%;
+				margin-bottom: 14px;
+				h2 {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 20px;
+					font-weight: 700;
+				}
+				p {
+					margin: 4px 0 0;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+				}
+			}
+
+			/* ===== DEALER PRODUCTS ===== */
+			.carlen-agent-products {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+
+				.card-wrap {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 16px;
+					width: 100%;
+					max-width: 100%;
+					box-sizing: border-box;
+					> * { min-width: 0; }
+				}
+
+				.carlen-agent-product-wrap {
+					width: 100%;
+					min-width: 0;
+				}
+
+				.carlen-agent-product-skeleton {
+					width: 100%;
+					aspect-ratio: 4 / 3;
+					border-radius: 16px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+				}
+
+				.pagination {
+					width: 100%;
+					margin-top: 18px;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 12px;
+
+					.pagination-box {
+						display: flex;
+						justify-content: center;
+					}
+					.MuiPaginationItem-root {
+						color: $c-muted;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						font-family: $font;
+						&.Mui-selected { color: #fff; border-color: transparent; background: $c-accent-grad; }
+					}
+					> span {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						text-align: center;
+					}
+					.no-data {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						gap: 8px;
+						color: $c-muted;
+						img { width: 40px; height: 40px; opacity: 0.6; }
+					}
+				}
+			}
+
+			/* ===== PropertyBigCard mobile card (.m-similar-card) ===== */
+			.m-similar-card {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				border-radius: 16px;
+				overflow: hidden;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				box-sizing: border-box;
+				cursor: pointer;
+
+				.m-similar-img {
+					position: relative;
+					width: 100%;
+					aspect-ratio: 16 / 10;
+					background-size: cover;
+					background-position: center;
+
+					.m-similar-fav {
+						position: absolute;
+						top: 10px;
+						right: 10px;
+						width: 40px;
+						height: 40px;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						border-radius: 50%;
+						border: 1px solid $c-border;
+						background: rgba(11, 15, 23, 0.55);
+						color: $c-text;
+						cursor: pointer;
+						.MuiSvgIcon-root { font-size: 18px; }
+						.liked { color: $c-red; }
+					}
+					.m-similar-price {
+						position: absolute;
+						left: 12px;
+						bottom: 12px;
+						padding: 6px 11px;
+						border-radius: 8px;
+						background: rgba(11, 15, 23, 0.7);
+						border: 1px solid $c-border;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 700;
+						color: #fff;
+					}
+				}
+
+				.m-similar-info {
+					padding: 14px;
+					min-width: 0;
+					.m-similar-title {
+						display: block;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 700;
+						color: $c-text;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+					.m-similar-addr {
+						margin: 4px 0 10px;
+						font-family: $font;
+						font-size: 12px;
+						color: $c-faint;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+					.m-similar-stats {
+						display: flex;
+						gap: 16px;
+						.stat {
+							display: inline-flex;
+							align-items: center;
+							gap: 5px;
+							color: $c-muted;
+							.MuiSvgIcon-root { font-size: 16px; }
+							.cnt { font-family: $font; font-size: 12px; }
+						}
+					}
+				}
+			}
+
+			/* ===== REVIEWS ===== */
+			.carlen-agent-reviews {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+
+				.review-wrap {
+					width: 100%;
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+
+					.title-box {
+						display: flex;
+						align-items: center;
+						gap: 6px;
+						color: $c-text;
+						font-family: $font;
+						svg { color: $c-orange; }
+					}
+
+					.pagination-box {
+						display: flex;
+						justify-content: center;
+						margin-top: 4px;
+						.MuiPaginationItem-root {
+							color: $c-muted;
+							border: 1px solid $c-border;
+							background: $c-glass;
+							&.Mui-selected { color: #fff; border-color: transparent; background: $c-accent-grad; }
+						}
+					}
+				}
+
+				.review-card {
+					width: 100%;
+					max-width: 100%;
+					min-width: 0;
+					padding: 16px;
+					border-radius: 16px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					box-sizing: border-box;
+
+					.info .left {
+						display: flex;
+						align-items: center;
+						gap: 12px;
+						img {
+							width: 40px;
+							height: 40px;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 1px solid $c-border;
+							flex-shrink: 0;
+						}
+						strong { color: $c-text; font-family: $font; font-size: 14px; font-weight: 600; }
+						span { color: $c-faint; font-family: $font; font-size: 12px; }
+					}
+					p {
+						margin: 10px 0 0;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						line-height: 1.6;
+						overflow-wrap: anywhere;
+					}
+				}
+
+				.carlen-agent-review-form {
+					width: 100%;
+					margin-top: 18px;
+					display: flex;
+					flex-direction: column;
+					gap: 10px;
+
+					.main-title { color: $c-text; font-family: $font; font-size: 18px; font-weight: 700; }
+					.review-title { color: $c-muted; font-family: $font; font-size: 13px; }
+
+					textarea {
+						width: 100%;
+						min-height: 110px;
+						box-sizing: border-box;
+						padding: 14px;
+						border-radius: 14px;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						color: $c-text;
+						outline: none;
+						resize: vertical;
+						font-family: $font;
+						font-size: 15px;
+						line-height: 1.5;
+					}
+
+					.submit-btn {
+						width: 100%;
+						> div { width: 100%; }
+						.submit-review {
+							width: 100%;
+							min-height: 48px;
+							border-radius: 14px;
+							background: $c-accent-grad;
+							color: #fff;
+							font-family: $font;
+							font-weight: 700;
+							text-transform: none;
+							.title { color: #fff; }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap {
+		.carlen-agent-detail-page {
+			.carlen-agent-products .card-wrap {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+}

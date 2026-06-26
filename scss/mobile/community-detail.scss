@@ -1,0 +1,609 @@
+/**
+ * Carlen mobile/tablet — Community Detail page.
+ * Desktop design lives under #pc-wrap (scss/pc/community/detail.scss) and never reaches #mobile-wrap,
+ * so the mobile page is styled here from scratch. Dark page + white article reading panel (mirrors desktop).
+ * Scoped #mobile-wrap #carlen-community-detail-page.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap {
+		#carlen-community-detail-page {
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			box-sizing: border-box;
+			overflow-x: hidden;
+			background: $c-base;
+			padding: 16px 0 calc(96px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				margin: 0 auto;
+				padding: 0 16px;
+				box-sizing: border-box;
+			}
+
+			.carlen-community-detail-layout {
+				flex-direction: column;
+				align-items: stretch;
+				gap: 18px;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+			}
+
+			/* TABS → horizontal scrollable pills */
+			.carlen-community-sidebar {
+				position: static;
+				top: auto;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				padding: 0;
+				border: 0;
+				background: transparent;
+				box-shadow: none;
+
+				.brand-row {
+					display: none;
+				}
+
+				.sidebar-nav {
+					flex-direction: row;
+					flex-wrap: nowrap;
+					gap: 8px;
+					overflow-x: auto;
+					-webkit-overflow-scrolling: touch;
+					scrollbar-width: none;
+					padding-bottom: 2px;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+
+					.nav-item {
+						flex: 0 0 auto;
+						width: auto;
+						white-space: nowrap;
+						gap: 8px;
+						padding: 10px 14px;
+						border: 1px solid $c-border;
+						border-radius: $c-radius-pill;
+						background: $c-glass;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+
+						.nav-icon svg {
+							font-size: 18px;
+						}
+
+						&.active {
+							border-color: rgba(233, 44, 40, 0.3);
+							background: rgba(233, 44, 40, 0.12);
+							color: $c-orange;
+
+							.nav-icon svg {
+								color: $c-orange;
+							}
+						}
+					}
+				}
+			}
+
+			/* CONTENT COLUMN */
+			.carlen-community-content {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+			}
+
+			/* ARTICLE PANEL (header) */
+			.carlen-article-panel {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				padding: 18px;
+				border-radius: 18px;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				box-sizing: border-box;
+
+				.panel-top {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					gap: 12px;
+
+					.category-chip {
+						padding: 5px 12px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.28);
+						background: rgba(233, 44, 40, 0.1);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 700;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+					}
+
+					.write-cta {
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						min-height: 40px;
+						padding: 0 14px;
+						border: 1px solid $c-border;
+						border-radius: $c-radius-pill;
+						background: $c-glass;
+						color: $c-text;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						cursor: pointer;
+
+						svg {
+							font-size: 17px;
+						}
+					}
+				}
+
+				.article-title {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 22px;
+					font-weight: 800;
+					line-height: 1.25;
+					overflow-wrap: anywhere;
+				}
+
+				.author-row {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 4px;
+
+					.author-meta {
+						min-width: 0;
+
+						.author-nick {
+							color: $c-text;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 700;
+							cursor: pointer;
+						}
+
+						.author-date {
+							color: $c-faint;
+							font-family: $font;
+							font-size: 12px;
+						}
+					}
+				}
+			}
+
+			/* ARTICLE BODY — white reading panel */
+			.carlen-article-body {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				padding: 20px 16px;
+				border-radius: 18px;
+				background: #fff;
+				overflow: hidden;
+				box-sizing: border-box;
+
+				.article-skeleton {
+					display: flex;
+					flex-direction: column;
+					gap: 14px;
+				}
+				.sk-line {
+					height: 14px;
+					border-radius: 7px;
+					background: rgba(24, 26, 32, 0.08);
+					&.w-60 { width: 60%; }
+					&.w-80 { width: 80%; }
+					&.w-90 { width: 90%; }
+					&.w-95 { width: 95%; }
+				}
+
+				.carlen-community-viewer {
+					width: 100%;
+					max-width: 100%;
+					min-width: 0;
+
+					.toastui-editor-contents {
+						font-family: $font;
+						font-size: 15px;
+						line-height: 1.8;
+						color: #2b2f38;
+						word-break: break-word;
+						overflow-wrap: anywhere;
+
+						p,
+						li,
+						span {
+							color: #2b2f38;
+						}
+						h1, h2, h3, h4 {
+							color: #181a20;
+						}
+
+						/* safe rendered media — never overflow the reading panel */
+						img,
+						video,
+						iframe {
+							max-width: 100%;
+							height: auto;
+							border-radius: 12px;
+						}
+						pre,
+						table {
+							max-width: 100%;
+							overflow-x: auto;
+						}
+					}
+				}
+			}
+
+			/* REACTION BAR */
+			.carlen-article-actions {
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: stretch;
+				gap: 10px;
+
+				.reaction-btn {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					min-height: 46px;
+					padding: 0 16px;
+					border: 1px solid $c-border;
+					border-radius: 14px;
+					background: $c-glass;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 600;
+					cursor: pointer;
+
+					svg {
+						font-size: 18px;
+					}
+					.reaction-count {
+						color: $c-text;
+						font-weight: 700;
+					}
+					&.liked {
+						border-color: rgba(233, 44, 40, 0.4);
+						background: rgba(233, 44, 40, 0.12);
+						color: $c-orange;
+					}
+					&.static {
+						cursor: default;
+					}
+				}
+			}
+
+			/* COMMENT FORM */
+			.carlen-comment-form {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				padding: 18px;
+				border-radius: 18px;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				box-sizing: border-box;
+
+				.discussion-header {
+					.discussion-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 18px;
+						font-weight: 700;
+					}
+					.discussion-subtitle {
+						margin-top: 4px;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+					}
+				}
+
+				.leave-comment {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+
+					.comment-textarea {
+						width: 100%;
+						min-height: 96px;
+						box-sizing: border-box;
+						padding: 14px;
+						border-radius: 14px;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						color: $c-text;
+						outline: none;
+						resize: vertical;
+						font-family: $font;
+						font-size: 15px;
+						line-height: 1.5;
+					}
+
+					.comment-actions {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						justify-content: space-between;
+						gap: 12px;
+
+						.char-count {
+							color: $c-faint;
+							font-family: $font;
+							font-size: 12px;
+						}
+					}
+				}
+			}
+
+			/* SHARED CTA buttons */
+			.cta-primary {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				min-height: 46px;
+				padding: 0 22px;
+				border: none;
+				border-radius: 14px;
+				cursor: pointer;
+				background: $c-accent-grad;
+				color: #fff;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 700;
+			}
+			.cta-secondary {
+				min-height: 46px;
+				padding: 0 22px;
+				border: 1px solid $c-border;
+				border-radius: 14px;
+				background: $c-glass;
+				color: $c-text;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 600;
+				cursor: pointer;
+			}
+
+			/* COMMENTS LIST */
+			.comments-list {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+
+				.carlen-comment-card {
+					padding: 16px;
+					border-radius: 16px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					box-sizing: border-box;
+
+					.member-info {
+						flex-direction: row;
+						align-items: center;
+						justify-content: space-between;
+						gap: 10px;
+						margin-bottom: 10px;
+
+						.name-date {
+							flex-direction: row;
+							align-items: center;
+							gap: 10px;
+							min-width: 0;
+							cursor: pointer;
+
+							img {
+								width: 40px;
+								height: 40px;
+								border-radius: 50%;
+								object-fit: cover;
+								border: 1px solid $c-border;
+								flex-shrink: 0;
+							}
+							.name {
+								color: $c-text;
+								font-family: $font;
+								font-size: 14px;
+								font-weight: 600;
+							}
+							.date {
+								color: $c-faint;
+								font-family: $font;
+								font-size: 12px;
+							}
+						}
+
+						.buttons {
+							flex-direction: row;
+							flex-shrink: 0;
+							.ghost-icon {
+								color: $c-faint;
+								svg { font-size: 19px; }
+							}
+						}
+					}
+
+					.comment-content .MuiTypography-root {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						line-height: 1.6;
+						overflow-wrap: anywhere;
+					}
+				}
+			}
+
+			.comments-empty {
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				padding: 40px 20px;
+				border-radius: 16px;
+				border: 1px dashed $c-border-strong;
+				background: $c-glass;
+				text-align: center;
+
+				.empty-icon svg {
+					font-size: 30px;
+					color: $c-orange;
+				}
+				.empty-title {
+					color: $c-text;
+					font-family: $font;
+					font-size: 16px;
+					font-weight: 700;
+				}
+				.empty-subtitle {
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+				}
+			}
+
+			.comment-skeleton {
+				display: flex;
+				gap: 12px;
+				padding: 16px;
+				border-radius: 16px;
+				border: 1px solid $c-border;
+				background: $c-glass;
+				.sk-avatar {
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					background: rgba(255, 255, 255, 0.06);
+					flex-shrink: 0;
+				}
+				.sk-body {
+					flex: 1;
+					min-width: 0;
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					.sk-line {
+						height: 12px;
+						border-radius: 6px;
+						background: rgba(255, 255, 255, 0.06);
+						&.w-40 { width: 40%; }
+						&.w-90 { width: 90%; }
+					}
+				}
+			}
+
+			/* EDIT MODAL */
+			.carlen-edit-backdrop {
+				z-index: 1300;
+				padding: 16px;
+
+				.carlen-edit-modal {
+					width: min(420px, calc(100vw - 32px));
+					max-width: 100%;
+					box-sizing: border-box;
+					padding: 20px 16px;
+					border-radius: 18px;
+					border: 1px solid $c-border;
+					background: $c-raised;
+
+					.modal-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 700;
+						margin-bottom: 12px;
+					}
+					.modal-textarea {
+						width: 100%;
+						min-height: 110px;
+						box-sizing: border-box;
+						padding: 14px;
+						border-radius: 12px;
+						border: 1px solid $c-border;
+						background: $c-glass;
+						color: $c-text;
+						outline: none;
+						resize: vertical;
+						font-family: $font;
+						font-size: 15px;
+						line-height: 1.5;
+					}
+					.modal-footer {
+						flex-direction: row;
+						align-items: center;
+						justify-content: space-between;
+						gap: 12px;
+						margin-top: 14px;
+
+						.char-count {
+							color: $c-faint;
+							font-family: $font;
+							font-size: 12px;
+						}
+						.modal-buttons {
+							flex-direction: row;
+							gap: 10px;
+						}
+					}
+				}
+			}
+
+			/* PAGINATION */
+			.carlen-community-pagination {
+				width: 100%;
+				align-items: center;
+				justify-content: center;
+				margin-top: 4px;
+
+				.MuiPaginationItem-root {
+					color: $c-muted;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					font-family: $font;
+
+					&.Mui-selected {
+						color: #fff;
+						border-color: transparent;
+						background: $c-accent-grad;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap {
+		#carlen-community-detail-page {
+			.carlen-article-panel .article-title {
+				font-size: 20px;
+			}
+			.carlen-article-body {
+				padding: 18px 14px;
+			}
+		}
+	}
+}
