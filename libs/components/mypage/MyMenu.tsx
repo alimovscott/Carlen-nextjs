@@ -14,7 +14,6 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
@@ -25,7 +24,6 @@ import { GET_MEMBER } from '../../../apollo/user/query';
 import { useTranslation } from 'next-i18next';
 
 const MyMenu = () => {
-	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
 	const router = useRouter();
 	const { t } = useTranslation('common');
@@ -98,10 +96,7 @@ const MyMenu = () => {
 		},
 	].filter((s) => s.items.length);
 
-	if (device === 'mobile') {
-		return <div>MY MENU</div>;
-	} else {
-		return (
+	return (
 			<motion.div className="carlen-my-menu" variants={container} initial="hidden" animate="visible">
 				<motion.div className="profile" variants={item}>
 					<div className="avatar-ring">
@@ -183,7 +178,6 @@ const MyMenu = () => {
 				</div>
 			</motion.div>
 		);
-	}
 };
 
 export default MyMenu;

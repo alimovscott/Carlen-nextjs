@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
@@ -14,7 +13,6 @@ import { GET_VISITED } from '../../../apollo/user/query';
 import { useTranslation } from 'next-i18next';
 
 const RecentlyVisited: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
@@ -53,10 +51,7 @@ const RecentlyVisited: NextPage = () => {
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
 	};
 
-	if (device === 'mobile') {
-		return <div>RECENTLY VISITED MOBILE</div>;
-	} else {
-		return (
+	return (
 			<div id="carlen-recently-visited-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.span className="eyebrow" variants={item}>
@@ -153,7 +148,6 @@ const RecentlyVisited: NextPage = () => {
 				) : null}
 			</div>
 		);
-	}
 };
 
 export default RecentlyVisited;

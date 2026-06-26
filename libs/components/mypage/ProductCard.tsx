@@ -1,6 +1,5 @@
 import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,7 +18,6 @@ interface PropertyCardProps {
 
 export const PropertyCard = (props: PropertyCardProps) => {
 	const { product, deletePropertyHandler, memberPage, updatePropertyHandler } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -50,10 +48,7 @@ export const PropertyCard = (props: PropertyCardProps) => {
 		setAnchorEl(null);
 	};
 
-	if (device === 'mobile') {
-		return <div>MOBILE PROPERTY CARD</div>;
-	} else
-		return (
+	return (
 			<Stack className="product-card-box">
 				<Stack className="image-box" onClick={() => pushPropertyDetail(product?._id)}>
 					<img src={`${process.env.REACT_APP_API_URL}/${product.productImages[0]}`} alt="" />

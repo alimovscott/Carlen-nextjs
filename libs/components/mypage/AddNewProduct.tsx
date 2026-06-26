@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductFuelType, ProductLocation, ProductTransmission, ProductType } from '../../enums/product.enum';
 import { REACT_APP_API_URL, productMileageRange } from '../../config';
 import { ProductInput } from '../../types/product/product.input';
@@ -16,7 +15,6 @@ import { GET_MEMBER, GET_PRODUCT } from '../../../apollo/user/query';
 import { useTranslation } from 'next-i18next';
 
 const AddProduct = ({ initialValues, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const inputRef = useRef<any>(null);
 	const shouldReduceMotion = useReducedMotion();
@@ -203,10 +201,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 	console.log('+insertPropertyData', insertPropertyData);
 
-	if (device === 'mobile') {
-		return <div>ADD NEW PROPERTY MOBILE PAGE</div>;
-	} else {
-		return (
+	return (
 			<div id="add-product-page">
 				<motion.div className="studio-shell" variants={container} initial="hidden" animate="visible">
 					<motion.div className="studio-header" variants={item}>
@@ -611,7 +606,6 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				</motion.div>
 			</div>
 		);
-	}
 };
 
 AddProduct.defaultProps = {
