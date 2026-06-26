@@ -1,0 +1,981 @@
+/**
+ * Carlen Member Profile — mobile/tablet responsive layer.
+ * Desktop MemberPage styles live in scss/pc/member/** and remain unchanged.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap,
+	#pc-wrap {
+		#carlen-member-page {
+			position: relative;
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			min-height: 100vh;
+			padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+			overflow-x: hidden;
+			box-sizing: border-box;
+			background:
+				radial-gradient(circle at 88% 0%, rgba(233, 44, 40, 0.18), transparent 34%),
+				radial-gradient(circle at 8% 12%, rgba(47, 107, 255, 0.13), transparent 30%),
+				linear-gradient(180deg, #080c13 0%, $c-base 44%, #080c13 100%);
+
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+
+			img,
+			video,
+			iframe {
+				max-width: 100%;
+			}
+
+			.container,
+			.carlen-member-page,
+			.carlen-member-shell,
+			.carlen-member-sidebar,
+			.carlen-member-main,
+			.carlen-member-content,
+			#carlen-member-products-page,
+			#carlen-member-articles-page,
+			#carlen-member-network-page {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				overflow-x: hidden;
+				box-sizing: border-box;
+			}
+
+			.container {
+				padding: 18px;
+			}
+
+			.carlen-member-page {
+				padding: 0;
+			}
+
+			.carlen-member-shell {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				gap: 16px;
+				margin: 0;
+			}
+
+			.carlen-member-sidebar {
+				position: relative;
+				top: auto;
+				flex-shrink: 1;
+				padding: 0;
+				border: 0;
+				border-radius: 0;
+				background: transparent;
+				box-shadow: none;
+			}
+
+			.carlen-member-main {
+				align-items: stretch;
+			}
+
+			.carlen-member-content {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+			}
+
+			/* Profile summary + horizontal tabs */
+			.carlen-member-menu {
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 15px;
+				border-radius: 18px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				overflow: hidden;
+				background:
+					linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+					rgba(14, 19, 29, 0.84);
+				box-shadow: 0 8px 8px -6px rgba(0, 0, 0, 0.55);
+				backdrop-filter: blur(20px) saturate(160%);
+				-webkit-backdrop-filter: blur(20px) saturate(160%);
+
+				&::before {
+					content: '';
+					position: absolute;
+					inset: 0;
+					pointer-events: none;
+					background:
+						radial-gradient(circle at 88% 0%, rgba(255, 106, 61, 0.2), transparent 34%),
+						linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 38%);
+					opacity: 0.72;
+				}
+
+				> * {
+					position: relative;
+					z-index: 1;
+				}
+
+				.profile {
+					display: grid;
+					grid-template-columns: 62px minmax(0, 1fr);
+					align-items: center;
+					gap: 9px 12px;
+					width: 100%;
+					min-width: 0;
+
+					.avatar-ring {
+						grid-row: span 3;
+						width: 62px;
+						height: 62px;
+						padding: 2px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+						box-shadow: 0 0 0 4px rgba(233, 44, 40, 0.1);
+
+						.avatar-img {
+							width: 100%;
+							height: 100%;
+							display: block;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 2px solid #111722;
+						}
+					}
+
+					.user-name {
+						align-self: end;
+						min-width: 0;
+						margin: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 17px;
+						font-weight: 800;
+						line-height: 1.2;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+
+					.member-type-badge {
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						width: fit-content;
+						min-height: 25px;
+						padding: 5px 9px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.32);
+						background: rgba(233, 44, 40, 0.13);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 800;
+						line-height: 1;
+						text-transform: capitalize;
+
+						svg {
+							font-size: 14px;
+						}
+					}
+
+					.phone-row {
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						min-width: 0;
+						color: $c-muted;
+
+						svg {
+							width: 15px;
+							height: 15px;
+							color: $c-orange;
+						}
+
+						.p-number {
+							min-width: 0;
+							margin: 0;
+							color: $c-muted;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 700;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+					}
+				}
+
+				.follow-cta-box {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 9px;
+					width: 100%;
+					min-width: 0;
+
+					.following-chip,
+					.cta-follow,
+					.cta-unfollow {
+						appearance: none;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						min-height: 48px;
+						border-radius: 14px;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 800;
+						line-height: 1;
+						cursor: pointer;
+						text-transform: none;
+					}
+
+					.cta-follow,
+					.cta-unfollow {
+						flex: 1;
+						width: 100%;
+					}
+
+					.cta-follow {
+						border: none;
+						background: $c-accent-grad;
+						color: #fff;
+					}
+
+					.cta-unfollow {
+						border: 1px solid rgba(233, 44, 40, 0.42);
+						background: rgba(233, 44, 40, 0.1);
+						color: $c-orange;
+					}
+
+					.following-chip {
+						flex: 0 0 auto;
+						padding: 0 14px;
+						border: 1px solid rgba(255, 255, 255, 0.12);
+						background: rgba(255, 255, 255, 0.045);
+						color: $c-text;
+					}
+				}
+
+				.menu-nav {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					gap: 8px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding-top: 2px;
+					overflow-x: auto;
+					overflow-y: hidden;
+					scrollbar-width: none;
+					-webkit-overflow-scrolling: touch;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+
+					.nav-section {
+						display: flex;
+						flex: 0 0 auto;
+						flex-direction: row;
+						gap: 8px;
+					}
+
+					.section-title {
+						display: none;
+					}
+
+					a {
+						width: auto !important;
+						flex: 0 0 auto;
+						text-decoration: none;
+					}
+
+					.nav-item {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						gap: 8px;
+						min-height: 42px;
+						width: auto;
+						padding: 0 13px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(255, 255, 255, 0.1);
+						background: rgba(255, 255, 255, 0.045);
+						color: $c-muted;
+						white-space: nowrap;
+						cursor: pointer;
+
+						.nav-icon {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+
+							svg {
+								width: 18px;
+								height: 18px;
+								color: currentColor;
+							}
+						}
+
+						.nav-label {
+							margin: 0;
+							color: currentColor;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 800;
+							line-height: 1;
+						}
+
+						.nav-count {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							min-width: 23px;
+							height: 23px;
+							padding: 0 7px;
+							border-radius: $c-radius-pill;
+							background: rgba(255, 255, 255, 0.07);
+							color: currentColor;
+							font-family: $font;
+							font-size: 11px;
+							font-weight: 800;
+						}
+
+						&.active {
+							border-color: rgba(233, 44, 40, 0.42);
+							background: $c-accent-grad;
+							color: #fff;
+						}
+					}
+				}
+
+				.menu-skeleton {
+					display: flex;
+					flex-direction: column;
+					gap: 10px;
+					width: 100%;
+				}
+			}
+
+			/* Shared member section headers */
+			.carlen-products-header,
+			.carlen-section-header {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 8px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				margin-bottom: 14px;
+
+				.head-text {
+					width: 100%;
+					min-width: 0;
+				}
+
+				.eyebrow {
+					display: inline-flex;
+					width: fit-content;
+					padding: 6px 10px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.26);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 10px;
+					font-weight: 800;
+					line-height: 1;
+					letter-spacing: 0.08em;
+					text-transform: uppercase;
+				}
+
+				.title {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 22px;
+					font-weight: 800;
+					line-height: 1.16;
+					letter-spacing: -0.02em;
+					overflow-wrap: anywhere;
+				}
+
+				.subtitle {
+					margin: 0;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 1.55;
+				}
+
+				.inventory-count-badge,
+				.stat-chip {
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
+					padding: 8px 12px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+					color: $c-text;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+
+					.dot {
+						width: 7px;
+						height: 7px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+					}
+				}
+			}
+
+			/* Products */
+			#carlen-member-products-page {
+				.carlen-products-panel,
+				.carlen-products-content,
+				.inventory-rows {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.carlen-products-content {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					padding: 14px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.inventory-rows {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 12px;
+
+					> * {
+						min-width: 0;
+					}
+				}
+			}
+
+			.product-card-box {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 12px;
+				border-radius: 16px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				background: rgba(255, 255, 255, 0.05);
+
+				.image-box {
+					width: 100%;
+					aspect-ratio: 16 / 10;
+					overflow: hidden;
+					border-radius: 13px;
+
+					img {
+						width: 100%;
+						height: 100%;
+						display: block;
+						object-fit: cover;
+					}
+				}
+
+				.information-box {
+					min-width: 0;
+
+					.name {
+						color: $c-text;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 800;
+						line-height: 1.25;
+						overflow-wrap: anywhere;
+					}
+
+					.address {
+						margin-top: 4px;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						line-height: 1.35;
+						overflow-wrap: anywhere;
+					}
+
+					.price strong {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 800;
+					}
+				}
+
+				.date-box,
+				.status-box,
+				.views-box {
+					width: 100%;
+					flex-direction: row;
+					align-items: center;
+
+					.date,
+					.status,
+					.views {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+					}
+				}
+
+				.status-box .coloured-box {
+					display: inline-flex;
+					width: fit-content;
+					min-height: 30px;
+					padding: 0 10px;
+					border-radius: $c-radius-pill;
+					background: rgba(47, 107, 255, 0.14) !important;
+				}
+			}
+
+			/* Articles */
+			#carlen-member-articles-page {
+				.carlen-member-articles-grid {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+
+					.grid-item,
+					.carlen-community-card {
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+					}
+				}
+			}
+
+			.inventory-skeleton,
+			.skeleton-card,
+			.carlen-products-empty,
+			.carlen-member-articles-empty {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				border-radius: 16px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				background: rgba(255, 255, 255, 0.045);
+			}
+
+			.carlen-products-empty,
+			.carlen-member-articles-empty {
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				gap: 12px;
+				padding: 42px 18px;
+
+				.empty-title {
+					color: $c-text;
+					font-family: $font;
+					font-size: 17px;
+					font-weight: 800;
+				}
+
+				.empty-helper {
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					line-height: 1.5;
+				}
+			}
+
+			.carlen-products-pagination,
+			.carlen-member-articles-pagination,
+			.carlen-network-pagination {
+				width: 100%;
+				align-items: center;
+				justify-content: center;
+				margin-top: 16px;
+
+				.pagination-box {
+					display: flex;
+					justify-content: center;
+					width: 100%;
+					overflow-x: auto;
+				}
+
+				.MuiPaginationItem-root {
+					width: 34px;
+					height: 34px;
+					min-width: 34px;
+					margin: 0 2px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 800;
+
+					&.Mui-selected {
+						border-color: transparent;
+						background: $c-accent-grad;
+						color: #fff;
+					}
+				}
+
+				.total-result p {
+					color: $c-muted;
+					text-align: center;
+					font-family: $font;
+					font-size: 13px;
+				}
+			}
+		}
+
+		/* Shared followers/followings section can also render inside member content. */
+		#carlen-member-network-page {
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			overflow-x: hidden;
+			box-sizing: border-box;
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap,
+	#pc-wrap {
+		#carlen-member-page {
+			padding-bottom: calc(124px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				padding: 14px;
+			}
+
+			.carlen-member-menu {
+				padding: 14px;
+
+				.profile {
+					grid-template-columns: 58px minmax(0, 1fr);
+
+					.avatar-ring {
+						width: 58px;
+						height: 58px;
+					}
+
+					.user-name {
+						font-size: 16px;
+					}
+				}
+
+				.follow-cta-box {
+					flex-direction: column;
+					align-items: stretch;
+
+					.following-chip,
+					.cta-follow,
+					.cta-unfollow {
+						width: 100%;
+					}
+				}
+			}
+
+			.carlen-products-header,
+			.carlen-section-header {
+				.title {
+					font-size: 20px;
+				}
+			}
+
+			#carlen-member-products-page .inventory-rows,
+			#carlen-member-articles-page .carlen-member-articles-grid {
+				grid-template-columns: 1fr;
+			}
+
+			#carlen-member-network-page {
+				.carlen-network-list {
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					overflow-x: hidden;
+					box-sizing: border-box;
+				}
+
+				.carlen-network-card {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 16px;
+					border-radius: 22px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: rgba(15, 18, 28, 0.86);
+					box-sizing: border-box;
+					overflow: hidden;
+					box-shadow: none;
+
+					.info {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 14px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						cursor: pointer;
+
+						.image-box {
+							width: 72px;
+							height: 72px;
+							flex: 0 0 72px;
+							min-width: 72px;
+							max-width: 72px;
+							overflow: hidden;
+							border-radius: 50%;
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(255, 255, 255, 0.055);
+
+							img {
+								display: block;
+								width: 72px;
+								height: 72px;
+								max-width: 72px;
+								border-radius: 50%;
+								object-fit: cover;
+							}
+						}
+
+						.information-box {
+							min-width: 0;
+							max-width: 100%;
+
+							.name {
+								margin: 0;
+								color: #fff;
+								font-family: $font;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1.25;
+								white-space: normal;
+								overflow: visible;
+								text-overflow: clip;
+								overflow-wrap: anywhere;
+							}
+						}
+					}
+
+					.carlen-network-stats {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+
+						.info-box {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+							gap: 6px;
+							min-width: 0;
+							min-height: 64px;
+							padding: 9px 5px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+							background: rgba(255, 255, 255, 0.055);
+							box-sizing: border-box;
+							text-align: center;
+							overflow: hidden;
+
+							p {
+								margin: 0;
+								color: rgba(255, 255, 255, 0.62);
+								font-family: $font;
+								font-size: 11px;
+								font-weight: 800;
+								line-height: 1.1;
+							}
+
+							span {
+								margin: 0;
+								color: #fff;
+								font-family: $font;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1;
+								letter-spacing: -0.01em;
+							}
+
+							svg {
+								width: 18px;
+								height: 18px;
+								min-width: 18px;
+								min-height: 18px;
+								color: rgba(255, 255, 255, 0.72);
+								cursor: pointer;
+							}
+
+							.MuiSvgIcon-colorPrimary {
+								color: $c-red;
+							}
+						}
+					}
+
+					.carlen-network-actions {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+
+						.following-label {
+							margin: 0;
+							color: rgba(255, 255, 255, 0.66);
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 800;
+							text-align: center;
+						}
+
+						.btn-follow,
+						.btn-unfollow {
+							appearance: none;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 100%;
+							height: 46px;
+							min-height: 46px;
+							padding: 0 16px;
+							border: none;
+							border-radius: 14px;
+							background: linear-gradient(135deg, #ff3b30, #ff6a3d);
+							color: #fff;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 800;
+							line-height: 1;
+							text-align: center;
+							cursor: pointer;
+						}
+
+						.btn-unfollow {
+							border: 1px solid rgba(255, 255, 255, 0.12);
+							background: rgba(255, 255, 255, 0.07);
+							color: #fff;
+						}
+					}
+				}
+
+				.carlen-network-pagination {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 20px;
+					align-items: center;
+					justify-content: center;
+					overflow-x: hidden;
+
+					.pagination-box {
+						display: flex;
+						justify-content: center;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						overflow-x: auto;
+					}
+
+					.MuiPaginationItem-root {
+						width: 32px;
+						height: 32px;
+						min-width: 32px;
+						margin: 0 1px;
+						color: rgba(255, 255, 255, 0.68);
+					}
+				}
+
+				.carlen-network-empty {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 28px 18px;
+					border-radius: 20px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(15, 18, 28, 0.72);
+					box-sizing: border-box;
+					overflow-x: hidden;
+					text-align: center;
+
+					.empty-icon {
+						width: 58px;
+						height: 58px;
+						margin-bottom: 14px;
+						border-radius: 50%;
+						border: 1px solid rgba(255, 255, 255, 0.12);
+						background: rgba(233, 44, 40, 0.14);
+						color: rgba(255, 255, 255, 0.72);
+						opacity: 0.85;
+
+						svg,
+						img {
+							color: $c-orange;
+							opacity: 0.9;
+						}
+					}
+
+					.empty-title {
+						color: #fff;
+						font-size: 20px;
+						font-weight: 800;
+						line-height: 1.25;
+					}
+
+					.empty-helper {
+						color: rgba(255, 255, 255, 0.65);
+						font-size: 14px;
+						line-height: 1.5;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#mobile-wrap #carlen-member-page,
+	#pc-wrap #carlen-member-page {
+		* {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+		}
+	}
+}

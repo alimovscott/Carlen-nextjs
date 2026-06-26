@@ -84,7 +84,102 @@ const MemberMenu = (props: MemberMenuProps) => {
 	const isFollowing = !!(member?.meFollowed && member?.meFollowed[0]?.myFollowing);
 
 	if (device === 'mobile') {
-		return <div>MEMBER MENU MOBILE</div>;
+		return (
+			<motion.div className="carlen-member-menu" variants={container} initial="hidden" animate="visible">
+				{getMemberLoading && !member ? (
+					<div className="menu-skeleton">
+						<span className="sk-avatar" />
+						<span className="sk-line w-60" />
+						<span className="sk-line w-40" />
+						<span className="sk-cta" />
+						<div className="sk-rows">
+							{Array.from({ length: 4 }).map((_, idx) => (
+								<span className="sk-row" key={idx} />
+							))}
+						</div>
+					</div>
+				) : (
+					<>
+						<motion.div className="profile" variants={item}>
+							<div className="avatar-ring">
+								<img
+									className="avatar-img"
+									src={
+										member?.memberImage
+											? `${REACT_APP_API_URL}/${member?.memberImage}`
+											: '/img/profile/defaultUser.svg'
+									}
+									alt="member-photo"
+								/>
+							</div>
+							<Typography className="user-name">{member?.memberNick}</Typography>
+							<span className="member-type-badge">
+								{member?.memberType === 'AGENT' && <VerifiedOutlinedIcon />}
+								{member?.memberType}
+							</span>
+							{member?.memberPhone && (
+								<span className="phone-row">
+									<PhoneOutlinedIcon />
+									<Typography className="p-number">{member?.memberPhone}</Typography>
+								</span>
+							)}
+						</motion.div>
+
+						<motion.div className="follow-cta-box" variants={item}>
+							{isFollowing ? (
+								<>
+									<span className="following-chip">Following</span>
+									<motion.button
+										className="cta-unfollow"
+										whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+										whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+										onClick={() => unsubscribeHandler(member?._id, getMemberRefetch, memberId)}
+									>
+										Unfollow
+									</motion.button>
+								</>
+							) : (
+								<motion.button
+									className="cta-follow"
+									whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+									whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+									onClick={() => subscribeHandler(member?._id, getMemberRefetch, memberId)}
+								>
+									Follow
+								</motion.button>
+							)}
+						</motion.div>
+
+						<div className="menu-nav">
+							{navSections.map((sec) => (
+								<motion.div className="nav-section" variants={item} key={sec.heading}>
+									<Typography className="section-title">{sec.heading}</Typography>
+									{sec.items.map(({ category: cat, label, count, Icon }) => (
+										<Link
+											key={cat}
+											href={{ pathname: '/member', query: { ...router.query, category: cat } }}
+											scroll={false}
+											style={{ width: '100%' }}
+										>
+											<motion.div
+												className={category === cat ? 'nav-item active' : 'nav-item'}
+												whileHover={shouldReduceMotion ? undefined : { x: 2 }}
+											>
+												<span className="nav-icon">
+													<Icon />
+												</span>
+												<Typography className="nav-label">{label}</Typography>
+												<span className="nav-count">{count}</span>
+											</motion.div>
+										</Link>
+									))}
+								</motion.div>
+							))}
+						</div>
+					</>
+				)}
+			</motion.div>
+		);
 	} else {
 		return (
 			<motion.div className="carlen-member-menu" variants={container} initial="hidden" animate="visible">

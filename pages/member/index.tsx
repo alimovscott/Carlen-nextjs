@@ -109,7 +109,57 @@ const MemberPage: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <>MEMBER PAGE MOBILE</>;
+		return (
+			<div id="carlen-member-page" style={{ position: 'relative' }}>
+				<div className="container">
+					<Stack className={'carlen-member-page'}>
+						<Stack className={'carlen-member-shell'}>
+							<motion.div
+								className={'carlen-member-sidebar'}
+								initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+								animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+							>
+								<MemberMenu subscribeHandler={subscribeHandler} unsubscribeHandler={unsubscribeHandler} />
+							</motion.div>
+							<motion.div
+								className="carlen-member-main"
+								initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+								animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+							>
+								<motion.div
+									className={'carlen-member-content'}
+									key={category}
+									initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+									animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+									transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+								>
+									{category === 'products' && <MemberProducts />}
+									{category === 'followers' && (
+										<MemberFollowers
+											subscribeHandler={subscribeHandler}
+											unsubscribeHandler={unsubscribeHandler}
+											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											likeMemberHandler={likeMemberHandler}
+										/>
+									)}
+									{category === 'followings' && (
+										<MemberFollowings
+											subscribeHandler={subscribeHandler}
+											unsubscribeHandler={unsubscribeHandler}
+											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											likeMemberHandler={likeMemberHandler}
+										/>
+									)}
+									{category === 'articles' && <MemberArticles />}
+								</motion.div>
+							</motion.div>
+						</Stack>
+					</Stack>
+				</div>
+			</div>
+		);
 	} else {
 		return (
 			<div id="carlen-member-page" style={{ position: 'relative' }}>

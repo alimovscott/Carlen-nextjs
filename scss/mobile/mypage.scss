@@ -1758,8 +1758,251 @@
 			}
 
 			#carlen-member-network-page {
+				.carlen-network-list {
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					overflow-x: hidden;
+					box-sizing: border-box;
+				}
+
 				.carlen-network-card {
-					padding: 14px;
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 16px;
+					border-radius: 22px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: rgba(15, 18, 28, 0.86);
+					box-sizing: border-box;
+					overflow: hidden;
+					box-shadow: none;
+
+					.info {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 14px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+
+						.image-box {
+							width: 72px;
+							height: 72px;
+							flex: 0 0 72px;
+							min-width: 72px;
+							max-width: 72px;
+							overflow: hidden;
+							border-radius: 50%;
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(255, 255, 255, 0.055);
+
+							img {
+								display: block;
+								width: 72px;
+								height: 72px;
+								max-width: 72px;
+								border-radius: 50%;
+								object-fit: cover;
+							}
+						}
+
+						.information-box {
+							min-width: 0;
+							max-width: 100%;
+
+							.name {
+								margin: 0;
+								color: #fff;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1.25;
+								white-space: normal;
+								overflow: visible;
+								text-overflow: clip;
+								overflow-wrap: anywhere;
+							}
+						}
+					}
+
+					.carlen-network-stats {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+
+						.info-box {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+							gap: 6px;
+							min-width: 0;
+							min-height: 64px;
+							padding: 9px 5px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+							background: rgba(255, 255, 255, 0.055);
+							box-sizing: border-box;
+							text-align: center;
+							overflow: hidden;
+
+							p {
+								margin: 0;
+								color: rgba(255, 255, 255, 0.62);
+								font-size: 11px;
+								font-weight: 800;
+								line-height: 1.1;
+							}
+
+							span {
+								margin: 0;
+								color: #fff;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1;
+								letter-spacing: -0.01em;
+							}
+
+							svg {
+								width: 18px;
+								height: 18px;
+								min-width: 18px;
+								min-height: 18px;
+								color: rgba(255, 255, 255, 0.72);
+								cursor: pointer;
+							}
+
+							.MuiSvgIcon-colorPrimary {
+								color: $c-red;
+							}
+						}
+					}
+
+					.carlen-network-actions {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+
+						.following-label {
+							margin: 0;
+							color: rgba(255, 255, 255, 0.66);
+							font-size: 12px;
+							font-weight: 800;
+							text-align: center;
+						}
+
+						.btn-follow,
+						.btn-unfollow {
+							appearance: none;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 100%;
+							height: 46px;
+							min-height: 46px;
+							padding: 0 16px;
+							border: none;
+							border-radius: 14px;
+							background: linear-gradient(135deg, #ff3b30, #ff6a3d);
+							color: #fff;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 800;
+							line-height: 1;
+							text-align: center;
+							cursor: pointer;
+						}
+
+						.btn-unfollow {
+							border: 1px solid rgba(255, 255, 255, 0.12);
+							background: rgba(255, 255, 255, 0.07);
+							color: #fff;
+						}
+					}
+				}
+
+				.carlen-network-pagination {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 20px;
+					align-items: center;
+					justify-content: center;
+					overflow-x: hidden;
+
+					.pagination-box {
+						display: flex;
+						justify-content: center;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						overflow-x: auto;
+					}
+
+					.MuiPaginationItem-root {
+						width: 32px;
+						height: 32px;
+						min-width: 32px;
+						margin: 0 1px;
+						color: rgba(255, 255, 255, 0.68);
+					}
+				}
+
+				.carlen-network-empty {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 28px 18px;
+					border-radius: 20px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(15, 18, 28, 0.72);
+					box-sizing: border-box;
+					overflow-x: hidden;
+					text-align: center;
+
+					.empty-icon {
+						width: 58px;
+						height: 58px;
+						margin-bottom: 14px;
+						border-radius: 50%;
+						border: 1px solid rgba(255, 255, 255, 0.12);
+						background: rgba(233, 44, 40, 0.14);
+						color: rgba(255, 255, 255, 0.72);
+						opacity: 0.85;
+
+						svg,
+						img {
+							color: $c-orange;
+							opacity: 0.9;
+						}
+					}
+
+					.empty-title {
+						color: #fff;
+						font-size: 20px;
+						font-weight: 800;
+						line-height: 1.25;
+					}
+
+					.empty-helper {
+						color: rgba(255, 255, 255, 0.65);
+						font-size: 14px;
+						line-height: 1.5;
+					}
 				}
 			}
 

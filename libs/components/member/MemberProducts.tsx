@@ -64,7 +64,84 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return (
+			<div id="carlen-member-products-page">
+				<motion.div className="carlen-products-header" variants={container} initial="hidden" animate="visible">
+					<motion.div className="head-text" variants={item}>
+						<span className="eyebrow">DEALER INVENTORY</span>
+						<Typography className="title">Available Vehicles</Typography>
+						<Typography className="subtitle">Explore vehicles currently listed by this dealer.</Typography>
+					</motion.div>
+					<motion.div className="inventory-count-badge" variants={item}>
+						{total} Cars Available
+					</motion.div>
+				</motion.div>
+
+				<Stack className="carlen-products-panel">
+					<Stack className="carlen-products-content">
+						{getPropertiesLoading && agentProducts.length === 0 ? (
+							<Stack className="inventory-skeleton-list">
+								{Array.from({ length: 5 }).map((_, idx) => (
+									<div className="inventory-skeleton" key={idx}>
+										<span className="sk-thumb" />
+										<div className="sk-lines">
+											<span className="sk-line w-70" />
+											<span className="sk-line w-40" />
+										</div>
+										<span className="sk-pill" />
+									</div>
+								))}
+							</Stack>
+						) : agentProducts?.length === 0 ? (
+							<Stack className="carlen-products-empty">
+								<span className="empty-icon">
+									<DirectionsCarFilledOutlinedIcon />
+								</span>
+								<Typography className="empty-title">No Vehicles Available</Typography>
+								<Typography className="empty-helper">This dealer has not listed any vehicles yet.</Typography>
+							</Stack>
+						) : (
+							<motion.div
+								className="inventory-rows"
+								variants={container}
+								initial="hidden"
+								animate="visible"
+								key={searchFilter.page}
+							>
+								{agentProducts.map((product: Product) => (
+									<motion.div
+										variants={item}
+										whileHover={shouldReduceMotion ? undefined : { y: -4 }}
+										key={product?._id}
+									>
+										<PropertyCard product={product} memberPage={true} />
+									</motion.div>
+								))}
+							</motion.div>
+						)}
+
+						{agentProducts.length !== 0 && (
+							<Stack className="carlen-products-pagination">
+								<Stack className="pagination-box">
+									<Pagination
+										count={Math.ceil(total / searchFilter.limit)}
+										page={searchFilter.page}
+										shape="circular"
+										color="primary"
+										onChange={paginationHandler}
+									/>
+								</Stack>
+								<Stack className="total-result">
+									<Typography>
+										{total} vehicle{total > 1 ? 's' : ''} available
+									</Typography>
+								</Stack>
+							</Stack>
+						)}
+					</Stack>
+				</Stack>
+			</div>
+		);
 	} else {
 		return (
 			<div id="carlen-member-products-page">

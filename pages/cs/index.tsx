@@ -48,7 +48,51 @@ const CS: NextPage = () => {
 	});
 
 	if (device === 'mobile') {
-		return <h1>CS PAGE MOBILE</h1>;
+		return (
+			<Stack className={'carlen-cs-page'} component={'section'} aria-label={'Carlen Support Center'}>
+				<Stack className={'container'}>
+					<motion.div className={'carlen-cs-header'} {...fadeUp(0)}>
+						<Box component={'div'} className={'carlen-cs-info'}>
+							<span className={'eyebrow'}>SUPPORT CENTER</span>
+							<h1>How can we help?</h1>
+							<p>Find notices, frequently asked questions, and support resources for Carlen users.</p>
+							<Box component={'div'} className={'quick-chips'}>
+								{QUICK_CHIPS.map((chip) => (
+									<Link href={chip.href} key={chip.label} className={'chip'}>
+										{chip.label}
+									</Link>
+								))}
+							</Box>
+						</Box>
+					</motion.div>
+
+					<motion.div className={'carlen-cs-tabs'} {...fadeUp(0.08)}>
+						<div
+							className={tab == 'notice' ? 'active' : ''}
+							onClick={() => {
+								changeTabHandler('notice');
+							}}
+						>
+							Notice
+						</div>
+						<div
+							className={tab == 'faq' ? 'active' : ''}
+							onClick={() => {
+								changeTabHandler('faq');
+							}}
+						>
+							FAQ
+						</div>
+					</motion.div>
+
+					<motion.div className={'carlen-cs-content'} {...fadeUp(0.16)}>
+						{tab === 'notice' && <Notice />}
+
+						{tab === 'faq' && <Faq />}
+					</motion.div>
+				</Stack>
+			</Stack>
+		);
 	} else {
 		return (
 			<Stack className={'carlen-cs-page'} component={'section'} aria-label={'Carlen Support Center'}>
