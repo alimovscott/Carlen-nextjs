@@ -463,7 +463,14 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 				{destinationProducts.length !== 0 && (
 					<section className={'m-section m-similar'}>
 						<h2 className={'m-section-title'}>{t('Similar Cars')}</h2>
-						<Swiper className={'m-similar-swiper'} slidesPerView={'auto'} spaceBetween={14} modules={[]}>
+						<Swiper
+								className={'m-similar-swiper'}
+								slidesPerView={1.12}
+								spaceBetween={16}
+								centeredSlides={false}
+								grabCursor={true}
+								breakpoints={{ 769: { slidesPerView: 2, spaceBetween: 18 } }}
+							>
 							{destinationProducts.map((p: Product) => (
 								<SwiperSlide className={'m-similar-slide'} key={p?._id}>
 									<ProductBigCard product={p} likePropertyHandler={likeProductHandler} />

@@ -1,0 +1,2097 @@
+/**
+ * Carlen mobile/tablet dashboard.
+ * Desktop lives in scss/pc/**; everything here is viewport-scoped and targets both wrappers because
+ * the app shell can render #pc-wrap on narrow screens depending on user-agent detection.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap,
+	#pc-wrap {
+		#my-page {
+			position: relative;
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			min-height: 100vh;
+			padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+			overflow-x: hidden;
+			box-sizing: border-box;
+			background:
+				radial-gradient(circle at 88% 0%, rgba(233, 44, 40, 0.18), transparent 34%),
+				radial-gradient(circle at 8% 12%, rgba(47, 107, 255, 0.13), transparent 30%),
+				linear-gradient(180deg, #080c13 0%, $c-base 42%, #080c13 100%);
+
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+
+			img,
+			video,
+			iframe {
+				max-width: 100%;
+			}
+
+			.container,
+			.my-page,
+			.back-frame,
+			.left-config,
+			.main-config,
+			.list-config {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				overflow-x: hidden;
+				box-sizing: border-box;
+			}
+
+			.container {
+				padding: 18px;
+			}
+
+			.my-page {
+				gap: 16px;
+			}
+
+			.mypage-topbar {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 2px 2px 0;
+
+				.eyebrow {
+					display: inline-flex;
+					align-items: center;
+					width: fit-content;
+					padding: 7px 11px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.28);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 10px;
+					font-weight: 800;
+					line-height: 1;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+				}
+
+				.title {
+					margin-top: 10px;
+					color: $c-text;
+					font-family: $font;
+					font-size: 26px;
+					font-weight: 800;
+					line-height: 1.12;
+					letter-spacing: -0.03em;
+					text-wrap: balance;
+				}
+
+				.subtitle {
+					margin-top: 7px;
+					max-width: 56ch;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 1.55;
+				}
+			}
+
+			.back-frame {
+				flex-direction: column;
+				align-items: stretch;
+				gap: 16px;
+			}
+
+			.main-config {
+				margin-bottom: 0 !important;
+			}
+
+			button,
+			.MuiButton-root,
+			.cta-primary,
+			.upload-btn,
+			.browse-button,
+			.publish-button {
+				min-height: 46px;
+				border-radius: 14px;
+				font-family: $font;
+				font-weight: 800;
+				line-height: 1;
+				text-transform: none;
+				-webkit-tap-highlight-color: transparent;
+			}
+
+			input,
+			textarea,
+			select {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				box-sizing: border-box;
+				color: $c-text;
+				font-family: $font;
+			}
+
+			/* ===== App account summary + horizontal tabs ===== */
+			.carlen-my-menu {
+				position: relative;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 14px;
+				border-radius: 18px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				overflow: hidden;
+				background:
+					linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+					rgba(14, 19, 29, 0.84);
+				box-shadow: 0 8px 8px -6px rgba(0, 0, 0, 0.55);
+				backdrop-filter: blur(20px) saturate(160%);
+				-webkit-backdrop-filter: blur(20px) saturate(160%);
+
+				&::before {
+					content: '';
+					position: absolute;
+					inset: 0;
+					pointer-events: none;
+					background:
+						radial-gradient(circle at 88% 0%, rgba(255, 106, 61, 0.22), transparent 34%),
+						linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 38%);
+					opacity: 0.72;
+				}
+
+				.profile,
+				.menu-nav {
+					position: relative;
+					z-index: 1;
+				}
+
+				.profile {
+					display: grid;
+					grid-template-columns: 58px minmax(0, 1fr);
+					gap: 10px 12px;
+					width: 100%;
+					min-width: 0;
+					padding-bottom: 13px;
+					margin-bottom: 12px;
+					border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+					.avatar-ring {
+						grid-row: span 3;
+						width: 58px;
+						height: 58px;
+						padding: 2px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+						box-shadow: 0 0 0 4px rgba(233, 44, 40, 0.1);
+
+						.avatar-img {
+							width: 100%;
+							height: 100%;
+							display: block;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 2px solid #111722;
+						}
+					}
+
+					.user-name {
+						align-self: end;
+						min-width: 0;
+						margin: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 17px;
+						font-weight: 800;
+						line-height: 1.2;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+
+					.member-type-badge {
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						width: fit-content;
+						min-height: 24px;
+						padding: 5px 9px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.32);
+						background: rgba(233, 44, 40, 0.13);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 800;
+						line-height: 1;
+						text-transform: capitalize;
+
+						svg {
+							font-size: 14px;
+						}
+					}
+
+					.phone-row {
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						min-width: 0;
+						color: $c-muted;
+
+						svg {
+							width: 15px;
+							height: 15px;
+							flex-shrink: 0;
+							color: $c-orange;
+						}
+
+						.p-number {
+							min-width: 0;
+							margin: 0;
+							color: $c-muted;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 600;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+					}
+
+					.profile-stats {
+						grid-column: 1 / -1;
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+						margin-top: 4px;
+
+						.stat {
+							min-width: 0;
+							padding: 10px 8px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+							background: rgba(255, 255, 255, 0.045);
+							text-align: center;
+
+							.stat-value {
+								display: block;
+								color: $c-text;
+								font-family: $font;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1.05;
+							}
+
+							.stat-label {
+								display: block;
+								margin-top: 3px;
+								color: $c-muted;
+								font-family: $font;
+								font-size: 10px;
+								font-weight: 700;
+								line-height: 1.2;
+							}
+						}
+					}
+				}
+
+				.menu-nav {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					gap: 8px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding-bottom: 2px;
+					overflow-x: auto;
+					overflow-y: hidden;
+					scrollbar-width: none;
+					-webkit-overflow-scrolling: touch;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+
+					.nav-section {
+						display: flex;
+						flex: 0 0 auto;
+						flex-direction: row;
+						gap: 8px;
+
+						&:nth-child(4) {
+							order: 1;
+						}
+
+						&:nth-child(1) {
+							order: 2;
+						}
+
+						&:nth-child(2) {
+							order: 3;
+						}
+
+						&:nth-child(3) {
+							order: 4;
+						}
+					}
+
+					.section-title,
+					.nav-item.logout {
+						display: none;
+					}
+
+					a {
+						width: auto !important;
+						flex: 0 0 auto;
+						text-decoration: none;
+					}
+
+					.nav-item {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						gap: 8px;
+						min-height: 42px;
+						width: auto;
+						padding: 0 13px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(255, 255, 255, 0.1);
+						background: rgba(255, 255, 255, 0.045);
+						color: $c-muted;
+						white-space: nowrap;
+						cursor: pointer;
+
+						.nav-icon {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+
+							svg {
+								width: 18px;
+								height: 18px;
+								color: currentColor;
+							}
+						}
+
+						.nav-label {
+							margin: 0;
+							color: currentColor;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 800;
+							line-height: 1;
+						}
+
+						&.active {
+							border-color: rgba(233, 44, 40, 0.42);
+							background: $c-accent-grad;
+							color: #fff;
+						}
+					}
+				}
+			}
+
+			/* ===== Shared content language ===== */
+			.carlen-section-header,
+			.inventory-header-block,
+			.studio-header {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 8px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				margin-bottom: 14px;
+
+				.eyebrow,
+				.studio-eyebrow {
+					display: inline-flex;
+					align-items: center;
+					width: fit-content;
+					padding: 6px 10px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.26);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 10px;
+					font-weight: 800;
+					line-height: 1;
+					letter-spacing: 0.08em;
+					text-transform: uppercase;
+				}
+
+				.head-text {
+					width: 100%;
+					min-width: 0;
+				}
+
+				.title,
+				.studio-title {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 22px;
+					font-weight: 800;
+					line-height: 1.16;
+					letter-spacing: -0.02em;
+					overflow-wrap: anywhere;
+				}
+
+				.subtitle,
+				.studio-subtitle {
+					margin: 0;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 1.55;
+					overflow-wrap: anywhere;
+				}
+
+				.stat-chip,
+				.completeness-chip {
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
+					max-width: 100%;
+					padding: 8px 12px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+					color: $c-text;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+					line-height: 1.1;
+
+					.dot {
+						width: 7px;
+						height: 7px;
+						flex-shrink: 0;
+						border-radius: 50%;
+						background: $c-accent-grad;
+					}
+				}
+			}
+
+			.cta-primary,
+			.publish-button,
+			.browse-button {
+				appearance: none;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 9px;
+				width: 100%;
+				border: none;
+				background: $c-accent-grad;
+				color: #fff;
+				cursor: pointer;
+
+				svg {
+					color: currentColor;
+				}
+
+				&:disabled {
+					cursor: not-allowed;
+					opacity: 0.55;
+				}
+			}
+
+			/* ===== Full-width section shells ===== */
+			#carlen-my-profile-page,
+			#add-product-page,
+			#carlen-my-products-page,
+			#carlen-my-favorites-page,
+			#carlen-recently-visited-page,
+			#carlen-my-articles-page,
+			#write-article-page,
+			#carlen-member-network-page {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				overflow-x: hidden;
+				box-sizing: border-box;
+			}
+
+			/* ===== Responsive grids/cards ===== */
+			.carlen-my-articles-grid,
+			.carlen-favorites-grid,
+			.carlen-recent-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 14px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+
+				> * {
+					min-width: 0;
+				}
+
+				.grid-item,
+				.carlen-product-card,
+				.carlen-community-card {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+			}
+
+			.favorite-skeleton,
+			.recent-skeleton,
+			.skeleton-card,
+			.inventory-skeleton {
+				width: 100%;
+				min-width: 0;
+				border-radius: 16px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				background: rgba(255, 255, 255, 0.045);
+			}
+
+			.carlen-favorites-empty,
+			.carlen-recent-empty,
+			.carlen-my-articles-empty,
+			.carlen-inventory-empty,
+			.carlen-network-empty {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 12px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 42px 18px;
+				border-radius: 18px;
+				border: 1px dashed rgba(255, 255, 255, 0.16);
+				background: rgba(255, 255, 255, 0.045);
+				text-align: center;
+
+				.empty-icon {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 54px;
+					height: 54px;
+					border-radius: 50%;
+					border: 1px solid rgba(233, 44, 40, 0.3);
+					background: rgba(233, 44, 40, 0.12);
+					color: $c-orange;
+
+					svg {
+						color: currentColor;
+					}
+				}
+
+				.empty-title {
+					margin: 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 17px;
+					font-weight: 800;
+				}
+
+				.empty-helper {
+					margin: 0;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					line-height: 1.5;
+				}
+			}
+
+			/* ===== Profile ===== */
+			#carlen-my-profile-page {
+				.carlen-profile-panel {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 16px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.carlen-profile-photo-card {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-bottom: 16px;
+
+					.avatar-ring {
+						width: 74px;
+						height: 74px;
+						padding: 2px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+					}
+
+					.avatar-img {
+						width: 100%;
+						height: 100%;
+						display: block;
+						border-radius: 50%;
+						object-fit: cover;
+						border: 2px solid #111722;
+					}
+
+					.photo-actions {
+						width: 100%;
+						min-width: 0;
+					}
+
+					.upload-text {
+						margin-top: 8px;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+					}
+				}
+
+				.carlen-profile-fields {
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 13px;
+					width: 100%;
+				}
+
+				.field,
+				.carlen-profile-address {
+					width: 100%;
+					min-width: 0;
+					margin-top: 13px;
+				}
+
+				.field-label {
+					margin-bottom: 8px;
+					color: $c-text;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+				}
+
+				input {
+					height: 48px;
+					padding: 0 14px;
+					border-radius: 14px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					outline: none;
+					background: rgba(255, 255, 255, 0.055);
+					color: $c-text;
+
+					&::placeholder {
+						color: $c-faint;
+					}
+				}
+
+				.upload-btn {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					width: 100%;
+					border: 1px solid rgba(233, 44, 40, 0.34);
+					background: rgba(233, 44, 40, 0.12);
+					color: $c-text;
+					cursor: pointer;
+				}
+
+				.carlen-profile-actions {
+					width: 100%;
+					margin-top: 16px;
+				}
+			}
+
+			/* ===== Add car studio ===== */
+			#add-product-page {
+				.studio-shell,
+				.studio-card,
+				.studio-actionbar {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.studio-shell {
+					display: flex;
+					flex-direction: column;
+					gap: 14px;
+				}
+
+				.studio-card {
+					padding: 16px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.card-head {
+					margin-bottom: 14px;
+
+					.card-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 800;
+					}
+
+					.card-hint {
+						margin-top: 4px;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						line-height: 1.45;
+					}
+				}
+
+				.field-grid,
+				.field-grid.two,
+				.spec-grid {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 12px;
+					width: 100%;
+				}
+
+				.field-cell,
+				.field-column {
+					min-width: 0;
+					width: 100%;
+				}
+
+				.field-label {
+					margin-bottom: 8px;
+					color: $c-text;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+				}
+
+				.studio-input,
+				.studio-select,
+				.studio-textarea {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 0 14px;
+					border-radius: 14px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					outline: none;
+					background: rgba(255, 255, 255, 0.055);
+					color: $c-text;
+					font-family: $font;
+					font-size: 14px;
+
+					&::placeholder {
+						color: $c-faint;
+					}
+				}
+
+				.studio-input,
+				.studio-select {
+					height: 48px;
+				}
+
+				.studio-textarea {
+					min-height: 148px;
+					padding-top: 13px;
+					resize: vertical;
+				}
+
+				.select-cell {
+					position: relative;
+
+					.arrow-down {
+						position: absolute;
+						right: 14px;
+						bottom: 18px;
+						width: 11px;
+						pointer-events: none;
+						filter: invert(1);
+						opacity: 0.75;
+					}
+				}
+
+				.images-box,
+				.upload-box {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.upload-box {
+					padding: 22px 14px;
+					border-radius: 16px;
+					border: 1px dashed rgba(255, 255, 255, 0.18);
+					background: rgba(255, 255, 255, 0.035);
+					text-align: center;
+				}
+
+				.drag-title {
+					color: $c-text;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 800;
+				}
+
+				.format-title,
+				.actionbar-hint {
+					color: $c-muted;
+					font-family: $font;
+					font-size: 12px;
+					line-height: 1.45;
+				}
+
+				.gallery-box {
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 10px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 12px;
+
+					.image-box {
+						width: 100%;
+						aspect-ratio: 1;
+						overflow: hidden;
+						border-radius: 14px;
+						border: 1px solid rgba(255, 255, 255, 0.1);
+
+						img {
+							width: 100%;
+							height: 100%;
+							display: block;
+							object-fit: cover;
+						}
+					}
+				}
+
+				.studio-actionbar {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 12px;
+					padding: 14px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+				}
+			}
+
+			/* ===== My cars inventory ===== */
+			#carlen-my-products-page {
+				.carlen-inventory-stats {
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 9px;
+					width: 100%;
+					margin-top: 4px;
+
+					.stat-card {
+						min-width: 0;
+						padding: 11px 6px;
+						border-radius: 14px;
+						border: 1px solid rgba(255, 255, 255, 0.1);
+						background: rgba(255, 255, 255, 0.045);
+						text-align: center;
+
+						.stat-value {
+							color: $c-text;
+							font-family: $font;
+							font-size: 19px;
+							font-weight: 800;
+							line-height: 1.05;
+						}
+
+						.stat-label {
+							margin-top: 4px;
+							color: $c-muted;
+							font-family: $font;
+							font-size: 10px;
+							font-weight: 700;
+							line-height: 1.25;
+						}
+					}
+				}
+
+				.carlen-inventory-panel {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 14px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.carlen-inventory-tabs {
+					display: flex;
+					flex-direction: row;
+					gap: 8px;
+					width: 100%;
+					padding: 4px;
+					margin-bottom: 14px;
+					border-radius: $c-radius-pill;
+					background: rgba(255, 255, 255, 0.045);
+					overflow-x: auto;
+					scrollbar-width: none;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+
+					.segment {
+						flex: 1 0 auto;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						min-height: 40px;
+						padding: 0 15px;
+						border-radius: $c-radius-pill;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 800;
+						cursor: pointer;
+
+						&.active {
+							background: $c-accent-grad;
+							color: #fff;
+						}
+					}
+				}
+
+				.carlen-inventory-header {
+					display: none;
+				}
+
+				.inventory-rows {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+
+					> * {
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+					}
+				}
+			}
+
+			.product-card-box {
+				display: grid;
+				grid-template-columns: 116px minmax(0, 1fr);
+				gap: 12px;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				padding: 12px;
+				border-radius: 16px;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				background: rgba(255, 255, 255, 0.05);
+
+				.image-box {
+					grid-row: span 4;
+					width: 100%;
+					aspect-ratio: 1 / 0.9;
+					overflow: hidden;
+					border-radius: 13px;
+
+					img {
+						width: 100%;
+						height: 100%;
+						display: block;
+						object-fit: cover;
+					}
+				}
+
+				.information-box {
+					min-width: 0;
+
+					.name {
+						color: $c-text;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 800;
+						line-height: 1.25;
+						overflow-wrap: anywhere;
+					}
+
+					.address {
+						margin-top: 3px;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						line-height: 1.35;
+						overflow-wrap: anywhere;
+					}
+
+					.price strong {
+						color: $c-text;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 800;
+					}
+				}
+
+				.date-box,
+				.status-box,
+				.views-box {
+					width: 100%;
+					min-width: 0;
+					flex-direction: row;
+					align-items: center;
+					justify-content: flex-start;
+
+					.date,
+					.status,
+					.views {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+					}
+				}
+
+				.status-box .coloured-box {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: fit-content;
+					min-height: 30px;
+					padding: 0 10px;
+					border-radius: $c-radius-pill;
+					background: rgba(47, 107, 255, 0.14) !important;
+				}
+
+				.action-box {
+					grid-column: 1 / -1;
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					gap: 9px;
+					width: 100%;
+
+					.icon-button {
+						width: 44px;
+						height: 44px;
+						border: 1px solid rgba(255, 255, 255, 0.12);
+						background: rgba(255, 255, 255, 0.055);
+						color: $c-text;
+
+						.buttons {
+							color: currentColor;
+						}
+					}
+				}
+			}
+
+			/* ===== Network cards ===== */
+			#carlen-member-network-page {
+				.carlen-network-list {
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 12px;
+					width: 100%;
+				}
+
+				.carlen-network-card {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 13px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 15px;
+					border-radius: 17px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.05);
+					box-shadow: none;
+
+					.info {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 12px;
+						width: 100%;
+						min-width: 0;
+						cursor: pointer;
+
+						.image-box {
+							width: 56px;
+							height: 56px;
+							flex-shrink: 0;
+							overflow: hidden;
+							border-radius: 50%;
+							border: 1px solid rgba(255, 255, 255, 0.12);
+
+							img {
+								width: 100%;
+								height: 100%;
+								display: block;
+								object-fit: cover;
+							}
+						}
+
+						.information-box {
+							min-width: 0;
+
+							.name {
+								color: $c-text;
+								font-family: $font;
+								font-size: 16px;
+								font-weight: 800;
+								line-height: 1.2;
+								white-space: normal;
+								overflow: visible;
+								text-overflow: clip;
+								overflow-wrap: anywhere;
+							}
+						}
+					}
+
+					.carlen-network-stats {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+
+						.info-box {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+							gap: 5px;
+							min-width: 0;
+							min-height: 62px;
+							padding: 9px 5px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+							background: rgba(255, 255, 255, 0.045);
+
+							p {
+								margin: 0;
+								color: $c-muted;
+								font-family: $font;
+								font-size: 10px;
+								font-weight: 800;
+								line-height: 1.1;
+								text-align: center;
+							}
+
+							span {
+								margin: 0;
+								color: $c-text;
+								font-family: $font;
+								font-size: 14px;
+								font-weight: 800;
+								line-height: 1.1;
+							}
+
+							svg {
+								width: 22px;
+								height: 22px;
+								color: $c-muted;
+								cursor: pointer;
+							}
+
+							.MuiSvgIcon-colorPrimary {
+								color: $c-red;
+							}
+						}
+					}
+
+					.carlen-network-actions {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 8px;
+						width: 100%;
+
+						.following-label {
+							color: $c-muted;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 800;
+							text-align: center;
+						}
+
+						.btn-follow,
+						.btn-unfollow {
+							appearance: none;
+							width: 100%;
+							min-height: 46px;
+							border-radius: 14px;
+							cursor: pointer;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 800;
+						}
+
+						.btn-follow {
+							border: none;
+							background: $c-accent-grad;
+							color: #fff;
+						}
+
+						.btn-unfollow {
+							border: 1px solid rgba(233, 44, 40, 0.42);
+							background: rgba(233, 44, 40, 0.1);
+							color: $c-orange;
+						}
+					}
+				}
+			}
+
+			/* ===== Write article / editor ===== */
+			#write-article-page {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				overflow-x: hidden;
+				box-sizing: border-box;
+
+				.main-title-box {
+					width: 100%;
+					margin-bottom: 14px;
+					flex-direction: column;
+					align-items: flex-start;
+
+					.main-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 22px;
+						font-weight: 800;
+						line-height: 1.18;
+					}
+
+					.sub-title {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						line-height: 1.5;
+					}
+				}
+
+				.carlen-community-editor {
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					gap: 18px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 18px;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					overflow: hidden;
+					box-sizing: border-box;
+					background:
+						radial-gradient(circle at 94% 0%, rgba(233, 44, 40, 0.16), transparent 34%),
+						linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+						rgba(14, 19, 29, 0.86);
+					box-shadow: 0 8px 8px -6px rgba(0, 0, 0, 0.55);
+					backdrop-filter: blur(18px) saturate(150%);
+					-webkit-backdrop-filter: blur(18px) saturate(150%);
+
+					> * {
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						box-sizing: border-box;
+					}
+				}
+
+				.editor-hero {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 9px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+
+					.editor-eyebrow {
+						display: inline-flex;
+						align-items: center;
+						width: fit-content;
+						padding: 6px 10px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.28);
+						background: rgba(233, 44, 40, 0.11);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 10px;
+						font-weight: 800;
+						line-height: 1;
+						letter-spacing: 0.09em;
+						text-transform: uppercase;
+					}
+
+					.editor-title {
+						margin: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 22px;
+						font-weight: 800;
+						line-height: 1.16;
+						letter-spacing: -0.02em;
+						overflow-wrap: anywhere;
+					}
+
+					.editor-subtitle {
+						margin: 0;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 500;
+						line-height: 1.55;
+						overflow-wrap: anywhere;
+					}
+				}
+
+				.editor-meta-row {
+					display: grid;
+					grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr);
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.meta-field {
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+
+					.meta-label {
+						margin: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 800;
+						line-height: 1.2;
+					}
+				}
+
+				.meta-select,
+				.meta-input,
+				.MuiFormControl-root,
+				.MuiTextField-root,
+				.MuiInputBase-root,
+				.MuiOutlinedInput-root {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					box-sizing: border-box;
+				}
+
+				.MuiOutlinedInput-root {
+					min-height: 50px;
+					border-radius: 14px;
+					background: rgba(255, 255, 255, 0.055);
+					color: $c-text;
+					font-family: $font;
+					font-size: 14px;
+
+					.MuiOutlinedInput-notchedOutline {
+						border-color: rgba(255, 255, 255, 0.12);
+					}
+
+					&:hover .MuiOutlinedInput-notchedOutline {
+						border-color: rgba(255, 255, 255, 0.2);
+					}
+
+					&.Mui-focused .MuiOutlinedInput-notchedOutline {
+						border-color: rgba(233, 44, 40, 0.52);
+						border-width: 1px;
+					}
+				}
+
+				.MuiInputBase-input,
+				.MuiSelect-select {
+					color: $c-text;
+					font-family: $font;
+					box-sizing: border-box;
+				}
+
+				.MuiInputBase-input::placeholder {
+					color: $c-faint;
+					opacity: 1;
+				}
+
+				.MuiSelect-icon {
+					color: $c-muted;
+				}
+
+				.editor-panel {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					overflow: hidden;
+					box-sizing: border-box;
+					background: rgba(8, 12, 19, 0.82);
+				}
+
+				.toastui-editor-defaultUI,
+				.toastui-editor,
+				.toastui-editor-md-container,
+				.toastui-editor-ww-container,
+				.toastui-editor-main,
+				.toastui-editor-main-container,
+				.toastui-editor-contents,
+				.toastui-editor-md-preview,
+				.toastui-editor-md-splitter,
+				.toastui-editor-ww-container .toastui-editor {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					box-sizing: border-box;
+				}
+
+				.toastui-editor-defaultUI {
+					overflow: hidden;
+					border: none;
+					border-radius: 18px;
+					background: transparent;
+				}
+
+				.toastui-editor-toolbar,
+				.toastui-editor-defaultUI-toolbar {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					overflow-x: auto;
+					overflow-y: hidden;
+					white-space: nowrap;
+					scrollbar-width: none;
+					box-sizing: border-box;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+				}
+
+				.toastui-editor-defaultUI-toolbar {
+					display: flex;
+					flex-wrap: nowrap;
+					align-items: center;
+					gap: 2px;
+					padding: 10px;
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.toastui-editor-toolbar-group {
+					flex: 0 0 auto;
+					white-space: nowrap;
+				}
+
+				.toastui-editor-defaultUI button {
+					min-width: 34px;
+					min-height: 34px;
+					border-radius: 10px;
+					padding: 4px;
+				}
+
+				.toastui-editor-md-container,
+				.toastui-editor-ww-container {
+					overflow-x: hidden;
+				}
+
+				.toastui-editor-contents {
+					overflow-wrap: anywhere;
+					word-break: break-word;
+
+					img,
+					video,
+					iframe {
+						max-width: 100%;
+						height: auto;
+					}
+
+					pre {
+						max-width: 100%;
+						overflow-x: auto;
+						white-space: pre;
+					}
+
+					code {
+						white-space: pre-wrap;
+						word-break: break-word;
+					}
+
+					table {
+						display: block;
+						width: 100%;
+						max-width: 100%;
+						overflow-x: auto;
+						white-space: nowrap;
+					}
+				}
+
+				.toastui-editor-popup,
+				.toastui-editor-popup-body {
+					max-width: calc(100vw - 32px);
+					box-sizing: border-box;
+				}
+
+				.toastui-editor-popup-body {
+					padding: 14px;
+					overflow-x: hidden;
+				}
+
+				.toastui-editor-popup-add-image,
+				.toastui-editor-popup-add-link,
+				.toastui-editor-popup-add-table {
+					width: min(420px, calc(100vw - 32px));
+				}
+
+				.editor-actions {
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					align-items: center;
+					gap: 10px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.cta-secondary,
+				.cta-primary,
+				.MuiButton-root {
+					appearance: none;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					min-height: 48px;
+					border-radius: 14px;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 800;
+					line-height: 1;
+					text-transform: none;
+					cursor: pointer;
+				}
+
+				.cta-secondary {
+					min-width: 132px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: rgba(255, 255, 255, 0.055);
+					color: $c-text;
+				}
+
+				.cta-primary {
+					min-width: 178px;
+					border: none;
+					background: $c-accent-grad;
+					color: #fff;
+
+					&:disabled {
+						opacity: 0.55;
+						cursor: not-allowed;
+					}
+				}
+
+				.MuiButton-root {
+					width: 100%;
+				}
+			}
+
+			/* ===== Pagination ===== */
+			.carlen-inventory-pagination,
+			.carlen-my-articles-pagination,
+			.carlen-favorites-pagination,
+			.carlen-recent-pagination,
+			.carlen-network-pagination {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				margin-top: 16px;
+				align-items: center;
+
+				.pagination-box {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					overflow-x: auto;
+					padding: 2px 0;
+				}
+
+				.MuiPaginationItem-root {
+					width: 34px;
+					height: 34px;
+					min-width: 34px;
+					margin: 0 2px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 800;
+
+					&.Mui-selected {
+						border-color: transparent;
+						background: $c-accent-grad;
+						color: #fff;
+					}
+				}
+
+				.total-result p,
+				.total p {
+					margin-top: 8px;
+					color: $c-muted;
+					text-align: center;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap,
+	#pc-wrap {
+		#my-page {
+			padding-bottom: calc(124px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				padding: 14px;
+			}
+
+			.mypage-topbar {
+				.title {
+					font-size: 24px;
+				}
+			}
+
+			.carlen-my-menu {
+				padding: 13px;
+
+				.profile {
+					grid-template-columns: 54px minmax(0, 1fr);
+
+					.avatar-ring {
+						width: 54px;
+						height: 54px;
+					}
+
+					.user-name {
+						font-size: 16px;
+					}
+				}
+
+				.menu-nav .nav-item {
+					min-height: 41px;
+					padding: 0 12px;
+
+					.nav-label {
+						font-size: 12px;
+					}
+				}
+			}
+
+			.carlen-section-header,
+			.inventory-header-block,
+			.studio-header {
+				.title,
+				.studio-title {
+					font-size: 20px;
+				}
+			}
+
+			.carlen-my-articles-grid,
+			.carlen-favorites-grid,
+			.carlen-recent-grid {
+				grid-template-columns: 1fr;
+			}
+
+			#add-product-page {
+				.field-grid,
+				.field-grid.two,
+				.spec-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.gallery-box {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+			}
+
+			#carlen-my-products-page {
+				.carlen-inventory-stats {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			.product-card-box {
+				grid-template-columns: 96px minmax(0, 1fr);
+				padding: 11px;
+			}
+
+			#carlen-member-network-page {
+				.carlen-network-list {
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					overflow-x: hidden;
+					box-sizing: border-box;
+				}
+
+				.carlen-network-card {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 14px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 16px;
+					border-radius: 22px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: rgba(15, 18, 28, 0.86);
+					box-sizing: border-box;
+					overflow: hidden;
+					box-shadow: none;
+
+					.info {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 14px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+
+						.image-box {
+							width: 72px;
+							height: 72px;
+							flex: 0 0 72px;
+							min-width: 72px;
+							max-width: 72px;
+							overflow: hidden;
+							border-radius: 50%;
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(255, 255, 255, 0.055);
+
+							img {
+								display: block;
+								width: 72px;
+								height: 72px;
+								max-width: 72px;
+								border-radius: 50%;
+								object-fit: cover;
+							}
+						}
+
+						.information-box {
+							min-width: 0;
+							max-width: 100%;
+
+							.name {
+								margin: 0;
+								color: #fff;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1.25;
+								white-space: normal;
+								overflow: visible;
+								text-overflow: clip;
+								overflow-wrap: anywhere;
+							}
+						}
+					}
+
+					.carlen-network-stats {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+
+						.info-box {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+							gap: 6px;
+							min-width: 0;
+							min-height: 64px;
+							padding: 9px 5px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.1);
+							background: rgba(255, 255, 255, 0.055);
+							box-sizing: border-box;
+							text-align: center;
+							overflow: hidden;
+
+							p {
+								margin: 0;
+								color: rgba(255, 255, 255, 0.62);
+								font-size: 11px;
+								font-weight: 800;
+								line-height: 1.1;
+							}
+
+							span {
+								margin: 0;
+								color: #fff;
+								font-size: 18px;
+								font-weight: 800;
+								line-height: 1;
+								letter-spacing: -0.01em;
+							}
+
+							svg {
+								width: 18px;
+								height: 18px;
+								min-width: 18px;
+								min-height: 18px;
+								color: rgba(255, 255, 255, 0.72);
+								cursor: pointer;
+							}
+
+							.MuiSvgIcon-colorPrimary {
+								color: $c-red;
+							}
+						}
+					}
+
+					.carlen-network-actions {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 8px;
+						width: 100%;
+						min-width: 0;
+
+						.following-label {
+							margin: 0;
+							color: rgba(255, 255, 255, 0.66);
+							font-size: 12px;
+							font-weight: 800;
+							text-align: center;
+						}
+
+						.btn-follow,
+						.btn-unfollow {
+							appearance: none;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							width: 100%;
+							height: 46px;
+							min-height: 46px;
+							padding: 0 16px;
+							border: none;
+							border-radius: 14px;
+							background: linear-gradient(135deg, #ff3b30, #ff6a3d);
+							color: #fff;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 800;
+							line-height: 1;
+							text-align: center;
+							cursor: pointer;
+						}
+
+						.btn-unfollow {
+							border: 1px solid rgba(255, 255, 255, 0.12);
+							background: rgba(255, 255, 255, 0.07);
+							color: #fff;
+						}
+					}
+				}
+
+				.carlen-network-pagination {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 20px;
+					align-items: center;
+					justify-content: center;
+					overflow-x: hidden;
+
+					.pagination-box {
+						display: flex;
+						justify-content: center;
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						overflow-x: auto;
+					}
+
+					.MuiPaginationItem-root {
+						width: 32px;
+						height: 32px;
+						min-width: 32px;
+						margin: 0 1px;
+						color: rgba(255, 255, 255, 0.68);
+					}
+				}
+
+				.carlen-network-empty {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 28px 18px;
+					border-radius: 20px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(15, 18, 28, 0.72);
+					box-sizing: border-box;
+					overflow-x: hidden;
+					text-align: center;
+
+					.empty-icon {
+						width: 58px;
+						height: 58px;
+						margin-bottom: 14px;
+						border-radius: 50%;
+						border: 1px solid rgba(255, 255, 255, 0.12);
+						background: rgba(233, 44, 40, 0.14);
+						color: rgba(255, 255, 255, 0.72);
+						opacity: 0.85;
+
+						svg,
+						img {
+							color: $c-orange;
+							opacity: 0.9;
+						}
+					}
+
+					.empty-title {
+						color: #fff;
+						font-size: 20px;
+						font-weight: 800;
+						line-height: 1.25;
+					}
+
+					.empty-helper {
+						color: rgba(255, 255, 255, 0.65);
+						font-size: 14px;
+						line-height: 1.5;
+					}
+				}
+			}
+
+			#write-article-page {
+				.carlen-community-editor {
+					gap: 16px;
+					padding: 16px;
+					border-radius: 17px;
+				}
+
+				.editor-hero {
+					gap: 8px;
+
+					.editor-title {
+						font-size: 20px;
+					}
+
+					.editor-subtitle {
+						font-size: 13px;
+					}
+				}
+
+				.editor-meta-row {
+					grid-template-columns: 1fr;
+					gap: 13px;
+				}
+
+				.meta-field,
+				.meta-select,
+				.meta-input,
+				.MuiFormControl-root,
+				.MuiTextField-root,
+				.MuiInputBase-root,
+				.MuiOutlinedInput-root {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.editor-panel {
+					border-radius: 16px;
+				}
+
+				.toastui-editor-defaultUI {
+					border-radius: 16px;
+				}
+
+				.toastui-editor-defaultUI-toolbar {
+					padding: 8px;
+				}
+
+				.toastui-editor-defaultUI button {
+					min-width: 36px;
+					min-height: 36px;
+				}
+
+				.toastui-editor-popup,
+				.toastui-editor-popup-body,
+				.toastui-editor-popup-add-image,
+				.toastui-editor-popup-add-link,
+				.toastui-editor-popup-add-table {
+					width: calc(100vw - 28px);
+					max-width: calc(100vw - 28px);
+				}
+
+				.editor-actions {
+					flex-direction: column;
+					align-items: stretch;
+					gap: 10px;
+				}
+
+				.cta-secondary,
+				.cta-primary {
+					width: 100%;
+					min-width: 0;
+				}
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#mobile-wrap #my-page,
+	#pc-wrap #my-page {
+		* {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+		}
+	}
+}

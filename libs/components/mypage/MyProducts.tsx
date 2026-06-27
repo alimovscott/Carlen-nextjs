@@ -4,7 +4,6 @@ import { Pagination, Stack, Typography } from '@mui/material';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import DirectionsCarFilledOutlinedIcon from '@mui/icons-material/DirectionsCarFilledOutlined';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { Product } from '../../types/product/product';
@@ -19,7 +18,6 @@ import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { useTranslation } from 'next-i18next';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
@@ -137,10 +135,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		router.back();
 	}
 
-	if (device === 'mobile') {
-		return <div>MY PRODUCTS MOBILE</div>;
-	} else {
-		return (
+	return (
 			<div id="carlen-my-products-page">
 				<motion.div className="inventory-header-block" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>
@@ -265,7 +260,6 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 			</div>
 		);
-	}
 };
 
 MyProducts.defaultProps = {

@@ -1,8 +1,7 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
-import PropertyCard from '../../libs/components/product/PropductCard';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/product/Filter';
 import { useRouter } from 'next/router';
@@ -29,7 +28,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const ProductList: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
@@ -48,6 +46,7 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
+	const [showFilter, setShowFilter] = useState(false);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -141,18 +140,15 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 		setAnchorEl(null);
 	};
 
-	if (device === 'mobile') {
-		return <h1>PROPERTIES MOBILE</h1>;
-	} else {
-		const listContainer = {
-			hidden: {},
-			visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.05, delayChildren: 0.04 } },
-		};
-		const listItem = {
-			hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
-			visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 320, damping: 30 } },
-		};
-		return (
+	const listContainer = {
+		hidden: {},
+		visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.05, delayChildren: 0.04 } },
+	};
+	const listItem = {
+		hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 16 },
+		visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 320, damping: 30 } },
+	};
+	return (
 			<div id="carlen-product-list-page" style={{ position: 'relative' }}>
 				<div className="container">
 					<Box component={'div'} className={'right'}>
@@ -189,8 +185,17 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 							</Menu>
 						</div>
 					</Box>
+					<button
+						type={'button'}
+						className={`carlen-filter-toggle ${showFilter ? 'open' : ''}`}
+						onClick={() => setShowFilter((prev) => !prev)}
+						aria-expanded={showFilter}
+					>
+						<TuneRoundedIcon />
+						<span>{t('Filters')}</span>
+					</button>
 					<Stack className={'carlen-product-page'}>
-						<Stack className={'filter-config'}>
+						<Stack className={`filter-config ${showFilter ? 'open' : ''}`}>
 							{/* @ts-ignore */}
 							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} total={total} />
 						</Stack>
@@ -246,7 +251,6 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 				</div>
 			</div>
 		);
-	}
 };
 
 ProductList.defaultProps = {

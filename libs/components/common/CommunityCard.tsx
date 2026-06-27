@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Typography } from '@mui/material';
 import { BoardArticle } from '../../types/board-article/board-article';
 import Moment from 'react-moment';
@@ -25,7 +24,6 @@ const stripHtml = (html?: string): string =>
 
 const CommunityCard = (props: CommunityCardProps) => {
 	const { boardArticle, size = 'normal', likeArticleHandler } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
@@ -53,10 +51,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 		else router.push(`/member?memberId=${id}`);
 	};
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY CARD MOBILE</div>;
-	} else {
-		return (
+	return (
 			<Stack
 				className={`community-general-card-config carlen-community-card ${size === 'small' ? 'small' : 'normal'}`}
 				onClick={(e: React.MouseEvent) => chooseArticleHandler(e, boardArticle)}
@@ -111,7 +106,6 @@ const CommunityCard = (props: CommunityCardProps) => {
 				</Stack>
 			</Stack>
 		);
-	}
 };
 
 export default CommunityCard;

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Stack, Box, Divider, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Product } from '../../types/product/product';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -20,7 +19,7 @@ interface TopProductCardProps {
 
 const TopProductCard = (props: TopProductCardProps) => {
 	const { product, likePropertyHandler, index = 0 } = props;
-	const device = useDeviceDetect();
+	const isCompact = useMediaQuery('(max-width:1023px)');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const shouldReduceMotion = useReducedMotion();
@@ -33,21 +32,28 @@ const TopProductCard = (props: TopProductCardProps) => {
 	};
 
 
-	if (device === 'mobile') {
+	if (isCompact) {
 		return (
-			<Stack className="top-card-box">
+			<Box component={'article'} className={'top-card-box carlen-top-responsive-card'}>
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages[0]})` }}
+					style={{ backgroundImage: `url(${imageUrl})` }}
 					onClick={() => pushDetailPageHandler(product._id)}
 				>
-					<div>${product?.productPrice}</div>
+					<span className={'top-card-badge'}>Top Rated</span>
+					<div className={'top-card-price'}>${formatterStr(product?.productPrice)}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
-					<strong className={'title'}onClick={() => pushDetailPageHandler(product._id)}
-						>{product?.productTitle}</strong>
-					<p className={'desc'}>{product?.productAddress}</p>
+					<div className={'meta-row'}>
+						<span>{product?.productYear}</span>
+						<span>{product?.productType}</span>
+						<span>{product?.productLocation}</span>
+					</div>
+					<strong className={'title'} onClick={() => pushDetailPageHandler(product._id)}>
+						{product?.productTitle}
+					</strong>
+					<p className={'desc'}>{product?.productDesc ?? product?.productAddress}</p>
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/car-seat.svg" alt="" />
@@ -59,33 +65,31 @@ const TopProductCard = (props: TopProductCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/odometer.svg" alt="" />
-							<span>{product?.productMileage} km</span>
+							<span>{formatterStr(product?.productMileage)} km</span>
 						</div>
 					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
 						<p>
-							{' '}
-							{product.productTransmission ? 'Automatic' : ''} {product.productTransmission && product.productFuelType && '/'}{' '}
-							{product.productFuelType ? 'Fuel' : ''}
+							{product.productTransmission?.toLowerCase()} / {product.productFuelType?.toLowerCase()}
 						</p>
 						<div className="view-like-box">
-							<IconButton color={'default'}>
+							<span className={'stat-chip'}>
 								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{product?.productViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler(user, product._id)}>
-								{product?.meLiked && product?.meLiked[0]?.myFavorite ? (
-									<FavoriteIcon style={{ color: 'red' }} />
-								) : (
-									<FavoriteIcon />
-								)}
+								<Typography className="view-cnt">{product?.productViews}</Typography>
+							</span>
+							<IconButton
+								className={isLiked ? 'like-button active' : 'like-button'}
+								color={'default'}
+								aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+								onClick={() => likePropertyHandler(user, product._id)}
+							>
+								<FavoriteIcon />
 							</IconButton>
 							<Typography className="view-cnt">{product?.productLikes}</Typography>
 						</div>
 					</div>
 				</Box>
-			</Stack>
+			</Box>
 		);
 	} else {
 		return (

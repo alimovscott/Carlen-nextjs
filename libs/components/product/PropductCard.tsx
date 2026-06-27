@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack, Typography, Box } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Product } from '../../types/product/product';
@@ -21,17 +20,13 @@ interface ProductCardType {
 
 const ProductCard = (props: ProductCardType) => {
 	const { product, likePropertyHandler, myFavorites, recentlyVisited } = props;
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const imagePath: string = product?.productImages[0]
 		? `${REACT_APP_API_URL}/${product?.productImages[0]}`
 		: '/img/banner/header1.svg';
 
-	if (device === 'mobile') {
-		return <div>PROPERTY CARD</div>;
-	} else {
-		return (
-			<Stack className="card-config carlen-product-card">
+	return (
+		<Stack className="card-config carlen-product-card">
 				<Stack className="top">
 					<Link
 						href={{
@@ -118,7 +113,6 @@ const ProductCard = (props: ProductCardType) => {
 				</Stack>
 			</Stack>
 		);
-	}
 };
 
 export default ProductCard;

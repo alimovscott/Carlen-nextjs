@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Box, Pagination, Stack, Typography } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import { FollowInquiry } from '../../types/follow/follow.input';
@@ -24,7 +23,6 @@ interface MemberFollowsProps {
 
 const MemberFollowers = (props: MemberFollowsProps) => {
 	const { initialInput, subscribeHandler, unsubscribeHandler, likeMemberHandler, redirectToMemberPageHandler } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const [total, setTotal] = useState<number>(0);
@@ -78,10 +76,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
 	};
 
-	if (device === 'mobile') {
-		return <div>MEMBER FOLLOWERS MOBILE</div>;
-	} else {
-		return (
+	return (
 			<div id="carlen-member-network-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.span className="eyebrow" variants={item}>
@@ -220,7 +215,6 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 				)}
 			</div>
 		);
-	}
 };
 
 MemberFollowers.defaultProps = {

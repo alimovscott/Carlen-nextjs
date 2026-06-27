@@ -1,6 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Box, Button, Pagination, CircularProgress } from '@mui/material';
 import { Menu, MenuItem } from '@mui/material';
@@ -27,7 +26,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const AgentList: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
@@ -145,10 +143,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 				transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
 		  };
 
-	if (device === 'mobile') {
-		return <h1>AGENTS PAGE MOBILE</h1>;
-	} else {
-		return (
+	return (
 			<Stack className={'agent-list-page carlen-agent-list-page'}>
 				<Stack className={'container'}>
 					<motion.div
@@ -245,7 +240,6 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 			</Stack>
 		);
-	}
 };
 
 AgentList.defaultProps = {

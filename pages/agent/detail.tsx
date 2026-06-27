@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
@@ -32,7 +31,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const shouldReduceMotion = useReducedMotion();
@@ -222,10 +220,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 28 } },
 	};
 
-	if (device === 'mobile') {
-		return <div>AGENT DETAIL PAGE MOBILE</div>;
-	} else {
-		return (
+	return (
 			<Stack className={'carlen-agent-detail-page'}>
 				<Stack className={'container'}>
 					{/* 1 + 2. PREMIUM DEALER HERO */}
@@ -375,7 +370,6 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 				</Stack>
 			</Stack>
 		);
-	}
 };
 
 AgentDetail.defaultProps = {

@@ -8,6 +8,7 @@ import ProductsHero from '../product/ProductsHero';
 import AgentsHero from '../agent/AgentsHero';
 import { Stack } from '@mui/material';
 import { getJwtToken, updateUserInfo } from '../../auth';
+import MobileBottomNav from '../common/MobileBottomNav';
 import Chat from '../Chat';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
@@ -112,6 +113,8 @@ const withLayoutBasic = (Component: any) => {
 						<Stack id={'footer'}>
 							<Footer />
 						</Stack>
+
+						<MobileBottomNav />
 					</Stack>
 				</>
 			);

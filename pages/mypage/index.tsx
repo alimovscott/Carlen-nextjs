@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { Stack, Typography } from '@mui/material';
 import { motion, useReducedMotion } from 'framer-motion';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProducts from '../../libs/components/mypage/MyProducts';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
@@ -30,7 +29,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const MyPage: NextPage = () => {
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
@@ -117,10 +115,7 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
-	} else {
-		return (
+	return (
 			<div id="my-page" style={{ position: 'relative' }}>
 				<div className="container">
 					<Stack className={'my-page'}>
@@ -171,7 +166,6 @@ const unsubscribeHandler = async (id: string, refetch: any, query: any) => {
 				</div>
 			</div>
 		);
-	}
 };
 
 export default withLayoutBasic(MyPage);

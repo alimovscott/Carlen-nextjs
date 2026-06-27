@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Typography } from '@mui/material';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import NorthEastRoundedIcon from '@mui/icons-material/NorthEastRounded';
@@ -17,7 +16,6 @@ import { useMutation } from '@apollo/client';
 import { useTranslation } from 'next-i18next';
 
 const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
-	const device = useDeviceDetect();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
 	const token = getJwtToken();
@@ -128,10 +126,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
 	};
 
-	if (device === 'mobile') {
-		return <>MY PROFILE PAGE MOBILE</>;
-	} else
-		return (
+	return (
 			<div id="carlen-my-profile-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>

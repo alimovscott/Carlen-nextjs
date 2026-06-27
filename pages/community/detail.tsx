@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Typography, IconButton, Backdrop, Pagination } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -56,7 +55,6 @@ const CATEGORY_META: Record<string, string> = {
 };
 
 const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { query } = router;
 	const shouldReduceMotion = useReducedMotion();
@@ -330,10 +328,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const related = relatedArticles.filter((a) => a?._id !== articleId).slice(0, 3);
 	const displayedCommentsCount = getCommentsData ? total : boardArticle?.articleComments ?? 0;
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
-	} else {
-		return (
+	return (
 			<div id="carlen-community-detail-page">
 				<div className="container">
 					<Stack className="carlen-community-detail-layout">
@@ -651,7 +646,6 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 				</div>
 			</div>
 		);
-	}
 };
 CommunityDetail.defaultProps = {
 	initialInput: {

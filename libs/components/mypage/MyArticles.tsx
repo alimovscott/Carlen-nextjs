@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { motion, useReducedMotion, Variants } from 'framer-motion';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
 import CommunityCard from '../common/CommunityCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -18,7 +17,6 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAler
 import { useTranslation } from 'next-i18next';
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const shouldReduceMotion = useReducedMotion();
 	const { t } = useTranslation('common');
@@ -86,10 +84,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 		visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 30 } },
 	};
 
-	if (device === 'mobile') {
-		return <>ARTICLE PAGE MOBILE</>;
-	} else
-		return (
+	return (
 			<div id="carlen-my-articles-page">
 				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
 					<motion.div className="head-text" variants={item}>

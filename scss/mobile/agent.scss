@@ -1,0 +1,632 @@
+/**
+ * Carlen mobile/tablet — Agents (dealers) list page.
+ * Desktop design lives under desktop SCSS. This file owns max-width responsive behavior
+ * for #mobile-wrap and narrow #pc-wrap render paths. Dark theme (reuse $c-* tokens).
+ * Page chrome scoped to .carlen-agent-list-page; card scoped to .carlen-agent-card.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap,
+	#pc-wrap {
+		width: 100%;
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
+		overflow-x: hidden;
+
+		.carlen-agent-list-page {
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			box-sizing: border-box;
+			overflow-x: hidden;
+			background:
+				radial-gradient(circle at 8% 0%, rgba(233, 44, 40, 0.12), transparent 30%),
+				radial-gradient(circle at 100% 18%, rgba(22, 70, 193, 0.11), transparent 34%),
+				$c-base;
+			padding: 20px 0 88px;
+
+			.container {
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				padding: 0 20px;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* TOOLBAR — search + sort full width */
+			.carlen-agent-toolbar {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				flex-direction: column;
+				align-items: stretch;
+				gap: 14px;
+				padding: 16px;
+				margin-bottom: 22px;
+				border-radius: 22px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				background: rgba(11, 15, 23, 0.76);
+				box-shadow: 0 22px 54px -34px rgba(0, 0, 0, 0.9);
+				backdrop-filter: blur(18px) saturate(150%);
+				-webkit-backdrop-filter: blur(18px) saturate(150%);
+				box-sizing: border-box;
+				overflow: hidden;
+
+				.carlen-agent-search {
+					width: 100%;
+					max-width: 100%;
+					min-width: 0;
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					height: 52px;
+					padding: 0 15px;
+					border: 1px solid $c-border;
+					border-radius: 16px;
+					background: $c-glass;
+					box-sizing: border-box;
+					transition: border-color 180ms $ease-out, box-shadow 180ms $ease-out;
+
+					&:focus-within {
+						border-color: rgba(233, 44, 40, 0.5);
+						box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.1);
+					}
+
+					.lead-icon {
+						color: $c-muted;
+						font-size: 20px;
+						flex-shrink: 0;
+					}
+
+					input {
+						flex: 1;
+						width: 100%;
+						height: 100%;
+						min-width: 0;
+						border: none;
+						outline: none;
+						background: transparent;
+						color: #fff;
+						font-family: $font;
+						font-size: 15px;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: rgba(255, 255, 255, 0.5);
+						}
+					}
+				}
+
+				.carlen-agent-sort {
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					gap: 10px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+
+					> span {
+						flex-shrink: 0;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+					}
+
+					> div {
+						flex: 1;
+						min-width: 0;
+						max-width: 100%;
+					}
+
+					button,
+					.MuiButton-root {
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						height: 52px;
+						padding: 0 14px;
+						justify-content: space-between;
+						border: 1px solid $c-border;
+						border-radius: 16px;
+						background: $c-glass;
+						color: $c-text;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 600;
+						text-transform: none;
+						box-sizing: border-box;
+					}
+				}
+			}
+
+			/* GRID — 2 columns on tablet */
+			.carlen-agent-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 16px;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				box-sizing: border-box;
+
+				> * {
+					min-width: 0;
+					max-width: 100%;
+					box-sizing: border-box;
+				}
+			}
+
+			.carlen-agent-loading,
+			.carlen-agent-empty {
+				width: 100%;
+				min-height: 280px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				text-align: center;
+				box-sizing: border-box;
+			}
+			.carlen-agent-empty {
+				padding: 40px 20px;
+				border-radius: 18px;
+				border: 1px solid $c-border;
+				background: $c-raised;
+				svg { width: 44px; height: 44px; color: $c-faint; }
+				strong { color: $c-text; font-family: $font; font-size: 17px; font-weight: 700; }
+				span { color: $c-faint; font-family: $font; font-size: 13px; }
+			}
+			.carlen-agent-loading {
+				.MuiCircularProgress-root { color: #e92c28; }
+				p { color: $c-muted; font-family: $font; font-size: 14px; }
+			}
+
+			/* PAGINATION */
+			.carlen-agent-pagination {
+				margin-top: 28px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				box-sizing: border-box;
+
+				.pagination-box {
+					display: flex;
+					justify-content: center;
+					width: 100%;
+					max-width: 100%;
+					overflow-x: auto;
+					-webkit-overflow-scrolling: touch;
+				}
+				.MuiPaginationItem-root {
+					font-family: $font;
+					color: $c-muted;
+					border-radius: 10px;
+					&.Mui-selected {
+						background: $c-accent-grad;
+						color: #fff;
+					}
+				}
+				> span {
+					margin-top: 14px;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					text-align: center;
+				}
+			}
+		}
+
+		/* AGENT (dealer) CARD */
+		.carlen-agent-card {
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			padding: 18px 16px 16px;
+			border-radius: 22px;
+			border: 1px solid rgba(255, 255, 255, 0.13);
+			background:
+				linear-gradient(155deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025) 45%, rgba(233, 44, 40, 0.055)),
+				rgba(11, 15, 23, 0.82);
+			box-shadow: 0 24px 60px -36px rgba(0, 0, 0, 0.95);
+			backdrop-filter: blur(18px) saturate(150%);
+			-webkit-backdrop-filter: blur(18px) saturate(150%);
+			box-sizing: border-box;
+			overflow: hidden;
+
+			.carlen-agent-card-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+				padding: 5px 11px;
+				border-radius: 999px;
+				border: 1px solid rgba(22, 70, 193, 0.4);
+				background: rgba(22, 70, 193, 0.12);
+				color: $c-blue-glow;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+				svg { width: 13px; height: 13px; }
+			}
+
+			> a {
+				display: block;
+				width: 100%;
+				min-width: 0;
+			}
+
+			.carlen-agent-card-avatar {
+				width: min(100%, 190px);
+				max-width: 190px;
+				height: auto;
+				aspect-ratio: 1 / 1;
+				margin: 14px 0 12px;
+				border-radius: 28px;
+				background-size: cover;
+				background-position: center;
+				background-color: #05070b;
+				border: 3px solid $c-raised;
+				box-shadow: 0 0 0 1px $c-border, 0 18px 30px -20px rgba(233, 44, 40, 0.65);
+				cursor: pointer;
+				box-sizing: border-box;
+			}
+
+			.carlen-agent-card-name {
+				color: $c-text;
+				font-family: $font;
+				font-size: 17px;
+				font-weight: 700;
+				text-transform: capitalize;
+				overflow-wrap: anywhere;
+				white-space: normal;
+			}
+			.carlen-agent-card-location {
+				margin-top: 4px;
+				color: $c-muted;
+				font-family: $font;
+				font-size: 13px;
+				overflow-wrap: anywhere;
+				white-space: normal;
+			}
+
+			.carlen-agent-card-stats {
+				width: 100%;
+				margin: 14px 0;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 8px;
+				div {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 2px;
+					padding: 10px 4px;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					min-width: 0;
+					strong { color: $c-text; font-family: $font; font-size: 15px; font-weight: 800; line-height: 1; }
+					span {
+						color: $c-faint;
+						font-family: $font;
+						font-size: 10px;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 0.04em;
+					}
+				}
+			}
+
+			.carlen-agent-card-actions {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 10px;
+				box-sizing: border-box;
+
+				.like {
+					width: 44px;
+					height: 44px;
+					flex-shrink: 0;
+					border-radius: 12px;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					color: $c-muted;
+					box-sizing: border-box;
+					svg { width: 20px; height: 20px; }
+				}
+				.view-profile {
+					flex: 1;
+					min-width: 0;
+					max-width: 100%;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					height: 44px;
+					border-radius: 12px;
+					background: $c-accent-grad;
+					color: #fff;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 700;
+					text-decoration: none;
+					box-sizing: border-box;
+				}
+			}
+		}
+	}
+
+	#pc-wrap {
+		.carlen-agent-hero {
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			padding: 76px 20px 42px;
+			box-sizing: border-box;
+			overflow: hidden;
+
+			.carlen-agent-hero-inner {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				gap: 28px;
+				box-sizing: border-box;
+			}
+
+			.carlen-agent-hero-content {
+				min-width: 0;
+				max-width: 48%;
+
+				.carlen-agent-title {
+					font-size: 42px;
+					line-height: 1.08;
+					white-space: normal;
+				}
+
+				.carlen-agent-subtitle {
+					font-size: 15px;
+					line-height: 1.55;
+					white-space: normal;
+				}
+
+				.carlen-agent-stats {
+					max-width: 100%;
+				}
+			}
+
+			.carlen-agent-hero-visual {
+				min-width: 0;
+				max-width: 48%;
+				height: 300px;
+
+				.float-card {
+					&.a {
+						left: 14px;
+					}
+
+					&.b {
+						right: 14px;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap,
+	#pc-wrap {
+		.carlen-agent-list-page {
+			padding: 16px 0 calc(124px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				padding: 0 14px;
+			}
+
+			.carlen-agent-toolbar {
+				gap: 12px;
+				padding: 13px;
+				margin-bottom: 16px;
+				border-radius: 20px;
+
+				.carlen-agent-search {
+					height: 50px;
+					border-radius: 15px;
+
+					input {
+						font-size: 15px;
+					}
+				}
+
+				.carlen-agent-sort {
+					flex-direction: column;
+					align-items: stretch;
+					gap: 8px;
+
+					> span {
+						width: 100%;
+					}
+
+					button,
+					.MuiButton-root {
+						height: 50px;
+						border-radius: 15px;
+					}
+				}
+			}
+
+			.carlen-agent-grid {
+				grid-template-columns: 1fr;
+				gap: 14px;
+			}
+
+			.carlen-agent-pagination {
+				margin-top: 24px;
+
+				.MuiPagination-ul {
+					justify-content: center;
+					row-gap: 6px;
+				}
+			}
+		}
+
+		.carlen-agent-card {
+			align-items: stretch;
+			text-align: left;
+			padding: 16px;
+			border-radius: 20px;
+
+			.carlen-agent-card-badge {
+				align-self: flex-start;
+				padding: 5px 10px;
+				font-size: 10px;
+			}
+
+			> a {
+				width: auto;
+				align-self: center;
+			}
+
+			.carlen-agent-card-avatar {
+				width: 96px;
+				max-width: 96px;
+				margin: 13px auto 12px;
+				border-radius: 24px;
+			}
+
+			.carlen-agent-card-name,
+			.carlen-agent-card-location {
+				width: 100%;
+				text-align: center;
+			}
+
+			.carlen-agent-card-name {
+				font-size: 18px;
+				line-height: 1.25;
+			}
+
+			.carlen-agent-card-location {
+				font-size: 13px;
+				line-height: 1.45;
+			}
+
+			.carlen-agent-card-stats {
+				margin: 13px 0 14px;
+				gap: 7px;
+
+				div {
+					padding: 9px 3px;
+
+					strong {
+						font-size: 15px;
+					}
+
+					span {
+						font-size: 9px;
+						letter-spacing: 0.03em;
+					}
+				}
+			}
+
+			.carlen-agent-card-actions {
+				position: relative;
+				display: block;
+
+				.like {
+					position: absolute;
+					top: -182px;
+					right: 0;
+					width: 42px;
+					height: 42px;
+					border-radius: 14px;
+					background: rgba(11, 15, 23, 0.78);
+					backdrop-filter: blur(14px);
+					-webkit-backdrop-filter: blur(14px);
+				}
+
+				.view-profile {
+					width: 100%;
+					height: 48px;
+					border-radius: 15px;
+				}
+			}
+		}
+	}
+
+	#pc-wrap {
+		.carlen-agent-hero {
+			padding: 52px 14px 30px;
+
+			.carlen-agent-hero-inner {
+				flex-direction: column;
+				align-items: stretch;
+				gap: 22px;
+			}
+
+			.carlen-agent-hero-content {
+				max-width: 100%;
+				gap: 13px;
+
+				.carlen-agent-title {
+					font-size: 34px;
+				}
+
+				.carlen-agent-subtitle {
+					font-size: 14px;
+				}
+
+				.carlen-agent-actions {
+					width: 100%;
+					flex-direction: column;
+					align-items: stretch;
+					gap: 10px;
+
+					.cta-primary,
+					.cta-secondary {
+						width: 100%;
+						height: 48px;
+						box-sizing: border-box;
+					}
+				}
+			}
+
+			.carlen-agent-hero-visual {
+				max-width: 100%;
+				height: 230px;
+
+				.float-card {
+					padding: 10px 12px;
+
+					&.a {
+						left: 10px;
+						top: 12px;
+					}
+
+					&.b {
+						right: 10px;
+						bottom: 12px;
+					}
+				}
+			}
+		}
+	}
+}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Box, CircularProgress, Stack } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper';
 import Link from 'next/link';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
@@ -69,18 +68,26 @@ const TopAgents = (props: TopAgentsProps) => {
 		return (
 			<Stack className={'top-agents'}>
 				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>Top Agents</span>
+					<Stack component={'header'} className={'agents-responsive-header'}>
+						<Stack className={'agents-responsive-copy'}>
+							<span className={'eyebrow'}>Top Rated Dealers</span>
+							<strong>Meet Carlen Experts</strong>
+							<p>Verified specialists ready to help you find the right car.</p>
+						</Stack>
+						<Link href={'/agent'} className={'agents-responsive-view-all'}>
+							View all
+						</Link>
 					</Stack>
-					<Stack className={'wrapper'}>
+					<Stack className={'card-box'}>
 						<Swiper
 							className={'top-agents-swiper'}
-							slidesPerView={'auto'}
-							centeredSlides={true}
-							spaceBetween={29}
-							modules={[Autoplay]}
+							slidesPerView={1.12}
+							spaceBetween={16}
+							centeredSlides={false}
+							grabCursor={true}
+							breakpoints={{ 769: { slidesPerView: 2, spaceBetween: 18 } }}
 						>
-							{topAgents.map((agent: Member) => {
+							{topAgents.slice(0, 6).map((agent: Member) => {
 								return (
 									<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
 										<TopAgentCard agent={agent} key={agent?.memberNick} />

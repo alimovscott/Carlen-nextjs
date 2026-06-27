@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Stack, Box } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { Stack, Box, useMediaQuery } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
 import PopularProductCard from './PopularProductCard';
 import { Product } from '../../types/product/product';
 import Link from 'next/link';
@@ -23,7 +19,8 @@ interface PopularProductsProps {
 
 const PopularProducts = (props: PopularProductsProps) => {
 	const { initialInput } = props;
-	const device = useDeviceDetect();
+	const isCompact = useMediaQuery('(max-width:1023px)');
+	const isMobile = useMediaQuery('(max-width:768px)');
 	const { t } = useTranslation('common');
 	const [popularProducts, setPopularProducts] = useState<Product[]>([]);
 
@@ -61,29 +58,45 @@ const PopularProducts = (props: PopularProductsProps) => {
 
 	if (!popularProducts) return null;
 
-	if (device === 'mobile') {
+	if (isCompact) {
 		return (
-			<Stack className={'popular-products'}>
+			<Stack className={'popular-products carlen-popular-responsive'}>
 				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>{t('Popular Cars')}</span>
+					<Stack component={'header'} className={'popular-responsive-header'}>
+						<Stack className={'popular-responsive-copy'}>
+							<span className={'eyebrow'}>{t('Popular Selection')}</span>
+							<strong>{t('Discover Popular Cars')}</strong>
+							<p>{t('Browse the vehicles most loved by our community.')}</p>
+						</Stack>
+						<Link href={'/cars'} className={'popular-responsive-view-all'}>
+							{t('View All')}
+						</Link>
 					</Stack>
 					<Stack className={'card-box'}>
-						<Swiper
-							className={'popular-product-swiper'}
-							slidesPerView={'auto'}
-							centeredSlides={true}
-							spaceBetween={25}
-							modules={[Autoplay]}
-						>
-							{popularProducts.map((product: Product) => {
-								return (
-									<SwiperSlide key={product._id} className={'popular-product-slide'}>
-										<PopularProductCard product={product} />
-									</SwiperSlide>
-								);
-							})}
-						</Swiper>
+						{popularProducts.length === 0 ? (
+							<Box component={'div'} className={'empty-list'}>
+								{t('No cars found')}
+							</Box>
+						) : (
+							<Swiper
+								className={'popular-product-swiper'}
+								slidesPerView={isMobile ? 1.12 : 2}
+								spaceBetween={isMobile ? 16 : 18}
+								grabCursor={true}
+								centeredSlides={false}
+							>
+								{popularProducts.map((product: Product) => {
+									return (
+										<SwiperSlide key={product._id} className={'popular-product-slide'}>
+											<PopularProductCard
+												product={product}
+												likePropertyHandler={likePropertyHandler}
+											/>
+										</SwiperSlide>
+									);
+								})}
+							</Swiper>
+						)}
 					</Stack>
 				</Stack>
 			</Stack>

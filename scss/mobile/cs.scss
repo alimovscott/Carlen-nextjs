@@ -1,0 +1,468 @@
+/**
+ * Carlen Support Center — mobile/tablet responsive layer.
+ * Desktop Support styles live in scss/pc/cs/cs.scss and remain unchanged.
+ */
+@media (max-width: 1023px) {
+	#mobile-wrap,
+	#pc-wrap {
+		.carlen-cs-page {
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			min-height: 100vh;
+			padding: 44px 0 calc(112px + env(safe-area-inset-bottom, 0px));
+			overflow-x: hidden;
+			box-sizing: border-box;
+			background:
+				radial-gradient(circle at 86% 0%, rgba(233, 44, 40, 0.18), transparent 34%),
+				radial-gradient(circle at 8% 16%, rgba(47, 107, 255, 0.13), transparent 30%),
+				linear-gradient(180deg, #080c13 0%, $c-base 48%, #080c13 100%);
+
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+
+			.container,
+			.carlen-cs-header,
+			.carlen-cs-info,
+			.carlen-cs-tabs,
+			.carlen-cs-content,
+			.notice-content,
+			.faq-content {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				box-sizing: border-box;
+			}
+
+			.container {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				padding: 0 18px;
+				overflow-x: hidden;
+			}
+
+			.carlen-cs-header {
+				padding: 2px 2px 0;
+			}
+
+			.carlen-cs-info {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				text-align: left;
+
+				.eyebrow {
+					display: inline-flex;
+					align-items: center;
+					width: fit-content;
+					padding: 7px 11px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(233, 44, 40, 0.28);
+					background: rgba(233, 44, 40, 0.1);
+					color: $c-orange;
+					font-family: $font;
+					font-size: 10px;
+					font-weight: 800;
+					line-height: 1;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+				}
+
+				h1 {
+					margin: 12px 0 0;
+					color: $c-text;
+					font-family: $font;
+					font-size: 34px;
+					font-weight: 800;
+					line-height: 1.06;
+					letter-spacing: -0.03em;
+					text-wrap: balance;
+				}
+
+				p {
+					margin: 12px 0 0;
+					max-width: 58ch;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 1.6;
+				}
+			}
+
+			.quick-chips {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 9px;
+				width: 100%;
+				margin-top: 18px;
+
+				.chip {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					min-height: 42px;
+					padding: 0 14px;
+					border-radius: $c-radius-pill;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: rgba(255, 255, 255, 0.045);
+					color: $c-muted;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+					line-height: 1;
+					text-decoration: none;
+					white-space: nowrap;
+				}
+			}
+
+			.carlen-cs-tabs {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 6px;
+				padding: 5px;
+				border-radius: $c-radius-pill;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				background: rgba(255, 255, 255, 0.045);
+
+				div {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					min-width: 0;
+					min-height: 44px;
+					padding: 0 14px;
+					border-radius: $c-radius-pill;
+					color: $c-muted;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 800;
+					cursor: pointer;
+					-webkit-tap-highlight-color: transparent;
+
+					&.active {
+						background: $c-accent-grad;
+						color: #fff;
+					}
+				}
+			}
+
+			.carlen-cs-content {
+				padding: 18px;
+				border-radius: 18px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				overflow: hidden;
+				background:
+					linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+					rgba(14, 19, 29, 0.84);
+				box-shadow: 0 8px 8px -6px rgba(0, 0, 0, 0.55);
+				backdrop-filter: blur(18px) saturate(150%);
+				-webkit-backdrop-filter: blur(18px) saturate(150%);
+
+				.title {
+					display: block;
+					margin-bottom: 14px;
+					color: $c-text;
+					font-family: $font;
+					font-size: 20px;
+					font-weight: 800;
+					line-height: 1.2;
+				}
+			}
+
+			/* Notice cards */
+			.notice-content {
+				.main,
+				.bottom {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+				}
+
+				.main {
+					border: 0;
+					border-radius: 0;
+					overflow: visible;
+				}
+
+				.top {
+					display: none;
+				}
+
+				.bottom {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 12px;
+				}
+
+				.notice-card {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 9px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					min-height: 126px;
+					padding: 15px;
+					border-radius: 16px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+					background: rgba(255, 255, 255, 0.045);
+
+					&.event {
+						border-color: rgba(233, 44, 40, 0.28);
+						background: linear-gradient(135deg, rgba(233, 44, 40, 0.16), rgba(255, 106, 61, 0.08));
+					}
+
+					> div,
+					.notice-number {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						min-height: 28px;
+						padding: 0 10px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(233, 44, 40, 0.42);
+						color: $c-orange;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 800;
+						line-height: 1;
+						text-transform: uppercase;
+					}
+
+					.notice-title {
+						width: 100%;
+						min-width: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 800;
+						line-height: 1.35;
+						overflow-wrap: anywhere;
+					}
+
+					.notice-date {
+						margin-top: auto;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+					}
+				}
+			}
+
+			/* FAQ */
+			.faq-content {
+				.categories {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					gap: 8px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding-bottom: 2px;
+					overflow-x: auto;
+					scrollbar-width: none;
+					-webkit-overflow-scrolling: touch;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+
+					div {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						flex: 0 0 auto;
+						min-height: 42px;
+						padding: 0 14px;
+						border-radius: $c-radius-pill;
+						border: 1px solid rgba(255, 255, 255, 0.1);
+						background: rgba(255, 255, 255, 0.035);
+						color: $c-muted;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 800;
+						white-space: nowrap;
+						cursor: pointer;
+
+						&.active {
+							border-color: transparent;
+							background: $c-accent-grad;
+							color: #fff;
+						}
+					}
+				}
+
+				.wrap {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 16px;
+					overflow: hidden;
+					border-radius: 16px;
+					border: 1px solid rgba(255, 255, 255, 0.1);
+				}
+
+				.MuiPaper-root {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					border-color: rgba(255, 255, 255, 0.1) !important;
+					background-color: transparent;
+					background-image: none;
+					color: $c-text;
+				}
+
+				.MuiAccordionSummary-root {
+					min-height: 58px;
+					padding: 0 12px;
+					background: rgba(255, 255, 255, 0.045);
+				}
+
+				.MuiAccordionSummary-content {
+					min-width: 0;
+					margin: 12px 0;
+					align-items: center;
+					gap: 10px;
+
+					.MuiTypography-root:not(.badge) {
+						min-width: 0;
+						color: $c-text;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 800;
+						line-height: 1.4;
+						overflow-wrap: anywhere;
+					}
+				}
+
+				.MuiAccordionSummary-expandIconWrapper {
+					color: $c-muted;
+				}
+
+				.MuiAccordionDetails-root {
+					padding: 15px 12px 17px;
+					background: rgba(255, 255, 255, 0.02);
+				}
+
+				.badge {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					flex: 0 0 auto;
+					width: 30px;
+					height: 30px;
+					margin: 0;
+					border-radius: 50%;
+					border: 1px solid rgba(255, 255, 255, 0.14);
+					color: $c-text;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+				}
+
+				.question .badge {
+					border: 0;
+					background: $c-accent-grad;
+					color: #fff;
+				}
+
+				.answer {
+					display: flex;
+					flex-direction: row;
+					align-items: flex-start;
+					gap: 10px;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					margin: 0;
+					white-space: normal;
+
+					.badge {
+						color: $c-orange;
+						border-color: rgba(233, 44, 40, 0.42);
+					}
+
+					.MuiTypography-root:not(.badge) {
+						min-width: 0;
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						line-height: 1.55;
+						overflow-wrap: anywhere;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#mobile-wrap,
+	#pc-wrap {
+		.carlen-cs-page {
+			padding: 34px 0 calc(124px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				padding: 0 16px;
+				gap: 14px;
+			}
+
+			.carlen-cs-info {
+				h1 {
+					font-size: 29px;
+				}
+
+				p {
+					font-size: 13px;
+				}
+			}
+
+			.quick-chips {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+
+				.chip {
+					width: 100%;
+				}
+			}
+
+			.carlen-cs-content {
+				padding: 16px;
+				border-radius: 17px;
+			}
+
+			.notice-content {
+				.bottom {
+					grid-template-columns: 1fr;
+				}
+
+				.notice-card {
+					min-height: auto;
+					padding: 14px;
+				}
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#mobile-wrap .carlen-cs-page,
+	#pc-wrap .carlen-cs-page {
+		* {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+		}
+	}
+}

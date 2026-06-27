@@ -79,7 +79,92 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>MEMBER ARTICLES MOBILE</div>;
+		return (
+			<div id="carlen-member-articles-page">
+				<motion.div className="carlen-section-header" variants={container} initial="hidden" animate="visible">
+					<motion.span className="eyebrow" variants={item}>
+						MEMBER STORIES
+					</motion.span>
+					<motion.h1 className="title" variants={item}>
+						Published Articles
+					</motion.h1>
+					<motion.p className="subtitle" variants={item}>
+						Explore community posts and insights shared by this member.
+					</motion.p>
+					{total > 0 && (
+						<motion.span className="stat-chip" variants={item}>
+							<i className="dot" />
+							Total {total} article{total !== 1 ? 's' : ''}
+						</motion.span>
+					)}
+				</motion.div>
+
+				{getBoardArticlesLoading && !memberArticles.length ? (
+					<Stack className="carlen-member-articles-grid">
+						{Array.from({ length: 6 }).map((_, idx) => (
+							<div className="skeleton-card" key={idx}>
+								<span className="skeleton-img" />
+								<div className="skeleton-body">
+									<span className="skeleton-line w-40" />
+									<span className="skeleton-line w-80" />
+									<span className="skeleton-line w-60" />
+								</div>
+							</div>
+						))}
+					</Stack>
+				) : memberArticles?.length === 0 ? (
+					<motion.div
+						className="carlen-member-articles-empty"
+						variants={container}
+						initial="hidden"
+						animate="visible"
+					>
+						<motion.span className="empty-icon" variants={item}>
+							<ArticleOutlinedIcon />
+						</motion.span>
+						<motion.p className="empty-title" variants={item}>
+							No articles yet
+						</motion.p>
+						<motion.p className="empty-helper" variants={item}>
+							This member has not published any community posts yet.
+						</motion.p>
+					</motion.div>
+				) : (
+					<motion.div
+						className="carlen-member-articles-grid"
+						variants={container}
+						initial="hidden"
+						animate="visible"
+						key={searchFilter.page}
+					>
+						{memberArticles.map((boardArticle: BoardArticle) => (
+							<motion.div className="grid-item" variants={item} key={boardArticle?._id}>
+								<CommunityCard boardArticle={boardArticle} likeArticleHandler={likeArticleHandler} size={'small'} />
+							</motion.div>
+						))}
+					</motion.div>
+				)}
+
+				{memberArticles?.length !== 0 && (
+					<Stack className="carlen-member-articles-pagination">
+						<Stack className="pagination-box">
+							<Pagination
+								count={Math.ceil(total / searchFilter.limit) || 1}
+								page={searchFilter.page}
+								shape="circular"
+								color="primary"
+								onChange={paginationHandler}
+							/>
+						</Stack>
+						<Stack className="total-result">
+							<Typography>
+								Total {total} article{total !== 1 ? 's' : ''} available
+							</Typography>
+						</Stack>
+					</Stack>
+				)}
+			</div>
+		);
 	} else {
 		return (
 			<div id="carlen-member-articles-page">
