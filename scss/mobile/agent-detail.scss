@@ -1,146 +1,223 @@
 /**
  * Carlen mobile/tablet — Agent Detail page.
- * Desktop design lives under #pc-wrap (scss/pc/agent/detail.scss) and never reaches #mobile-wrap,
- * so the mobile page is styled here from scratch. Dark theme (reuse $c-* tokens).
- * Scoped #mobile-wrap .carlen-agent-detail-page.
+ * Desktop design lives under desktop SCSS. This file owns max-width responsive behavior
+ * for #mobile-wrap and narrow #pc-wrap render paths only.
  */
 @media (max-width: 1023px) {
-	#mobile-wrap {
+	#mobile-wrap,
+	#pc-wrap {
 		.carlen-agent-detail-page {
 			position: relative;
 			width: 100%;
-			max-width: 100%;
 			min-width: 0;
+			max-width: 100%;
+			padding: 20px 0 96px;
 			box-sizing: border-box;
 			overflow-x: hidden;
-			background: $c-base;
-			padding: 16px 0 calc(96px + env(safe-area-inset-bottom, 0px));
+			background:
+				radial-gradient(circle at 8% 0%, rgba(233, 44, 40, 0.13), transparent 30%),
+				radial-gradient(circle at 100% 18%, rgba(22, 70, 193, 0.12), transparent 34%),
+				$c-base;
 
 			.container {
 				width: 100%;
-				max-width: 100%;
 				min-width: 0;
-				padding: 0 16px;
+				max-width: 100%;
+				padding: 0 20px;
 				display: flex;
 				flex-direction: column;
-				gap: 24px;
+				align-items: stretch;
+				gap: 28px;
 				box-sizing: border-box;
 			}
 
-			/* ===== HERO (profile header) ===== */
+			.carlen-agent-detail-hero,
+			.carlen-agent-products,
+			.carlen-agent-reviews {
+				width: 100%;
+				min-width: 0;
+				max-width: 100%;
+				box-sizing: border-box;
+				overflow-x: hidden;
+			}
+
 			.carlen-agent-detail-hero {
 				display: flex;
 				flex-direction: column;
-				gap: 16px;
-				width: 100%;
-				max-width: 100%;
-				min-width: 0;
+				gap: 14px;
+				padding: 18px;
+				border-radius: 24px;
+				border: 1px solid rgba(255, 255, 255, 0.13);
+				background:
+					linear-gradient(150deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.026) 46%, rgba(233, 44, 40, 0.058)),
+					rgba(11, 15, 23, 0.82);
+				box-shadow: 0 26px 64px -38px rgba(0, 0, 0, 0.95);
+				backdrop-filter: blur(20px) saturate(150%);
+				-webkit-backdrop-filter: blur(20px) saturate(150%);
 
 				.carlen-agent-profile {
-					flex-direction: column;
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					display: flex;
+					flex-direction: row;
 					align-items: center;
-					text-align: center;
-					gap: 14px;
-					padding: 20px 16px;
-					border-radius: 18px;
-					border: 1px solid $c-border;
-					background: $c-raised;
+					gap: 18px;
+					padding: 0;
+					text-align: left;
 					box-sizing: border-box;
 
 					.avatar-ring {
+						width: 112px;
+						height: 112px;
+						min-width: 112px;
+						padding: 4px;
+						border-radius: 50%;
+						background: $c-accent-grad;
+						box-shadow: 0 0 0 1px $c-border, 0 18px 34px -18px rgba(233, 44, 40, 0.65);
 						cursor: pointer;
+						box-sizing: border-box;
+
 						img {
-							width: 120px;
-							height: 120px;
+							width: 100%;
+							height: 100%;
+							display: block;
 							border-radius: 50%;
 							object-fit: cover;
-							border: 1px solid $c-border-strong;
+							border: 3px solid rgba(11, 15, 23, 0.95);
+							background: #05070b;
+							box-sizing: border-box;
 						}
 					}
 
 					.info {
+						flex: 1;
+						min-width: 0;
+						max-width: 100%;
 						display: flex;
 						flex-direction: column;
-						align-items: center;
-						gap: 8px;
-						min-width: 0;
-						width: 100%;
+						align-items: flex-start;
+						gap: 9px;
 
 						.verified-chip {
 							display: inline-flex;
 							align-items: center;
-							gap: 5px;
-							padding: 5px 11px;
-							border-radius: 999px;
-							border: 1px solid rgba(52, 211, 153, 0.4);
-							background: rgba(52, 211, 153, 0.14);
-							color: #34d399;
+							gap: 6px;
+							max-width: 100%;
+							padding: 6px 12px;
+							border-radius: $c-radius-pill;
+							border: 1px solid rgba(233, 44, 40, 0.32);
+							background: rgba(233, 44, 40, 0.12);
+							color: $c-orange;
 							font-family: $font;
 							font-size: 11px;
-							font-weight: 700;
-							svg { font-size: 14px; }
+							font-weight: 800;
+							line-height: 1;
+							letter-spacing: 0.06em;
+							text-transform: uppercase;
+							box-sizing: border-box;
+							white-space: normal;
+
+							svg {
+								width: 14px;
+								height: 14px;
+								flex: 0 0 auto;
+							}
 						}
 
 						strong {
+							width: 100%;
 							color: $c-text;
 							font-family: $font;
-							font-size: 22px;
+							font-size: 26px;
 							font-weight: 800;
-							line-height: 1.2;
+							line-height: 1.14;
+							letter-spacing: -0.01em;
+							text-transform: capitalize;
 							cursor: pointer;
 							overflow-wrap: anywhere;
+							white-space: normal;
 						}
 
 						.phone-row {
-							display: inline-flex;
+							width: 100%;
+							min-width: 0;
+							display: flex;
 							align-items: center;
-							gap: 6px;
+							gap: 7px;
 							color: $c-muted;
-							font-family: $font;
-							font-size: 14px;
-							svg { font-size: 16px; color: $c-orange; }
+
+							svg {
+								width: 17px;
+								height: 17px;
+								flex: 0 0 auto;
+								color: $c-orange;
+							}
+
+							span {
+								min-width: 0;
+								color: $c-muted;
+								font-family: $font;
+								font-size: 14px;
+								font-weight: 600;
+								overflow-wrap: anywhere;
+							}
 						}
 
 						.dealer-desc {
-							margin: 4px 0 0;
+							width: 100%;
+							max-width: 100%;
+							margin: 0;
 							color: $c-muted;
 							font-family: $font;
 							font-size: 14px;
 							line-height: 1.6;
 							overflow-wrap: anywhere;
+							white-space: normal;
 						}
 
 						.cta-row {
-							display: flex;
-							flex-direction: column;
-							gap: 10px;
 							width: 100%;
-							margin-top: 6px;
+							min-width: 0;
+							max-width: 100%;
+							margin-top: 4px;
+							display: grid;
+							grid-template-columns: repeat(2, minmax(0, 1fr));
+							gap: 10px;
 
 							.cta-primary,
 							.cta-secondary {
 								width: 100%;
+								min-width: 0;
+								height: 50px;
 								display: inline-flex;
 								align-items: center;
 								justify-content: center;
 								gap: 8px;
-								min-height: 48px;
-								border-radius: 14px;
+								padding: 0 14px;
+								border-radius: 16px;
 								font-family: $font;
-								font-size: 15px;
-								font-weight: 700;
+								font-size: 14px;
+								font-weight: 800;
+								line-height: 1;
+								text-align: center;
 								text-decoration: none;
+								text-transform: none;
 								box-sizing: border-box;
 								cursor: pointer;
+								white-space: normal;
 							}
+
 							.cta-primary {
-								border: none;
+								border: 0;
 								background: $c-accent-grad;
 								color: #fff;
+								box-shadow: 0 12px 28px -16px rgba(233, 44, 40, 0.65);
 							}
+
 							.cta-secondary {
 								border: 1px solid $c-border;
-								background: $c-glass;
+								background: rgba(255, 255, 255, 0.055);
 								color: $c-text;
 							}
 						}
@@ -148,219 +225,429 @@
 				}
 
 				.carlen-agent-stats {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
 					display: grid;
 					grid-template-columns: repeat(3, minmax(0, 1fr));
 					gap: 10px;
-					width: 100%;
+					box-sizing: border-box;
 
 					.stat-card {
+						min-width: 0;
+						padding: 13px 8px;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
-						gap: 4px;
-						padding: 14px 6px;
-						border-radius: 14px;
+						gap: 5px;
+						border-radius: 16px;
 						border: 1px solid $c-border;
-						background: $c-glass;
-						min-width: 0;
+						background: rgba(255, 255, 255, 0.055);
 						box-sizing: border-box;
+						text-align: center;
 
-						.stat-icon svg { font-size: 18px; color: $c-orange; }
-						.stat-value { color: $c-text; font-family: $font; font-size: 16px; font-weight: 800; line-height: 1; }
+						.stat-icon {
+							width: 30px;
+							height: 30px;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							border-radius: 10px;
+							background: rgba(233, 44, 40, 0.12);
+							color: $c-orange;
+
+							svg {
+								width: 17px;
+								height: 17px;
+							}
+						}
+
+						.stat-value {
+							color: $c-text;
+							font-family: $font;
+							font-size: 18px;
+							font-weight: 850;
+							line-height: 1;
+						}
+
 						.stat-label {
 							color: $c-faint;
 							font-family: $font;
 							font-size: 10px;
-							font-weight: 600;
+							font-weight: 700;
+							line-height: 1.15;
+							letter-spacing: 0.035em;
 							text-transform: uppercase;
-							letter-spacing: 0.04em;
+							overflow-wrap: anywhere;
 						}
 					}
 				}
 			}
 
-			/* ===== shared section head ===== */
 			.carlen-agent-section-head {
 				width: 100%;
-				margin-bottom: 14px;
+				min-width: 0;
+				max-width: 100%;
+				margin-bottom: 16px;
+				box-sizing: border-box;
+
 				h2 {
 					margin: 0;
 					color: $c-text;
 					font-family: $font;
-					font-size: 20px;
-					font-weight: 700;
+					font-size: 23px;
+					font-weight: 800;
+					line-height: 1.2;
+					letter-spacing: -0.01em;
+					overflow-wrap: anywhere;
 				}
+
 				p {
-					margin: 4px 0 0;
+					margin: 5px 0 0;
 					color: $c-muted;
 					font-family: $font;
 					font-size: 14px;
+					line-height: 1.5;
+					overflow-wrap: anywhere;
 				}
 			}
 
-			/* ===== DEALER PRODUCTS ===== */
 			.carlen-agent-products {
-				width: 100%;
-				max-width: 100%;
-				min-width: 0;
-
 				.card-wrap {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
 					display: grid;
 					grid-template-columns: repeat(2, minmax(0, 1fr));
 					gap: 16px;
-					width: 100%;
-					max-width: 100%;
 					box-sizing: border-box;
-					> * { min-width: 0; }
+
+					> *,
+					.carlen-agent-product-wrap {
+						width: 100%;
+						min-width: 0;
+						max-width: 100%;
+						display: flex;
+						box-sizing: border-box;
+					}
 				}
 
-				.carlen-agent-product-wrap {
-					width: 100%;
-					min-width: 0;
+				.carlen-agent-product-wrap.is-liking {
+					pointer-events: none;
+					opacity: 0.86;
 				}
 
 				.carlen-agent-product-skeleton {
 					width: 100%;
-					aspect-ratio: 4 / 3;
-					border-radius: 16px;
+					min-width: 0;
+					max-width: 100%;
+					min-height: 330px;
+					border-radius: 20px;
 					border: 1px solid $c-border;
-					background: $c-glass;
+					background: linear-gradient(110deg, $c-glass 8%, $c-glass-hover 18%, $c-glass 33%);
+					background-size: 200% 100%;
+					animation: carlenAgentShimmer 1.4s ease-in-out infinite;
+					box-sizing: border-box;
 				}
 
 				.pagination {
 					width: 100%;
-					margin-top: 18px;
+					min-width: 0;
+					max-width: 100%;
+					margin-top: 22px;
 					display: flex;
 					flex-direction: column;
 					align-items: center;
 					gap: 12px;
+					box-sizing: border-box;
 
 					.pagination-box {
+						width: 100%;
+						max-width: 100%;
 						display: flex;
 						justify-content: center;
+						overflow-x: auto;
+						-webkit-overflow-scrolling: touch;
 					}
+
+					.MuiPagination-ul {
+						justify-content: center;
+						row-gap: 6px;
+					}
+
 					.MuiPaginationItem-root {
 						color: $c-muted;
 						border: 1px solid $c-border;
 						background: $c-glass;
 						font-family: $font;
-						&.Mui-selected { color: #fff; border-color: transparent; background: $c-accent-grad; }
+
+						&.Mui-selected {
+							color: #fff;
+							border-color: transparent;
+							background: $c-accent-grad;
+						}
 					}
+
 					> span {
 						color: $c-muted;
 						font-family: $font;
 						font-size: 14px;
+						line-height: 1.4;
 						text-align: center;
 					}
+
 					.no-data {
+						width: 100%;
+						min-height: 220px;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
-						gap: 8px;
-						color: $c-muted;
-						img { width: 40px; height: 40px; opacity: 0.6; }
-					}
-				}
-			}
-
-			/* ===== PropertyBigCard mobile card (.m-similar-card) ===== */
-			.m-similar-card {
-				display: flex;
-				flex-direction: column;
-				width: 100%;
-				max-width: 100%;
-				min-width: 0;
-				border-radius: 16px;
-				overflow: hidden;
-				border: 1px solid $c-border;
-				background: $c-raised;
-				box-sizing: border-box;
-				cursor: pointer;
-
-				.m-similar-img {
-					position: relative;
-					width: 100%;
-					aspect-ratio: 16 / 10;
-					background-size: cover;
-					background-position: center;
-
-					.m-similar-fav {
-						position: absolute;
-						top: 10px;
-						right: 10px;
-						width: 40px;
-						height: 40px;
-						display: inline-flex;
-						align-items: center;
 						justify-content: center;
-						border-radius: 50%;
+						gap: 10px;
+						padding: 30px 16px;
+						border-radius: 20px;
 						border: 1px solid $c-border;
-						background: rgba(11, 15, 23, 0.55);
-						color: $c-text;
-						cursor: pointer;
-						.MuiSvgIcon-root { font-size: 18px; }
-						.liked { color: $c-red; }
-					}
-					.m-similar-price {
-						position: absolute;
-						left: 12px;
-						bottom: 12px;
-						padding: 6px 11px;
-						border-radius: 8px;
-						background: rgba(11, 15, 23, 0.7);
-						border: 1px solid $c-border;
-						font-family: $font;
-						font-size: 14px;
-						font-weight: 700;
-						color: #fff;
-					}
-				}
+						background: rgba(255, 255, 255, 0.045);
+						box-sizing: border-box;
 
-				.m-similar-info {
-					padding: 14px;
-					min-width: 0;
-					.m-similar-title {
-						display: block;
-						font-family: $font;
-						font-size: 15px;
-						font-weight: 700;
-						color: $c-text;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
-					.m-similar-addr {
-						margin: 4px 0 10px;
-						font-family: $font;
-						font-size: 12px;
-						color: $c-faint;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
-					.m-similar-stats {
-						display: flex;
-						gap: 16px;
-						.stat {
-							display: inline-flex;
-							align-items: center;
-							gap: 5px;
+						img {
+							width: 40px;
+							height: 40px;
+							opacity: 0.65;
+						}
+
+						p {
+							margin: 0;
 							color: $c-muted;
-							.MuiSvgIcon-root { font-size: 16px; }
-							.cnt { font-family: $font; font-size: 12px; }
+							font-family: $font;
+							font-size: 14px;
 						}
 					}
 				}
 			}
 
-			/* ===== REVIEWS ===== */
-			.carlen-agent-reviews {
+			.m-similar-card,
+			.carlen-product-big-card {
 				width: 100%;
-				max-width: 100%;
 				min-width: 0;
+				max-width: 100%;
+				height: 100%;
+				border-radius: 20px;
+				border: 1px solid rgba(255, 255, 255, 0.13);
+				background:
+					linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025) 48%),
+					rgba(11, 15, 23, 0.82);
+				box-shadow: 0 22px 52px -34px rgba(0, 0, 0, 0.95);
+				box-sizing: border-box;
+				overflow: hidden;
+				cursor: pointer;
+			}
+
+			.m-similar-card {
+				display: flex;
+				flex-direction: column;
+
+				.m-similar-img {
+					position: relative;
+					width: 100%;
+					min-width: 0;
+					aspect-ratio: 16 / 10;
+					background-size: cover;
+					background-position: center;
+					background-color: #05070b;
+
+					.m-similar-fav {
+						position: absolute;
+						top: 10px;
+						right: 10px;
+						width: 44px;
+						height: 44px;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						padding: 0;
+						border-radius: 15px;
+						border: 1px solid $c-border;
+						background: rgba(11, 15, 23, 0.74);
+						color: $c-text;
+						backdrop-filter: blur(14px);
+						-webkit-backdrop-filter: blur(14px);
+						box-sizing: border-box;
+						cursor: pointer;
+
+						.MuiSvgIcon-root {
+							width: 20px;
+							height: 20px;
+						}
+
+						.liked {
+							color: $c-red;
+						}
+					}
+
+					.m-similar-price {
+						position: absolute;
+						left: 12px;
+						bottom: 12px;
+						max-width: calc(100% - 24px);
+						padding: 7px 11px;
+						border-radius: 11px;
+						border: 1px solid $c-border;
+						background: rgba(11, 15, 23, 0.72);
+						color: #fff;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 850;
+						backdrop-filter: blur(12px);
+						-webkit-backdrop-filter: blur(12px);
+						box-sizing: border-box;
+						overflow-wrap: anywhere;
+					}
+				}
+
+				.m-similar-info {
+					min-width: 0;
+					padding: 14px;
+					box-sizing: border-box;
+
+					.m-similar-title,
+					.m-similar-addr {
+						width: 100%;
+						display: block;
+						white-space: normal;
+						overflow-wrap: anywhere;
+					}
+
+					.m-similar-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 16px;
+						font-weight: 800;
+						line-height: 1.3;
+					}
+
+					.m-similar-addr {
+						margin: 6px 0 11px;
+						color: $c-faint;
+						font-family: $font;
+						font-size: 12px;
+						line-height: 1.45;
+					}
+
+					.m-similar-stats {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 10px;
+
+						.stat {
+							display: inline-flex;
+							align-items: center;
+							gap: 5px;
+							color: $c-muted;
+
+							.MuiSvgIcon-root {
+								width: 16px;
+								height: 16px;
+							}
+
+							.cnt {
+								color: $c-muted;
+								font-family: $font;
+								font-size: 12px;
+							}
+						}
+					}
+				}
+			}
+
+			.carlen-product-big-card {
+				display: flex;
+				flex-direction: column;
+
+				.card-img {
+					width: 100%;
+					height: auto;
+					aspect-ratio: 16 / 10;
+					min-height: 0;
+					background-size: cover;
+					background-position: center;
+
+					.fav-btn {
+						width: 44px;
+						height: 44px;
+						border-radius: 15px;
+					}
+				}
+
+				.info {
+					min-width: 0;
+					padding: 16px;
+					box-sizing: border-box;
+
+					.title,
+					.desc {
+						width: 100%;
+						white-space: normal;
+						overflow-wrap: anywhere;
+					}
+
+					.title {
+						font-size: 16px;
+						line-height: 1.3;
+					}
+
+					.desc {
+						margin-top: 6px;
+						font-size: 13px;
+						line-height: 1.45;
+					}
+
+					.options {
+						gap: 7px;
+
+						.spec-chip {
+							min-width: 0;
+							white-space: normal;
+							line-height: 1.2;
+						}
+					}
+
+					.bott {
+						align-items: flex-start;
+						gap: 10px;
+
+						.tags,
+						.buttons-box {
+							min-width: 0;
+							flex-wrap: wrap;
+						}
+					}
+				}
+			}
+
+			.carlen-agent-reviews {
+				padding: 18px;
+				border-radius: 24px;
+				border: 1px solid rgba(255, 255, 255, 0.13);
+				background: rgba(11, 15, 23, 0.76);
+				box-shadow: 0 24px 58px -38px rgba(0, 0, 0, 0.95);
+				backdrop-filter: blur(18px) saturate(150%);
+				-webkit-backdrop-filter: blur(18px) saturate(150%);
+
+				.review-wrap,
+				.carlen-agent-review-form {
+					width: 100%;
+					min-width: 0;
+					max-width: 100%;
+					padding: 16px;
+					border-radius: 18px;
+					border: 1px solid $c-border;
+					background: rgba(255, 255, 255, 0.045);
+					box-sizing: border-box;
+				}
 
 				.review-wrap {
-					width: 100%;
+					margin-bottom: 16px;
 					display: flex;
 					flex-direction: column;
 					gap: 12px;
@@ -368,100 +655,206 @@
 					.title-box {
 						display: flex;
 						align-items: center;
-						gap: 6px;
+						gap: 7px;
 						color: $c-text;
 						font-family: $font;
-						svg { color: $c-orange; }
+
+						svg {
+							width: 18px;
+							height: 18px;
+							color: $c-orange;
+						}
+
+						span {
+							color: $c-text;
+							font-family: $font;
+							font-size: 15px;
+							font-weight: 750;
+						}
 					}
 
 					.pagination-box {
+						width: 100%;
+						max-width: 100%;
+						margin-top: 4px;
 						display: flex;
 						justify-content: center;
-						margin-top: 4px;
-						.MuiPaginationItem-root {
-							color: $c-muted;
-							border: 1px solid $c-border;
-							background: $c-glass;
-							&.Mui-selected { color: #fff; border-color: transparent; background: $c-accent-grad; }
+						overflow-x: auto;
+						-webkit-overflow-scrolling: touch;
+
+						.MuiPagination-ul {
+							justify-content: center;
+							row-gap: 6px;
 						}
 					}
 				}
 
 				.review-card {
 					width: 100%;
-					max-width: 100%;
 					min-width: 0;
-					padding: 16px;
+					max-width: 100%;
+					padding: 14px;
 					border-radius: 16px;
 					border: 1px solid $c-border;
-					background: $c-glass;
+					background: rgba(5, 7, 11, 0.32);
 					box-sizing: border-box;
 
-					.info .left {
-						display: flex;
-						align-items: center;
-						gap: 12px;
-						img {
-							width: 40px;
-							height: 40px;
-							border-radius: 50%;
-							object-fit: cover;
-							border: 1px solid $c-border;
-							flex-shrink: 0;
+					.info {
+						width: 100%;
+						min-width: 0;
+
+						.left {
+							display: flex;
+							align-items: center;
+							gap: 11px;
+							min-width: 0;
+
+							img {
+								width: 42px;
+								height: 42px;
+								flex: 0 0 auto;
+								border-radius: 50%;
+								object-fit: cover;
+								border: 1px solid $c-border;
+								background: #05070b;
+							}
+
+							div {
+								min-width: 0;
+								display: flex;
+								flex-direction: column;
+								gap: 3px;
+							}
+
+							strong,
+							span {
+								overflow-wrap: anywhere;
+							}
+
+							strong {
+								color: $c-text;
+								font-family: $font;
+								font-size: 14px;
+								font-weight: 700;
+							}
+
+							span {
+								color: $c-faint;
+								font-family: $font;
+								font-size: 12px;
+							}
 						}
-						strong { color: $c-text; font-family: $font; font-size: 14px; font-weight: 600; }
-						span { color: $c-faint; font-family: $font; font-size: 12px; }
 					}
+
 					p {
-						margin: 10px 0 0;
+						margin: 11px 0 0;
 						color: $c-muted;
 						font-family: $font;
 						font-size: 14px;
 						line-height: 1.6;
 						overflow-wrap: anywhere;
+						white-space: normal;
 					}
 				}
 
 				.carlen-agent-review-form {
-					width: 100%;
-					margin-top: 18px;
 					display: flex;
 					flex-direction: column;
 					gap: 10px;
 
-					.main-title { color: $c-text; font-family: $font; font-size: 18px; font-weight: 700; }
-					.review-title { color: $c-muted; font-family: $font; font-size: 13px; }
+					.main-title {
+						color: $c-text;
+						font-family: $font;
+						font-size: 18px;
+						font-weight: 800;
+						line-height: 1.25;
+					}
+
+					.review-title {
+						color: $c-muted;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 700;
+					}
 
 					textarea {
 						width: 100%;
-						min-height: 110px;
-						box-sizing: border-box;
+						min-height: 124px;
 						padding: 14px;
-						border-radius: 14px;
+						border-radius: 16px;
 						border: 1px solid $c-border;
-						background: $c-glass;
+						background: rgba(5, 7, 11, 0.45);
 						color: $c-text;
-						outline: none;
-						resize: vertical;
 						font-family: $font;
 						font-size: 15px;
 						line-height: 1.5;
+						resize: vertical;
+						outline: none;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: $c-faint;
+						}
+
+						&:focus {
+							border-color: rgba(233, 44, 40, 0.5);
+							box-shadow: 0 0 0 3px rgba(233, 44, 40, 0.1);
+						}
 					}
 
 					.submit-btn {
 						width: 100%;
-						> div { width: 100%; }
+						display: flex;
+
+						> div {
+							width: 100%;
+						}
+
 						.submit-review {
 							width: 100%;
-							min-height: 48px;
-							border-radius: 14px;
+							min-height: 50px;
+							border-radius: 16px;
 							background: $c-accent-grad;
 							color: #fff;
 							font-family: $font;
-							font-weight: 700;
+							font-weight: 800;
 							text-transform: none;
-							.title { color: #fff; }
+							box-sizing: border-box;
+
+							.title {
+								color: #fff;
+							}
+
+							svg path {
+								fill: #fff;
+							}
+
+							&:disabled {
+								background: rgba(255, 255, 255, 0.08);
+								color: $c-faint;
+
+								.title {
+									color: $c-faint;
+								}
+
+								svg path {
+									fill: $c-faint;
+								}
+							}
 						}
+					}
+				}
+
+				.MuiPaginationItem-root {
+					color: $c-muted;
+					border: 1px solid $c-border;
+					background: $c-glass;
+					font-family: $font;
+
+					&.Mui-selected {
+						color: #fff;
+						border-color: transparent;
+						background: $c-accent-grad;
 					}
 				}
 			}
@@ -470,11 +863,182 @@
 }
 
 @media (max-width: 768px) {
-	#mobile-wrap {
+	#mobile-wrap,
+	#pc-wrap {
 		.carlen-agent-detail-page {
-			.carlen-agent-products .card-wrap {
-				grid-template-columns: 1fr;
+			padding: 16px 0 calc(124px + env(safe-area-inset-bottom, 0px));
+
+			.container {
+				padding: 0 14px;
+				gap: 22px;
+			}
+
+			.carlen-agent-detail-hero {
+				padding: 16px;
+				border-radius: 22px;
+
+				.carlen-agent-profile {
+					flex-direction: column;
+					align-items: center;
+					gap: 12px;
+					text-align: center;
+
+					.avatar-ring {
+						width: 94px;
+						height: 94px;
+						min-width: 94px;
+					}
+
+					.info {
+						align-items: center;
+						gap: 8px;
+
+						.verified-chip {
+							align-self: center;
+							font-size: 10px;
+						}
+
+						strong {
+							text-align: center;
+							font-size: 23px;
+						}
+
+						.phone-row {
+							justify-content: center;
+
+							span {
+								text-align: center;
+							}
+						}
+
+						.dealer-desc {
+							text-align: center;
+							font-size: 13px;
+						}
+
+						.cta-row {
+							grid-template-columns: 1fr;
+							gap: 9px;
+
+							.cta-primary,
+							.cta-secondary {
+								height: 50px;
+							}
+						}
+					}
+				}
+
+				.carlen-agent-stats {
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 7px;
+
+					.stat-card {
+						padding: 10px 4px;
+						border-radius: 14px;
+
+						.stat-icon {
+							width: 26px;
+							height: 26px;
+							border-radius: 9px;
+						}
+
+						.stat-value {
+							font-size: 16px;
+						}
+
+						.stat-label {
+							font-size: 9px;
+							letter-spacing: 0.025em;
+						}
+					}
+				}
+			}
+
+			.carlen-agent-section-head {
+				margin-bottom: 13px;
+
+				h2 {
+					font-size: 20px;
+				}
+
+				p {
+					font-size: 13px;
+				}
+			}
+
+			.carlen-agent-products {
+				.card-wrap {
+					grid-template-columns: 1fr;
+					gap: 14px;
+				}
+
+				.carlen-agent-product-skeleton {
+					min-height: 300px;
+				}
+			}
+
+			.carlen-product-big-card {
+				.card-img {
+					aspect-ratio: 16 / 9;
+				}
+
+				.info {
+					padding: 14px;
+
+					.bott {
+						flex-direction: column;
+					}
+				}
+			}
+
+			.m-similar-card {
+				.m-similar-img {
+					aspect-ratio: 16 / 9;
+				}
+			}
+
+			.carlen-agent-reviews {
+				padding: 14px;
+				border-radius: 22px;
+
+				.review-wrap,
+				.carlen-agent-review-form {
+					padding: 14px;
+					border-radius: 17px;
+				}
+
+				.review-card {
+					padding: 13px;
+
+					.info .left {
+						align-items: flex-start;
+
+						img {
+							width: 40px;
+							height: 40px;
+						}
+					}
+				}
+
+				.carlen-agent-review-form {
+					textarea {
+						min-height: 118px;
+					}
+
+					.submit-btn .submit-review {
+						min-height: 50px;
+					}
+				}
 			}
 		}
+	}
+}
+
+@keyframes carlenAgentShimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
 	}
 }
